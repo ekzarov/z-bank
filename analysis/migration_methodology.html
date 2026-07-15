@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Перенос легаси-системы: методология</title>
+<style>
+  :root{
+    --ground:#EFF1F4; --panel:#FFFFFF; --ink:#1A2430; --muted:#5D6C7B;
+    --line:#CBD4DD; --spine:#9AACBD;
+    --xl-green:#E2F0D9; --xl-green-b:#6FA55A;
+    --xl-red:#FFC7CE;   --xl-red-b:#C0505F;
+    --xl-gray:#EDEDED;  --xl-gray-b:#9AA3AC;
+    --xl-amber:#FCE4D6; --xl-amber-b:#D08A4E;
+    --owner:#C9971E; --agent:#6E7F90; --gate:#3D8455;
+    --s1:#54689B; --s2:#4F6FA0; --s3:#4A79A0; --s4:#44839C; --s5:#3E8B92; --s6:#3D9084; --s7:#429474; --s8:#529B62; --s9:#6FA55A;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --ground:#141B23; --panel:#1C2632; --ink:#E7ECF1; --muted:#94A3B2;
+      --line:#34404D; --spine:#4E5F6F; --owner:#D9AE45; --agent:#8B9CAC; --gate:#5CAB84;
+      --s1:#6479AE; --s2:#5F7FB0; --s3:#5787AF; --s4:#5090A7; --s5:#4B979A; --s6:#4D9C8B; --s7:#549F7A; --s8:#64A96E; --s9:#7DB56A; }
+  }
+  :root[data-theme="dark"]{ --ground:#141B23; --panel:#1C2632; --ink:#E7ECF1; --muted:#94A3B2;
+      --line:#34404D; --spine:#4E5F6F; --owner:#D9AE45; --agent:#8B9CAC; --gate:#5CAB84;
+      --s1:#6479AE; --s2:#5F7FB0; --s3:#5787AF; --s4:#5090A7; --s5:#4B979A; --s6:#4D9C8B; --s7:#549F7A; --s8:#64A96E; --s9:#7DB56A; }
+  :root[data-theme="light"]{ --ground:#EFF1F4; --panel:#FFFFFF; --ink:#1A2430; --muted:#5D6C7B;
+      --line:#CBD4DD; --spine:#9AACBD; --owner:#C9971E; --agent:#6E7F90; --gate:#3D8455;
+      --s1:#54689B; --s2:#4F6FA0; --s3:#4A79A0; --s4:#44839C; --s5:#3E8B92; --s6:#3D9084; --s7:#429474; --s8:#529B62; --s9:#6FA55A; }
+
+  body{ background:var(--ground); color:var(--ink);
+    font:15px/1.55 "Segoe UI", system-ui, -apple-system, sans-serif; margin:0; }
+  .wrap{ max-width:980px; margin:0 auto; padding:30px 22px 56px; }
+  h1{ font-family:"Bahnschrift","Segoe UI Semibold","Arial Narrow",system-ui,sans-serif;
+    font-size:29px; margin:0 0 4px; letter-spacing:.2px; text-wrap:balance; }
+  .lede{ color:var(--muted); margin:0 0 20px; max-width:70ch; }
+  h2.section{ font-family:"Bahnschrift","Segoe UI Semibold","Arial Narrow",system-ui,sans-serif;
+    font-size:14px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted);
+    margin:34px 0 14px; display:flex; align-items:center; gap:10px; }
+  h2.section::after{ content:""; flex:1; height:1px; background:var(--line); }
+
+  .legends{ display:flex; flex-direction:column; gap:8px; margin-bottom:22px;
+    background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px 16px; }
+  .legend{ display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; font-size:12.8px; }
+  .legend .t{ font-weight:700; font-size:11.5px; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--muted); min-width:160px; }
+  .sw{ display:inline-block; width:14px; height:14px; border-radius:3px; margin-right:6px;
+    vertical-align:-2px; border:1px solid; }
+  .fr{ display:inline-block; width:20px; height:13px; border-radius:4px; margin-right:6px; vertical-align:-2px; background:transparent; }
+
+  /* ---- детальный флоу с текстом сценария ---- */
+  .flow{ position:relative; padding-left:110px; }
+  .flow::before{ content:""; position:absolute; left:71px; top:24px; bottom:24px; width:2px; background:var(--spine); }
+  .phase{ position:relative; border:1px solid var(--line); border-radius:10px;
+    padding:15px 17px 14px; background:var(--panel); }
+  .node{ position:absolute; left:-51px; top:12px; width:44px; height:44px; border-radius:50%;
+    background:var(--panel); border:2px solid var(--spine); display:flex; align-items:center; justify-content:center; z-index:1; }
+  .node svg{ width:22px; height:22px; stroke:var(--ink); fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+  .down{ height:30px; position:relative; }
+  .down::after{ content:""; position:absolute; left:50%; top:3px; bottom:9px; width:2px; background:var(--spine); }
+  .down::before{ content:""; position:absolute; left:50%; bottom:2px; transform:translateX(-5.5px);
+    border:6px solid transparent; border-top:8px solid var(--spine); border-bottom:0; }
+  .phase h3{ font-family:"Bahnschrift","Segoe UI Semibold","Arial Narrow",system-ui,sans-serif;
+    font-size:16.5px; margin:0 0 5px; }
+  .phase h3 small{ font-family:"Segoe UI",system-ui,sans-serif; color:var(--muted); font-weight:400; font-size:12.5px; margin-left:7px; }
+  .phase .d{ margin:0 0 10px; color:var(--muted); font-size:13.5px; max-width:76ch; }
+  .phase .d b{ color:var(--ink); font-weight:600; }
+  .steps{ display:flex; flex-wrap:wrap; gap:6px 4px; align-items:center; }
+  .chip{ background:var(--ground); border:1px solid var(--line); border-radius:6px;
+    padding:5px 10px; font-size:12.8px; }
+  .chip b{ font-weight:600; }
+  .sep{ color:var(--spine); font-weight:700; padding:0 2px; }
+  .chip.owner{ border:1.6px dashed var(--owner); background:var(--panel); }
+  .chip.agent{ border:1.6px dashed var(--agent); background:var(--panel); }
+  .chip.gate{ border:1.6px solid var(--gate); background:var(--xl-green); color:#1A2430; }
+  .chip.key{ background:var(--ink); color:var(--panel); border-color:var(--ink); }
+
+  .rulebox{ margin-top:10px; background:var(--xl-red); color:#1A2430; border:1px solid var(--xl-red-b);
+    border-radius:7px; padding:8px 12px; font-size:12.8px; }
+  .findings{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:10px; }
+  .f{ border-radius:8px; padding:9px 11px; font-size:12.5px; border:1px solid; color:#1A2430; }
+  .f b{ display:block; font-size:13px; margin-bottom:2px; }
+  .f .to{ opacity:.75; }
+  .f.red{ background:var(--xl-red); border-color:var(--xl-red-b); }
+  .f.gray{ background:var(--xl-gray); border-color:var(--xl-gray-b); }
+  .f.amber{ background:var(--xl-amber); border-color:var(--xl-amber-b); }
+
+  .loop-scope{ position:relative; }
+  .loop-line{ position:absolute; left:-6px; top:34px; bottom:160px; width:28px;
+    border-left:2.5px dashed var(--xl-red-b); border-bottom:2.5px dashed var(--xl-red-b);
+    border-bottom-left-radius:16px; pointer-events:none; }
+  .loop-line::before{ content:""; position:absolute; top:-10px; left:-8px;
+    border:6.5px solid transparent; border-bottom:10px solid var(--xl-red-b); }
+  .loop-tag{ position:absolute; left:-17px; top:47%; transform:rotate(-90deg) translateX(50%);
+    transform-origin:left center; background:var(--xl-red); color:#1A2430;
+    border:1px solid var(--xl-red-b); border-radius:6px; padding:2px 10px;
+    font-size:11.5px; white-space:nowrap; }
+  /* мини-петля: контрольная разведка → назад в разведку */
+  .loop-scope.mini .loop-line{ top:34px; bottom:58px; }
+  .loop-scope.mini .loop-tag{ top:52%; }
+  /* внешняя левая петля: живой прогон → назад в разведку (левее иконок шагов) */
+  .loop-scope.recon > .loop-line{ left:-88px; top:34px; bottom:64px; }
+  .loop-scope.recon > .loop-tag{ left:-99px; top:50%; }
+
+  .outcome{ background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    padding:10px 14px; margin-top:18px; font-size:14px; }
+
+  /* ---- горизонтальная лента «одним взглядом» ---- */
+  .glance{ background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:30px 22px 16px; overflow-x:auto; }
+  .strip{ display:flex; align-items:flex-start; justify-content:space-between; gap:0;
+    position:relative; padding-bottom:62px; }
+  .gstep{ flex:1; display:flex; flex-direction:column; align-items:center; text-align:center;
+    position:relative; min-width:0; }
+  .bubble{ width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 10px rgba(20,35,60,.18); position:relative; z-index:1; }
+  .bubble svg{ width:24px; height:24px; stroke:#fff; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  .gnum{ font-family:"Bahnschrift","Segoe UI Semibold",system-ui,sans-serif; font-size:19px; margin-top:7px; }
+  .gname{ font-weight:600; font-size:12.3px; margin-top:1px; }
+  .gcap{ color:var(--muted); font-size:10.8px; margin-top:2px; max-width:13ch; }
+  /* стрелки между шагами */
+  .gstep:not(:last-child)::after{ content:""; position:absolute; top:26px; left:calc(50% + 33px);
+    width:calc(100% - 66px); border-top:2.5px dashed var(--spine); }
+  .gstep:not(:last-child)::before{ content:""; position:absolute; top:20.5px; right:-7px; z-index:1;
+    border:6px solid transparent; border-left:9px solid var(--spine); }
+  /* петля возврата под лентой */
+  /* большая петля: от последнего шага назад к шагу 04 (центры шагов при 9 колонках: 5.56% / 16.67% / 27.78% / … / 94.44%) */
+  .gloop{ position:absolute; left:38.89%; right:5.56%; bottom:2px; height:26px;
+    border-bottom:2.5px dashed var(--xl-red-b); border-left:2.5px dashed var(--xl-red-b);
+    border-right:2.5px dashed var(--xl-red-b); border-bottom-left-radius:12px; border-bottom-right-radius:12px; }
+  .gloop::before{ content:""; position:absolute; top:-9px; left:-8px;
+    border:6px solid transparent; border-bottom:9px solid var(--xl-red-b); }
+  .gloop-label{ position:absolute; bottom:-9px; left:50%; transform:translateX(-50%);
+    background:var(--xl-red); color:#1A2430; border:1px solid var(--xl-red-b); border-radius:6px;
+    padding:1px 10px; font-size:11px; white-space:nowrap; }
+  /* мини-петля: от шага 02 назад к шагу 01 (верхняя) */
+  .gloop2{ position:absolute; left:6.4%; right:83.33%; bottom:34px; height:16px;
+    border-bottom:2.5px dashed var(--xl-red-b); border-left:2.5px dashed var(--xl-red-b);
+    border-right:2.5px dashed var(--xl-red-b); border-bottom-left-radius:12px; border-bottom-right-radius:12px; }
+  .gloop2::before{ content:""; position:absolute; top:-9px; left:-8px;
+    border:6px solid transparent; border-bottom:9px solid var(--xl-red-b); }
+  /* петля: от шага 03 назад к шагу 01 (нижняя) */
+  .gloop3{ position:absolute; left:4.9%; right:72.22%; bottom:4px; height:46px;
+    border-bottom:2.5px dashed var(--xl-red-b); border-left:2.5px dashed var(--xl-red-b);
+    border-right:2.5px dashed var(--xl-red-b); border-bottom-left-radius:12px; border-bottom-right-radius:12px; }
+  .gloop3::before{ content:""; position:absolute; top:-9px; left:-8px;
+    border:6px solid transparent; border-bottom:9px solid var(--xl-red-b); }
+  .gloop3-label{ position:absolute; bottom:-5px; left:16.4%; transform:translateX(-50%);
+    background:var(--xl-red); color:#1A2430; border:1px solid var(--xl-red-b); border-radius:6px;
+    padding:1px 8px; font-size:10px; white-space:nowrap; }
+
+  .foot{ margin-top:20px; border-top:1px solid var(--line); padding-top:11px;
+    color:var(--muted); font-size:12.6px; display:flex; gap:18px; flex-wrap:wrap; }
+  .foot b{ color:var(--ink); font-weight:600; }
+
+  @media (max-width:640px){
+    .findings{ grid-template-columns:1fr; }
+    .flow{ padding-left:0; } .flow::before{ display:none; } .node{ display:none; }
+    .loop-line,.loop-tag{ display:none; }
+  }
+  @media print{ body{ background:#fff; } .wrap{ padding:0; }
+    .glance{ page-break-before:always; border:0; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <h1>Перенос легаси-системы: по какому сценарию мы движемся</h1>
+  <p class="lede">Каждое поведение легаси — строка карты паритета; каждая строка доводится до зелёного с доказательством. Методология не привязана к стеку и применима к любому переносу.</p>
+
+  <div class="legends">
+    <div class="legend"><span class="t">Статус строки карты</span>
+      <span><span class="sw" style="background:var(--xl-green);border-color:var(--xl-green-b)"></span>сделано и проверено</span>
+      <span><span class="sw" style="background:var(--xl-red);border-color:var(--xl-red-b)"></span>дыра — чинить</span>
+      <span><span class="sw" style="background:var(--xl-gray);border-color:var(--xl-gray-b)"></span>нужно решение владельца</span>
+      <span><span class="sw" style="background:var(--xl-amber);border-color:var(--xl-amber-b)"></span>отложено, причина записана</span>
+    </div>
+    <div class="legend"><span class="t">Кто выполняет шаг</span>
+      <span><span class="fr" style="border:1.6px dashed var(--owner)"></span>точка контроля владельца</span>
+      <span><span class="fr" style="border:1.6px dashed var(--agent)"></span>независимый агент</span>
+      <span><span class="fr" style="border:1.6px solid var(--gate);background:var(--xl-green)"></span>автоматический гейт</span>
+    </div>
+  </div>
+
+  <div class="flow">
+
+    <div class="loop-scope recon">
+      <div class="loop-line" aria-hidden="true"></div>
+      <div class="loop-tag">дыры в карте → снова в разведку</div>
+
+    <div class="loop-scope mini">
+      <div class="loop-line" aria-hidden="true"></div>
+      <div class="loop-tag">дыры → снова в разведку</div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></div>
+        <h3>1 · Разведка <small>легаси-код → карта паритета</small></h3>
+        <p class="d">Поведение достаётся <b>только из кода легаси</b> — не из документации и не по памяти. Каждый пользовательский сценарий становится строкой <b>воркбука — карты паритета</b> с доказательством (файл/класс/страница): реальные системы прячут второстепенные флоу, поэтому первый проход — всегда черновик.</p>
+        <div class="steps">
+          <span class="chip">Легаси-код</span><span class="sep">→</span>
+          <span class="chip">Выделение user&nbsp;flows</span><span class="sep">→</span>
+          <span class="chip key">Воркбук — карта паритета</span>
+        </div>
+      </section>
+
+      <div class="down"></div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/><path d="M11.5 14l1.8 1.8 3.2-3.2"/></svg></div>
+        <h3>2 · Контрольная разведка <small>второй агент ищет, что пропустил первый</small></h3>
+        <p class="d">Когда карта построена, <b>второй, независимый агент</b> делает такой же анализ легаси с нуля и сравнивает свой результат с картой: пропущенные флоу и сценарии, битые доказательства, неверные статусы. Каждая находка возвращает работу <b>назад в разведку</b> — карта исправляется и дополняется, затем контроль повторяется. Стадия закрыта только проходом без новых находок.</p>
+        <div class="steps">
+          <span class="chip agent">Второй агент: анализ с нуля</span><span class="sep">→</span>
+          <span class="chip">Дифф с картой: дыры и ошибки</span><span class="sep">→</span>
+          <span class="chip">Исправления в карте</span><span class="sep">→</span>
+          <span class="chip gate">Чистый проход — карта принята</span>
+        </div>
+      </section>
+
+    </div><!-- /loop-scope mini -->
+
+    <div class="down"></div>
+
+    <section class="phase">
+      <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="14" rx="2"/><path d="M6.5 8.5l3 2.5-3 2.5"/><path d="M12 13.5h5"/><path d="M9 21h6"/></svg></div>
+      <h3>3 · Живой прогон легаси <small>развернуть и пройти все сценарии руками</small></h3>
+      <p class="d">Карта из кода — это гипотеза. Легаси разворачивается и проходится вживую, как его проходит реальный пользователь: веб — <b>прокликать каждую страницу и форму</b>, зелёный экран — <b>пройти каждую транзакцию в терминале</b>, API — вызвать каждый маршрут, батч — прогнать джоб. К технологии не привязываемся — важно пройти <b>все возможные сценарии</b> и сверить каждый с картой. Поведение без строки — строка добавляется; что развернуть или наблюдать нельзя — остаётся в карте непроверенным, а не «предположительно работает».</p>
+      <div class="steps">
+        <span class="chip">Развернуть легаси</span><span class="sep">→</span>
+        <span class="chip agent">Пройти всё: страницы / экраны терминала / API / джобы</span><span class="sep">→</span>
+        <span class="chip">Сверка с картой</span><span class="sep">→</span>
+        <span class="chip key">Карта дополнена и подтверждена</span>
+      </div>
+    </section>
+
+    </div><!-- /loop-scope recon -->
+
+    <div class="down"></div>
+
+    <div class="loop-scope">
+      <div class="loop-line" aria-hidden="true"></div>
+      <div class="loop-tag">находки возвращаются в цикл</div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4"/><path d="M10 12h6M10 16h6"/></svg></div>
+        <h3>4 · Проектирование — SDD <small>карта → спецификации: spec / plan / tasks</small></h3>
+        <p class="d">Здесь пишется <b>SDD (Spec-Driven Development)</b> — спецификации, от которых дальше ведётся вся разработка. Точка входа всегда воркбук: <b>сначала актуализируются сами строки</b> (формулировки, SDD-колонки: что покрывается, что откладывается — с причиной), и только затем каждый флоу превращается в SDD-артефакты: spec → plan → tasks. Карта и SDD связаны колонками покрытия и расходиться не могут. Ни строчки кода до утверждения SDD владельцем.</p>
+        <div class="steps">
+          <span class="chip key">Актуализация воркбука</span><span class="sep">→</span>
+          <span class="chip">SDD: Spec</span><span class="sep">→</span>
+          <span class="chip">Plan</span><span class="sep">→</span>
+          <span class="chip">Tasks</span><span class="sep">→</span>
+          <span class="chip owner">Утверждение SDD владельцем</span>
+        </div>
+      </section>
+
+      <div class="down"></div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <h3>5 · Перепроверка проектирования <small>всё ли учтено — чужими глазами</small></h3>
+        <p class="d">До начала сборки <b>другой агент</b> сверяет результат стадий 1–4: все ли легаси-флоу учтены картой (ничего не потеряно ни при разведке, ни при живом прогоне) и все ли строки карты покрыты SDD-спецификациями или отложены с причиной. Расхождения возвращаются в стадию 4 — реализация не стартует, пока перепроверка не чистая.</p>
+        <div class="steps">
+          <span class="chip agent">Другой агент</span><span class="sep">→</span>
+          <span class="chip">Карта ↔ легаси: полнота</span><span class="sep">→</span>
+          <span class="chip">Карта ↔ спеки: покрытие</span><span class="sep">→</span>
+          <span class="chip gate">Допуск к сборке</span>
+        </div>
+      </section>
+
+      <div class="down"></div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3v6a3 3 0 0 0 3 3h6a3 3 0 0 1 3 3v6"/><circle cx="6" cy="3" r="2"/><circle cx="18" cy="21" r="2"/><circle cx="18" cy="9" r="2"/><path d="M18 11v4"/></svg></div>
+        <h3>6 · Сборка <small>код, тесты и документы — одним PR</small></h3>
+        <p class="d">Ветка → реализация на целевом стеке → <b>автотесты как жёсткий гейт</b>: PR не выпускается на красных. В том же PR вместе с кодом синхронизируются спецификации и воркбук (зеленение строк с доказательствами). Мерж — только владелец.</p>
+        <div class="steps">
+          <span class="chip">Ветка</span><span class="sep">→</span>
+          <span class="chip">Реализация</span><span class="sep">→</span>
+          <span class="chip gate"><b>Тесты-гейт</b></span><span class="sep">→</span>
+          <span class="chip">PR: код + SDD + воркбук</span><span class="sep">→</span>
+          <span class="chip owner">Мерж — владелец</span>
+        </div>
+      </section>
+
+      <div class="down"></div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c4 3 5 7 5 10l3 4h-5a3 3 0 0 1-6 0H4l3-4c0-3 1-7 5-10z"/><circle cx="12" cy="10" r="2"/></svg></div>
+        <h3>7 · Поставка <small>деплой одной командой</small></h3>
+        <p class="d">Деплой одной командой → демо-стенд, где <b>легаси и новая система живут бок о бок</b>: один и тот же флоу показывается в двух мирах. Смоук-тест закрывает поставку.</p>
+        <div class="steps">
+          <span class="chip">Деплой</span><span class="sep">→</span>
+          <span class="chip key">Демо-стенд: легаси + новое</span><span class="sep">→</span>
+          <span class="chip gate">Смоук</span>
+        </div>
+      </section>
+
+      <div class="down"></div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h13v10H8l-4 4z"/><path d="M13 14l2 6 2-3 3 1-2-6"/></svg></div>
+        <h3>8 · Ревизия через UI <small>карта против живого приложения</small></h3>
+        <p class="d">Агент проходит <b>обе системы как реальный пользователь — прокликивает всё, что только можно</b>: каждую страницу, ссылку, форму, и сверяет увиденное с картой. Каждая находка в момент фиксации меняет и карту, и спецификации.</p>
+        <div class="steps">
+          <span class="chip agent">Проход как реальный пользователь: все страницы, ссылки, формы</span><span class="sep">→</span>
+          <span class="chip">Сверка с картой</span><span class="sep">→</span>
+          <span class="chip gate">Автоаудит инвариантов воркбука</span>
+        </div>
+        <div class="rulebox"><b>Непроверенное = не сделано (красное).</b> Каждый геп несёт происхождение: подтверждено наблюдением / не проверено — проверка = первый шаг закрытия.</div>
+        <div class="findings">
+          <div class="f red"><b>Дыра</b>заявлено, но не работает<div class="to">→ назад в цикл: карта → спеки → код</div></div>
+          <div class="f gray"><b>Решение</b>сделано иначе, чем в легаси<div class="to">→ владелец: девиация или доработка</div></div>
+          <div class="f amber"><b>Отсрочка</b>причина/зависимость записана<div class="to">→ бэклог финальной приёмки</div></div>
+        </div>
+      </section>
+
+      <div class="down"></div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M8.5 12l2.5 2.5 4.5-4.5"/></svg></div>
+        <h3>9 · Финальная приёмка <small>чужими руками</small></h3>
+        <p class="d">Остаётся <b>один консолидированный бэклог</b> всего открытого; автоматический аудит доказывает полноту — открытая строка вне бэклога невозможна. Финальный прогон UI-чеклиста и аудита отдаётся <b>агентам других вендоров</b> (Google Antigravity, OpenAI Codex или аналог): агент, писавший код, не подтверждает сам себя. Сторонний агент получает только инструкцию, воркбук и URL стенда; совпали результаты с картой — приёмка подписана.</p>
+        <div class="steps">
+          <span class="chip key">Единый бэклог всего открытого</span><span class="sep">→</span>
+          <span class="chip gate">Аудит полноты</span><span class="sep">→</span>
+          <span class="chip agent">Перепроверка сторонними агентами</span><span class="sep">→</span>
+          <span class="chip owner">Приёмка подписана</span>
+        </div>
+      </section>
+
+    </div><!-- /loop-scope -->
+  </div>
+
+  <p class="outcome"><b>Петли:</b> дыры в карте, найденные контрольной разведкой (стадия 2) и живым прогоном (стадия 3), возвращаются в стадию 1 — разведку; находки стадий 5, 8 и 9 возвращаются в стадию 4 (карта → SDD) и далее в сборку — циклы повторяются до чистой приёмки.&nbsp;&nbsp;<b>Выход:</b> карта без красного и серого + независимая приёмка = <b>перенос доказан, а не заявлен</b>.</p>
+
+  <h2 class="section">Одним взглядом</h2>
+
+  <div class="glance">
+    <div class="strip">
+      <div class="gstep">
+        <div class="bubble" style="background:var(--s1)"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></div>
+        <div class="gnum" style="color:var(--s1)">01</div>
+        <div class="gname">Разведка</div>
+        <div class="gcap">карта паритета из кода легаси</div>
+      </div>
+      <div class="gstep">
+        <div class="bubble" style="background:var(--s2)"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/><path d="M11.5 14l1.8 1.8 3.2-3.2"/></svg></div>
+        <div class="gnum" style="color:var(--s2)">02</div>
+        <div class="gname">Контроль карты</div>
+        <div class="gcap">второй агент ищет пропуски</div>
+      </div>
+      <div class="gstep">
+        <div class="bubble" style="background:var(--s3)"><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="14" rx="2"/><path d="M6.5 8.5l3 2.5-3 2.5"/><path d="M12 13.5h5"/><path d="M9 21h6"/></svg></div>
+        <div class="gnum" style="color:var(--s3)">03</div>
+        <div class="gname">Живой прогон</div>
+        <div class="gcap">пройти легаси вживую целиком</div>
+      </div>
+      <div class="gstep">
+        <div class="bubble" style="background:var(--s4)"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4"/><path d="M10 12h6M10 16h6"/></svg></div>
+        <div class="gnum" style="color:var(--s4)">04</div>
+        <div class="gname">Проектирование</div>
+        <div class="gcap">SDD: spec → plan → tasks</div>
+      </div>
+      <div class="gstep">
+        <div class="bubble" style="background:var(--s5)"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="gnum" style="color:var(--s5)">05</div>
+        <div class="gname">Перепроверка</div>
+        <div class="gcap">другой агент: всё ли учтено</div>
+      </div>
+      <div class="gstep">
+        <div class="bubble" style="background:var(--s6)"><svg viewBox="0 0 24 24"><path d="M6 3v6a3 3 0 0 0 3 3h6a3 3 0 0 1 3 3v6"/><circle cx="6" cy="3" r="2"/><circle cx="18" cy="21" r="2"/><circle cx="18" cy="9" r="2"/><path d="M18 11v4"/></svg></div>
+        <div class="gnum" style="color:var(--s6)">06</div>
+        <div class="gname">Сборка</div>
+        <div class="gcap">код + тесты + документы одним PR</div>
+      </div>
+      <div class="gstep">
+        <div class="bubble" style="background:var(--s7)"><svg viewBox="0 0 24 24"><path d="M12 3c4 3 5 7 5 10l3 4h-5a3 3 0 0 1-6 0H4l3-4c0-3 1-7 5-10z"/><circle cx="12" cy="10" r="2"/></svg></div>
+        <div class="gnum" style="color:var(--s7)">07</div>
+        <div class="gname">Поставка</div>
+        <div class="gcap">легаси и новое бок о бок</div>
+      </div>
+      <div class="gstep">
+        <div class="bubble" style="background:var(--s8)"><svg viewBox="0 0 24 24"><path d="M4 4h13v10H8l-4 4z"/><path d="M13 14l2 6 2-3 3 1-2-6"/></svg></div>
+        <div class="gnum" style="color:var(--s8)">08</div>
+        <div class="gname">Ревизия UI</div>
+        <div class="gcap">прокликать всё и сверить с картой</div>
+      </div>
+      <div class="gstep">
+        <div class="bubble" style="background:var(--s9)"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M8.5 12l2.5 2.5 4.5-4.5"/></svg></div>
+        <div class="gnum" style="color:var(--s9)">09</div>
+        <div class="gname">Приёмка</div>
+        <div class="gcap">перепроверка сторонними агентами</div>
+      </div>
+      <div class="gloop" aria-hidden="true"></div>
+      <div class="gloop-label">находки → назад в цикл</div>
+      <div class="gloop2" aria-hidden="true"></div>
+      <div class="gloop3" aria-hidden="true"></div>
+      <div class="gloop3-label">дыры → в разведку</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span><b>Правила зашиты:</b> инструкция воркбука + скрипт-аудит (цвет=статус, три типа находок, полнота бэклога, непроверенное=красное)</span>
+    <span><b>Выход:</b> карта без красного и серого + независимая приёмка</span>
+  </div>
+</div>
+
+</body>
+</html>
