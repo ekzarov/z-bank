@@ -94,11 +94,12 @@ before any action and overrides convenience.
   system run side by side**: the same flow can be shown in both worlds.
 - A smoke test closes the delivery.
 
-### Stage 8 — UI revision (map vs the living application)
+### Stage 8 — Live revision (map vs the living systems, every channel)
 
-- An agent walks **both systems as a real user — clicking everything that can
-  be clicked**: every page, link, form — and compares what it sees against the
-  map.
+- An agent walks **both systems as a real user — through every channel the
+  system has**: pages, links, and forms in a web UI; screens and transactions
+  in a terminal (3270/COBOL/IMS); API routes; batch jobs — and compares what
+  it sees against the map.
 - Every finding updates the map **and** the SDD in the same change set.
 - **Unverified = not done (red).** Every gap records its provenance:
   confirmed by observation, or not-checked (the check is then the first step
@@ -117,7 +118,7 @@ before any action and overrides convenience.
 
 - One **consolidated backlog** of everything still open; the automated audit
   proves completeness — an open row outside the backlog is impossible.
-- The final UI checklist run and audit are given to **third-party agents of
+- The final checklist run (across all channels) and audit are given to **third-party agents of
   other vendors** (e.g. Google Antigravity, OpenAI Codex or equivalent): the
   agent that wrote the code never signs off on itself.
 - The third-party agent receives only the instruction, the workbook, and the
@@ -131,7 +132,7 @@ before any action and overrides convenience.
 | Stage 2 (control reconnaissance) | Stage 1 | any hole or error found in the map |
 | Stage 3 (live walkthrough) | Stage 1 | observed behavior missing from the map |
 | Stage 5 (design re-verification) | Stage 4 | map/SDD coverage discrepancies |
-| Stage 8 (UI revision) | Stage 4 | gaps → map → SDD → code |
+| Stage 8 (live revision) | Stage 4 | gaps → map → SDD → code |
 | Stage 9 (final acceptance) | Stage 4 | third-party findings |
 
 Cycles repeat until acceptance is clean.
