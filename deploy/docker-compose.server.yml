@@ -1,0 +1,76 @@
+services:
+  api-builder:
+    image: icr.io/zosconnect/ibm-zcon-designer:3.0.101
+    platform: linux/amd64
+    container_name: zbank-api-builder
+    user: "0:0"
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        cd /workspace/project &&
+        gradle build --no-daemon &&
+        cp build/libs/api.war /api-dropins/api.war &&
+        chmod 0644 /api-dropins/api.war
+    volumes:
+      - ../legacy/src/api:/workspace/project
+      - zbank-project-cache:/workspace/project/.gradle
+      - zbank-project-build:/workspace/project/build
+      - zbank-api-dropins:/api-dropins
+
+  zosconnect:
+    image: icr.io/zosconnect/ibm-zcon-designer:3.0.101
+    platform: linux/amd64
+    container_name: zbank-zosconnect
+    restart: unless-stopped
+    environment:
+      CICS_USER: ${CICS_USER:-na}
+      CICS_PASSWORD: ${CICS_PASSWORD:-na}
+      CICS_HOST: ${CICS_HOST:-127.0.0.1}
+      CICS_PORT: ${CICS_PORT:-1}
+      IMS_USER: ${IMS_USER:-na}
+      IMS_PASSWORD: ${IMS_PASSWORD:-na}
+      IMS_HOST: ${IMS_HOST:-127.0.0.1}
+      IMS_PORT: ${IMS_PORT:-1}
+      IMS_DATASTORE: ${IMS_DATASTORE:-NA}
+      HTTP_PORT: 9080
+      zosconnect_remote_download_allowlist: BLOCK_ALL
+    ports:
+      - "127.0.0.1:9082:9080"
+      - "127.0.0.1:9444:9443"
+    volumes:
+      - ../legacy/src/api:/workspace/project:ro
+      - zbank-api-dropins:/opt/ibm/wlp/usr/servers/defaultServer/dropins
+      - zbank-logs:/logs
+    depends_on:
+      api-builder:
+        condition: service_completed_successfully
+    networks:
+      - zbank
+
+  frontend:
+    image: node:24-alpine
+    container_name: zbank-frontend
+    restart: unless-stopped
+    working_dir: /app
+    command: node server.js
+    environment:
+      PORT: 3001
+      API_BASE_URL: http://zosconnect:9080
+    ports:
+      - "127.0.0.1:3002:3001"
+    volumes:
+      - ../legacy/src/frontend:/app:ro
+      - ./frontend-config.server.js:/app/config.js:ro
+    depends_on:
+      - zosconnect
+    networks:
+      - zbank
+
+networks:
+  zbank:
+
+volumes:
+  zbank-logs:
+  zbank-api-dropins:
+  zbank-project-cache:
+  zbank-project-build:
