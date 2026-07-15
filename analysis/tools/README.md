@@ -11,14 +11,23 @@ npm install   # first time only
 npm run audit
 ```
 
+When a workbook is exported by `@oai/artifact-tool`, normalize its XLSX package
+metadata and restore detail-row outlines before the audit (the finalizer does
+not change workbook cell values or status styles):
+
+```bash
+node analysis/tools/repair-artifact-xlsx.js analysis/legacy_user_flows.xlsx
+```
+
 Exit 0 / `AUDIT OK` means every invariant holds. Invariants checked:
 
 - **A. Colour = status** on scenario rows: green ⇔ `Destination implemented? = Yes`;
   orange ⇒ `Deferred in SDD? = Yes` + a written reason; red ⇒ open with no decision.
 - **B. Epic banner rows** reflect their children: all Yes → green + `Passed`;
   any red child → red; otherwise orange.
-- **C. Revision coverage**: every open row is referenced by at least one `Rev N`
-  sheet (this is the check that caught Rev 3 missing 33 rows).
+- **C. Revision coverage**: after target/SDD tracking begins, every open row is
+  referenced by at least one `Rev N` sheet. A first-pass, code-only discovery
+  map may contain no revision sheet while columns I:N are entirely blank.
 - **D. Rev sheets**: a green (closed) finding carries `Implemented? = Yes`.
 
 ## Writing mutation scripts

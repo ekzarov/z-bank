@@ -55,6 +55,10 @@ applies to every action from the very start, not just at implementation time.
      mobile) — so the sheet reads as the build order.
    - Do not consider the evidence step finished until this re-analysis surfaces
      no new gaps and the grouping/order checks pass.
+   - During this initial code-only discovery stage, leave destination and SDD
+     columns I:N blank and keep every detail row red. Revision-sheet coverage
+     becomes mandatory once target/SDD lifecycle tracking starts; forcing a
+     revision worklist before any target or SDD exists only duplicates the map.
 
 3. **Write or update SDD before implementation**
    - Convert the discovered user-visible behavior into feature specs,
@@ -237,7 +241,7 @@ row types and a single Excel outline level:
   epic **status** in the `Scenario` column (C: `Passed`, `Not Passed - Missed`,
   or `Not Passed - Deferred/Partial`), and a short meaning of that status in
   column D. Leave the other columns blank. Color the whole banner row by status:
-  red `FFEA9999` (Missed), orange `FFFCE4D6` (Deferred/Partial), green
+     red `FFFFC7CE` (Missed), orange `FFFCE4D6` (Deferred/Partial), green
   `FFE2F0D9` (Passed).
 - **Detail rows** (outline level 1) — one per atomic, checkable behavior, listed
   directly under their epic so a single expand shows every flow and scenario:

@@ -66,17 +66,26 @@ const DATA_START = 7;
     if (allYes && cellText(hdr.getCell(3)).trim() !== 'Passed') errors.push(`B ${uf}: fully green but Scenario column ≠ Passed`);
   }
 
-  // C: revision coverage of open rows
+  // C: revision coverage of open rows. A code-only discovery map legitimately
+  // has no revision worklist yet; enforcement starts as soon as destination/SDD
+  // lifecycle data or a Rev sheet exists.
   const covered = new Set();
-  for (const ws of wb.worksheets) {
-    if (!/^Rev \d+$/.test(ws.name)) continue;
+  const revSheets = wb.worksheets.filter((ws) => /^Rev \d+$/.test(ws.name));
+  const lifecycleStarted = epics.some((e) => e.children.some((r) => {
+    const row = main.getRow(r);
+    for (let c = 9; c <= 14; c++) if (cellText(row.getCell(c)).trim() !== '') return true;
+    return false;
+  }));
+  for (const ws of revSheets) {
     ws.eachRow((row, r) => {
       if (r === 1) return;
       parseRefs(cellText(row.getCell(3))).forEach((x) => covered.add(x));
     });
   }
-  for (const r of openRows) {
-    if (!covered.has(r)) errors.push(`C r${r}: open row not referenced by any Rev sheet`);
+  if (lifecycleStarted || revSheets.length > 0) {
+    for (const r of openRows) {
+      if (!covered.has(r)) errors.push(`C r${r}: open row not referenced by any Rev sheet`);
+    }
   }
 
   // D: closed findings on Rev sheets carry Implemented? = Yes
