@@ -1,7 +1,9 @@
 # Bank of Z demo deployment
 
-This deployment starts the two components shipped by the upstream repository:
+This deployment builds and starts the components shipped by the upstream
+repository:
 
+- a one-shot Gradle builder that creates and stages `api.war`;
 - the static/Node frontend on loopback port `3002`;
 - IBM z/OS Connect Designer on loopback ports `9082` and `9444`.
 
@@ -10,6 +12,11 @@ Start from the repository root:
 ```bash
 docker compose -p zbank -f deploy/docker-compose.server.yml up -d
 ```
+
+The first run downloads the large IBM Designer image and can take several
+minutes. `zbank-api-builder` must finish with exit code 0 before z/OS Connect
+starts. The generated WAR and Gradle caches live in named volumes, so normal
+container recreation does not require manual copying into Liberty `dropins`.
 
 The public reverse proxy serves the UI at `/z-bank/`. The deployment-specific
 `config.js` keeps browser API traffic under that HTTPS prefix and lets the Node
