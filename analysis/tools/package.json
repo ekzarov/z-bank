@@ -1,0 +1,11 @@
+{
+  "name": "workbook-tools",
+  "private": true,
+  "description": "Invariant audit + shared helpers for analysis/legacy_user_flows.xlsx",
+  "scripts": {
+    "audit": "node workbook-audit.js"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0"
+  }
+}

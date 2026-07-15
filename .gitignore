@@ -1,31 +1,17 @@
-/.project
-/.settings/
-/.bob/*.json
-/.setup/.env
-.env
-provisioning/
-/.pydevproject
-build.log
-/bin/
-/logs/
+# Local dependencies and generated analysis artifacts
+node_modules/
+analysis/_work/
+analysis/rendered/
+
+# Modern application build output
+modern/**/bin/
+modern/**/obj/
+modern/**/dist/
+modern/**/.angular/
+
+# IDE and OS files
+.vs/
+.idea/
 .DS_Store
-src/base/ims/java/src/main/java/nazare/jmp/standalone/*
-/build/
-zowe.config.user.json
-/.host.yaml
-/.zdx.json
-# VSIX extension downloads
-vsix-extensions/
-*.vsix
-/.taz-unit-test
-tools/
-imsbank_provisioning/
-.setup/jcl/ims/Db2-grant-sysadm.jcl
-docs/_site
-.env
-.gitignore
-scripts/update-frontend-file.sh
-scripts/update-frontend-file-zos.sh
-**/.taz-edt/
-**/datasets.yaml
-.gradle/
+Thumbs.db
+
