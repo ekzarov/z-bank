@@ -63,7 +63,25 @@ is always cheaper than one found at acceptance.
   row (**loop back to Stage 1**). A row that cannot be observed or deployed
   stays explicitly *unverified* in the map — never "assumed working".
 
-### Stage 4 — Design: SDD (map → spec / plan / tasks)
+### Stage 4 — Requirements revision (consistency check, with the business)
+
+- Before any design, the agent audits the map itself as a set of requirements
+  — **actively hunting for contradictions**, not just re-reading:
+  - **contradictions / inconsistencies** between flows and channels (e.g. a
+    login exists in one channel and is absent in another; validation or
+    balance rules differ between channels for the same operation);
+  - **obsolete requirements** — behavior kept only for historical reasons;
+    cross-check the legacy documentation for signs a rule is outdated
+    (documentation is a signal here, still never parity evidence);
+  - **unreasonable or strange requirements** — behavior that makes no
+    business sense today.
+- Every flagged row is reviewed **together with the business (owner) and a
+  developer**: keep as-is / change / do not port. The decision is recorded in
+  the map (decision status, deviation notes) **before SDD starts**.
+- If a "contradiction" turns out to be a mapping error, that is a map hole —
+  **loop back to Stage 1**.
+
+### Stage 5 — Design: SDD (map → spec / plan / tasks)
 
 - **This is where SDD (Spec-Driven Development) happens.** All further
   development is driven by the specifications written here.
@@ -76,17 +94,18 @@ is always cheaper than one found at acceptance.
 - **Not a single line of implementation code before the owner approves the
   SDD.**
 
-### Stage 5 — Design re-verification (independent eyes)
+### Stage 6 — Design re-verification (independent eyes)
 
-- Before any build starts, a **different agent** cross-checks Stages 1–4:
+- Before any build starts, a **different agent** cross-checks Stages 1–5:
   - map ↔ legacy: is every legacy flow captured (nothing lost in
     reconnaissance or the live walkthrough)?
+  - map ↔ decisions: are the requirements-revision decisions reflected?
   - map ↔ SDD: is every row covered by the specs or explicitly deferred with
     a written reason?
-- Discrepancies return to Stage 4. Implementation does not start until this
+- Discrepancies return to Stage 5. Implementation does not start until this
   re-verification is clean. Passing it is the **gate to build**.
 
-### Stage 6 — Build (code, tests, and documents in one PR)
+### Stage 7 — Build (code, tests, and documents in one PR)
 
 - Branch first (`main` stays stable) → implement on the target stack.
 - **Automated tests are a hard gate**: no PR ships on red.
@@ -95,13 +114,13 @@ is always cheaper than one found at acceptance.
   is incomplete.
 - **Merge is the owner's decision only.**
 
-### Stage 7 — Delivery (one-command deploy)
+### Stage 8 — Delivery (one-command deploy)
 
 - Deploy with a single command to a demo stand where **legacy and the new
   system run side by side**: the same flow can be shown in both worlds.
 - A smoke test closes the delivery.
 
-### Stage 8 — Live revision (map vs the living systems, every channel)
+### Stage 9 — Live revision (map vs the living systems, every channel)
 
 - An agent walks **both systems as a real user — through every channel the
   system has**: pages, links, and forms in a web UI; screens and transactions
@@ -121,7 +140,7 @@ is always cheaper than one found at acceptance.
 - The workbook audit script (`node analysis/tools/workbook-audit.js`) must
   pass before any workbook commit.
 
-### Stage 9 — Final acceptance (someone else's hands)
+### Stage 10 — Final acceptance (someone else's hands)
 
 - One **consolidated backlog** of everything still open; the automated audit
   proves completeness — an open row outside the backlog is impossible.
@@ -138,9 +157,10 @@ is always cheaper than one found at acceptance.
 |---|---|---|
 | Stage 2 (control reconnaissance) | Stage 1 | any hole or error found in the map |
 | Stage 3 (live walkthrough) | Stage 1 | observed behavior missing from the map |
-| Stage 5 (design re-verification) | Stage 4 | map/SDD coverage discrepancies |
-| Stage 8 (live revision) | Stage 4 | gaps → map → SDD → code |
-| Stage 9 (final acceptance) | Stage 4 | third-party findings |
+| Stage 4 (requirements revision) | Stage 1 | a flagged contradiction turns out to be a mapping error |
+| Stage 6 (design re-verification) | Stage 5 | map/SDD coverage discrepancies |
+| Stage 9 (live revision) | Stage 5 | gaps → map → SDD → code |
+| Stage 10 (final acceptance) | Stage 5 | third-party findings |
 
 Cycles repeat until acceptance is clean.
 
