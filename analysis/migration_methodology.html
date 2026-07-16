@@ -45,6 +45,9 @@
     color:var(--muted); min-width:160px; }
   .sw{ display:inline-block; width:14px; height:14px; border-radius:3px; margin-right:6px;
     vertical-align:-2px; border:1px solid; }
+  .principle{ background:var(--panel); border:1px solid var(--line); border-left:4px solid var(--s1);
+    border-radius:8px; padding:10px 14px; margin:0 0 22px; font-size:13.5px; color:var(--muted); }
+  .principle b{ color:var(--ink); }
   .fr{ display:inline-block; width:20px; height:13px; border-radius:4px; margin-right:6px; vertical-align:-2px; background:transparent; }
 
   /* ---- детальный флоу с текстом сценария ---- */
@@ -180,6 +183,8 @@
       <span><span class="fr" style="border:1.6px solid var(--gate);background:var(--xl-green)"></span>автоматический гейт</span>
     </div>
   </div>
+
+  <p class="principle"><b>Принцип работы с агентами: глубина важнее скорости.</b> На каждой стадии агент работает в режиме глубокого исследования — полные проходы вместо выборочных, адверсариальные перепроверки, независимые вторые мнения. Это медленнее, но дыра, пойманная рано, всегда дешевле дыры, найденной на приёмке.</p>
 
   <div class="flow">
 

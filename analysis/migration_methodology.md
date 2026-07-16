@@ -25,6 +25,13 @@ before any action and overrides convenience.
 - **Automated gate** — a check that must pass before the flow may continue
   (tests, workbook audit script, smoke test).
 
+## Working principle: depth over speed
+
+At every stage, agents work in **deep-research mode**: full sweeps instead of
+sampling, adversarial re-checks, independent second opinions. This is slower —
+and that is accepted. Never trade completeness for speed: a hole caught early
+is always cheaper than one found at acceptance.
+
 ## Stages
 
 ### Stage 1 — Reconnaissance (legacy code → parity map)
