@@ -5,25 +5,22 @@ updated: 2026-07-21
 methodology_stage:
   number: 6
   name: Design re-verification
-  status: independent-agent-required
+  status: clean-pending-owner-approval
   last_completed_stage: 5
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: fresh-independent-agent
+  actor: project-owner
   pass_number: 1
   report: analysis/reviews/stage-06-pass-001.md
   instruction: >-
-    Self-disqualify if you authored or edited any Stage 4/5 artifact. Otherwise
-    verify all 135 workbook rows against the cited legacy code, the recorded
-    owner decisions, and the exact SDD requirement/task coverage. Sampling is
-    forbidden. Write the immutable Stage 6 pass report and update pass history.
+    Review the clean Stage 6 independent design re-verification report and
+    explicitly approve target implementation of the first delivery slice
+    (Feature 001: Secure Access and Application Shell) before starting Stage 7.
   completion_gate: >-
-    A fresh independent agent records a clean Stage 6 report, both workbook and
-    SDD audits pass, and the project owner explicitly approves implementation
-    of the first delivery slice before Stage 7.
+    The project owner explicitly approves implementation of Feature 001.
 
 stage_3_fallback_result:
   mode: simulate
@@ -93,6 +90,12 @@ review_passes:
     agent: OpenAI Codex independent reviewer
     result: clean
     report: analysis/reviews/stage-02-pass-007.md
+  - stage: 6
+    pass: 1
+    date: 2026-07-21
+    agent: Antigravity independent reviewer
+    result: clean
+    report: analysis/reviews/stage-06-pass-001.md
 
 owner_gates:
   constitution_ratification:
@@ -123,7 +126,7 @@ owner_gates:
     report: analysis/stage-05-sdd-report.md
     slices: 9
     workbook_rows_covered: 135
-  implementation_approval: pending-clean-stage-6
+  implementation_approval: pending-owner-decision
   stage_3_fallback_decision:
     status: approved
     allowed_modes:
