@@ -72,9 +72,10 @@ and SDD columns are intentionally empty because target design has not started.
   including five error mappings on otherwise bound CICS operations.
 - The standalone history diagnostic queries hard-coded account 1501 and is not
   the parameterized IBGHIST flow.
-- Remote setup/validation and repository tooling (secret scan, VSIX setup,
-  zOpenDebug, and documentation TOC generation) are executable operator
-  surfaces and remain explicit until Stage 4 scope decisions are recorded.
+- Remote setup/validation and repository tooling (secret scan, VSIX setup and
+  zOpenDebug) are executable operator surfaces. The documentation TOC generator
+  is present but non-runnable as supplied because of malformed syntax/
+  indentation and no invocation of its generation function.
 
 ## Runtime constraint
 
@@ -113,7 +114,7 @@ comparison. Pass 003 independently verified all pass-001 corrections, then
 found five additional deployment and completeness defects. Pass 004 verified
 those corrections and found four further API/setup/diagnostic/tooling gaps.
 Those corrections are now represented in the 133-scenario map; a different
-independent agent must complete Stage 2 pass 005 before this inventory is clean.
+independent agent must complete Stage 2 pass 006 before this inventory is clean.
 
 ## Stage 4-5 owner decisions
 
