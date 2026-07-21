@@ -3,23 +3,21 @@ project: Bank of Z modernization
 updated: 2026-07-21
 
 methodology_stage:
-  number: 1
-  name: Reconnaissance
-  status: reopened-by-stage-02-pass-005-findings
-  last_completed_stage: 0
+  number: 2
+  name: Control reconnaissance
+  status: awaiting-independent-pass-006
+  last_completed_stage: 1
 
 next_action:
-  actor: primary-agent
+  actor: independent-agent
   pass_number: 6
-  report: analysis/reviews/stage-02-pass-005.md
+  report: analysis/reviews/stage-02-pass-006.md
   instruction: >-
-    Correct the documentation TOC tooling contradiction in the filled parity
-    map and legacy reconnaissance without changing legacy code or creating
-    SDD/implementation artifacts. Run the workbook audit, then return control
-    reconnaissance to a different eligible fresh agent for Stage 2 pass 006.
+    Perform a fresh complete code-first inventory, then verify the corrected TOC
+    tooling scenario and the full parity map/reconnaissance in pass 006.
   completion_gate: >-
-    The pass-005 finding is corrected with concrete legacy evidence, the
-    workbook audit reports AUDIT OK, and status advances to Stage 2 pass 006.
+    A different eligible independent agent records a clean Stage 2 pass with no
+    new findings and the workbook audit reports AUDIT OK.
 
 review_pass_schema:
   required_fields:
@@ -85,11 +83,11 @@ owner_gates:
 known_blockers:
   - id: stage-02-pass-005-findings
     affects_stage: 2
-    status: open
+    status: resolved-awaiting-independent-verification
     detail: >-
-      One parity-map and reconnaissance contradiction requires Stage 1
-      correction before another independent control pass.
-    evidence: analysis/reviews/stage-02-pass-005.md
+      The TOC tooling contradiction was corrected in the parity map and
+      reconnaissance; pass 006 must independently verify it and completeness.
+    evidence: analysis/reviews/stage-02-pass-005.md; analysis/legacy_user_flows.xlsx; analysis/legacy_reconnaissance.md
   - id: stage-02-pass-004-findings
     affects_stage: 2
     status: resolved-verified-by-pass-005
