@@ -3,25 +3,24 @@ project: Bank of Z modernization
 updated: 2026-07-21
 
 methodology_stage:
-  number: 2
-  name: Control reconnaissance
-  status: awaiting-independent-clean-pass
-  last_completed_stage: 1
+  number: 1
+  name: Reconnaissance
+  status: reopened-by-stage-2-findings
+  last_completed_stage: 0
 
 next_action:
-  actor: independent-agent
-  pass_number: 1
+  actor: primary-agent
+  pass_number: 2
   report: analysis/reviews/stage-02-pass-001.md
   instruction: >-
-    First build a behavior inventory from legacy executable artifacts without
-    reading the filled workbook or legacy reconnaissance. Then compare that
-    inventory with analysis/legacy_user_flows.xlsx and report missing
-    scenarios, incorrect grouping, unsupported claims, and broken evidence
-    references in analysis/reviews/stage-02-pass-001.md.
+    Address every finding in analysis/reviews/stage-02-pass-001.md in the
+    filled parity map and legacy reconnaissance, without changing legacy code
+    or creating SDD/implementation artifacts. Run the workbook audit after map
+    edits, then return control reconnaissance to a different eligible fresh
+    independent agent for Stage 2 pass 002.
   completion_gate: >-
-    An eligible fresh independent agent records a clean pass, the report is
-    appended to review_passes, and the workbook audit succeeds after any map
-    edits.
+    All pass-001 findings are corrected with concrete legacy evidence, the
+    workbook audit reports AUDIT OK, and status advances to Stage 2 pass 002.
 
 review_pass_schema:
   required_fields:
@@ -36,7 +35,13 @@ review_pass_schema:
     - findings
     - blocked
 
-review_passes: []
+review_passes:
+  - stage: 2
+    pass: 1
+    date: 2026-07-21
+    agent: OpenAI Codex independent reviewer
+    result: findings
+    report: analysis/reviews/stage-02-pass-001.md
 
 owner_gates:
   constitution_ratification: pending
@@ -55,6 +60,13 @@ owner_gates:
     permitted_next_stage: null
 
 known_blockers:
+  - id: stage-02-pass-001-findings
+    affects_stage: 2
+    status: open
+    detail: >-
+      Ten parity-map and reconnaissance findings require Stage 1 correction
+      before another independent control pass.
+    evidence: analysis/reviews/stage-02-pass-001.md
   - id: full-legacy-runtime
     affects_stage: 3
     status: blocked-by-external-infrastructure
