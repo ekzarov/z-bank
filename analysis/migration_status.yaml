@@ -5,20 +5,20 @@ updated: 2026-07-21
 methodology_stage:
   number: 3
   name: Live legacy walkthrough
-  status: blocked-awaiting-owner-fallback-decision
+  status: simulation-authorized
   last_completed_stage: 2
 
 next_action:
-  actor: owner
+  actor: primary-agent
   pass_number: null
-  report: null
+  report: analysis/stage-03-simulated-walkthrough.md
   instruction: >-
-    Provide an authorized IBM legacy runtime for the complete Stage 3 live
-    walkthrough, or explicitly select simulate or waive and record the required
-    approver, date, rationale, scope, residual risk, and permitted next stage.
+    Build the smallest traceable simulator/contract harness for the unavailable
+    CICS, IMS, DB2, API, terminal, and batch behavior; execute the observable
+    flows, record evidence, and keep real legacy runtime rows unverified.
   completion_gate: >-
-    Complete live legacy evidence is recorded, or the owner records a valid
-    Stage 3 simulate/waive fallback decision without claiming live verification.
+    The simulated walkthrough report and fixtures cite legacy evidence, the
+    harness checks pass, and status records partial-simulated before Stage 4.
 
 review_pass_schema:
   required_fields:
@@ -78,20 +78,32 @@ review_passes:
     report: analysis/reviews/stage-02-pass-007.md
 
 owner_gates:
-  constitution_ratification: pending
+  constitution_ratification:
+    status: approved
+    approved_by: project owner
+    approved_on: 2026-07-21
+    version: 0.4.0
   implementation_approval: not-applicable-before-stage-5
   stage_3_fallback_decision:
-    status: pending-if-live-walkthrough-unavailable
+    status: approved
     allowed_modes:
       - simulate
       - waive
-    selected_mode: null
-    approved_by: null
-    approved_on: null
-    rationale: null
-    scope: null
-    residual_risk: null
-    permitted_next_stage: null
+    selected_mode: simulate
+    approved_by: project owner
+    approved_on: 2026-07-21
+    rationale: >-
+      A complete authorized IBM CICS, IMS, DB2, and 3270 runtime is unavailable;
+      a traceable simulation provides stronger behavioral review than a waiver.
+    scope: >-
+      Simulate code- and contract-derived browser, REST API, CICS/IMS message,
+      persistence-transition, and monthly-batch observable behavior. Do not
+      claim IBM middleware, transaction, encoding, or infrastructure parity.
+    residual_risk: >-
+      Actual CICS/IMS/DB2 execution, transaction boundaries, record encodings,
+      generated adapter behavior, middleware security, and operational jobs may
+      differ when a real authorized runtime becomes available.
+    permitted_next_stage: 4
 
 known_blockers:
   - id: stage-02-pass-006-findings
