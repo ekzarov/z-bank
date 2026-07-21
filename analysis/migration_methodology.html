@@ -265,7 +265,7 @@
   .dgroup .down::after{ left:calc(50% - 43px); }
   .dgroup .down::before{ left:calc(50% - 43px); }
 
-  .ggroups{ padding-top:26px; }
+  .ggroups{ padding-top:34px; }
   .ilbl{ position:absolute; background:#EDE7FA; color:#1A2430;
     border:1px solid var(--iter); border-radius:6px; padding:2px 9px;
     font-size:12px; white-space:nowrap; z-index:2; }
@@ -405,7 +405,7 @@
       (function(){
         var code = R('grp-code'), qa = R('grp-qa');
         var x1 = code.l - 8, x2 = qa.r + 8;
-        var y1 = Math.min(code.t, qa.t) - 8, y2 = Math.max(code.b, qa.b) + 8;
+        var y1 = Math.min(code.t, qa.t) - 15, y2 = Math.max(code.b, qa.b) + 8;
         var rect = document.createElementNS(NS, 'rect');
         rect.setAttribute('x', x1); rect.setAttribute('y', y1);
         rect.setAttribute('width', x2 - x1); rect.setAttribute('height', y2 - y1);
@@ -429,11 +429,11 @@
         function along(len, step){ var n = Math.max(1, Math.round(len / step)); var pts = [];
           for (var i = 0; i < n; i++) pts.push((i + 0.5) * len / n); return pts; }
         var labelHalf = bb3.width/2 + 16;
-        along(x2 - x1 - 32, 110).forEach(function(t){ tri(x1 + 16 + t, y2, 0); });
-        along(y2 - y1 - 32, 110).forEach(function(t){ tri(x2, y2 - 16 - t, -90); });
+        along(x2 - x1 - 32, 110).forEach(function(t){ tri(x1 + 16 + t, y2, 180); });
+        along(y2 - y1 - 32, 110).forEach(function(t){ tri(x2, y2 - 16 - t, 90); });
         along(x2 - x1 - 32, 110).forEach(function(t){ var x = x2 - 16 - t;
-          if (Math.abs(x - cx) > labelHalf) tri(x, y1, 180); });
-        along(y2 - y1 - 32, 110).forEach(function(t){ tri(x1, y1 + 16 + t, 90); });
+          if (Math.abs(x - cx) > labelHalf) tri(x, y1, 0); });
+        along(y2 - y1 - 32, 110).forEach(function(t){ tri(x1, y1 + 16 + t, -90); });
       })();
     }
     function draw2(){
