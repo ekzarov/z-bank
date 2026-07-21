@@ -32,10 +32,11 @@ any action and overrides convenience.
   a successful test run, or an agent statement.
 - If a stage cannot be executed, record the blocker and leave affected rows
   unverified. Skipping a stage does not count as completing it.
-- Advancing beyond a blocked stage requires an explicit owner waiver in
-  `analysis/migration_status.yaml`, including approver, date, rationale, and
-  permitted next stage. The waiver does not complete the blocked stage or
-  verify affected rows.
+- Advancing beyond a blocked stage requires an explicit owner decision in
+  `analysis/migration_status.yaml`, including approver, date, rationale, scope,
+  residual risk, and permitted next stage. For an unavailable Stage 3, the
+  owner chooses `simulate` or `waive`; neither completes the unobserved real
+  scope or verifies affected rows.
 - Stages 2, 6, and 10 produce immutable reports under `analysis/reviews/` and
   append their result to `review_passes` in the status file. A clean result in
   chat is not a completed gate.
@@ -60,6 +61,17 @@ At every stage, agents work in **deep-research mode**: full sweeps instead of
 sampling, adversarial re-checks, independent second opinions. This is slower —
 and that is accepted. Never trade completeness for speed: a hole caught early
 is always cheaper than one found at acceptance.
+
+## Stop criterion for re-checks: the dry pass
+
+Every executable return loop — Stages 2, 3, 4 → Stage 1 and Stages 6, 9, 10 →
+Stage 5 — closes not after a fixed number of repetitions but on a **dry pass**:
+a full pass that yields not a single new finding (in practice 2–3 iterations).
+Stages 2, 6, and 10 require a fresh independent agent for every pass. Working
+iterations in Stages 3, 4, and 9 may use the responsible primary agent unless a
+stage-specific decision requires otherwise. When Stage 3 cannot be executed,
+its recorded `simulate` or `waive` owner decision replaces the dry-pass gate
+only for progression; the unobserved real scope remains incomplete.
 
 ## Stages
 
@@ -160,6 +172,10 @@ is always cheaper than one found at acceptance.
   - map ↔ decisions: are the requirements-revision decisions reflected?
   - map ↔ SDD: is every row covered by the specs or explicitly deferred with
     a written reason?
+- The check is not paper-only: following the **source code evidence** columns,
+  the agent goes back into the legacy sources row by row — opening the cited
+  files and lines and verifying that the requirement and the spec really match
+  the code, catching omissions and understatements.
 - Discrepancies return to Stage 5. Implementation does not start until this
   re-verification is clean. For every workbook row, the reviewer checks the
   cited legacy evidence and traces the row to an approved requirement, decision,
@@ -235,7 +251,8 @@ is always cheaper than one found at acceptance.
 | Stage 9 (live revision) | Stage 5 | gaps → map → SDD → code |
 | Stage 10 (final acceptance) | Stage 5 | third-party findings |
 
-Cycles repeat until acceptance is clean.
+Cycles repeat until every loop ends in a dry pass and the final acceptance is
+clean.
 
 ## Exit criterion
 
