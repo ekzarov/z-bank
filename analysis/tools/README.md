@@ -3,12 +3,16 @@
 Invariant checker for `analysis/legacy_user_flows.xlsx` plus the shared helpers
 every workbook-mutating script must use.
 
+Read [`../../MIGRATION.md`](../../MIGRATION.md) and
+[`../legacy_user_flows_template_instructions.md`](../legacy_user_flows_template_instructions.md)
+before editing the workbook. The audit targets the filled Bank of Z map, not the
+empty `analysis/legacy_user_flows_template.xlsx`.
+
 ## Run the audit (required before committing any workbook change)
 
 ```bash
-cd analysis/tools
-npm install   # first time only
-npm run audit
+npm --prefix analysis/tools ci   # first time or after dependency changes
+npm --prefix analysis/tools run audit
 ```
 
 When a workbook is exported by `@oai/artifact-tool`, normalize its XLSX package

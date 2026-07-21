@@ -2,9 +2,11 @@
 
 ## Purpose
 
-This is the Stage 1 handoff for SDD. The governed behavioral inventory is
-`analysis/legacy_user_flows.xlsx`; this note records how it was produced, its
-runtime limits, and the decisions that must not be guessed during Stage 2.
+This is the Stage 1 handoff to the later control, requirements-revision, and SDD
+stages. The governed behavioral inventory is
+[`legacy_user_flows.xlsx`](legacy_user_flows.xlsx); this note records how it was
+produced, its runtime limits, and the decisions that must not be guessed during
+Stages 4-5.
 
 ## Evidence boundary
 
@@ -73,7 +75,7 @@ z/OS Connect operation mappings, the monthly statement job, and deployment
 definitions against at least one workbook row. Helper copybooks/data mappings
 are evidence for parent flows rather than independent user flows.
 
-## Stage 2 entry decisions
+## Stage 4-5 owner decisions
 
 Before specs/plans/tasks are final, the owner must decide:
 

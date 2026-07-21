@@ -1,13 +1,10 @@
 <!--
 Sync Impact Report
-0.1.0: Replaced the copied XPlanner-specific constitution with a Bank of Z
-modernization draft. Removed unapproved .NET/Angular/EF/SQL Server choices and
-paths. Preserved evidence-first, SDD-first, approval-gated delivery, explicit
-data change control, automated verification, security hardening, and workbook
-traceability. Adapted the legacy-baseline rule to the actual IBM infrastructure
-dependency: the repository does not contain standalone CICS/IMS/DB2 runtimes.
+0.4.0: Added a stack-agnostic Stage 3 fallback decision. When a real legacy
+walkthrough is unavailable, the owner chooses traceable simulation or an
+explicit waiver; neither is misrepresented as live legacy verification.
 
-Follow-up before Stage 2 artifacts are final:
+Follow-up before Stage 5 artifacts are final:
 - project owner ratifies this constitution;
 - target architecture, languages, persistence, authentication, and deployment
   model are selected in an approved planning decision;
@@ -21,14 +18,22 @@ analysis, SDD artifacts, target implementation, tests, deployment, and parity
 verification. A spec or implementation that conflicts with it must be revised
 or propose an explicit amendment for owner approval.
 
+Every agent starts with [`MIGRATION.md`](../../MIGRATION.md). That entry point
+routes the agent to this constitution, the current stage, the methodology, and
+artifact-specific instructions. This constitution remains the highest
+repository authority when those documents conflict.
+
 ## Core Principles
 
 ### I. Constitution-First, SDD-Driven, Approval-Gated
 
-The project proceeds in this order: legacy evidence map, owner-reviewed SDD
-(`spec.md` -> clarification -> `plan.md` -> `tasks.md`), implementation, parity
-verification, and owner acceptance. Production code MUST NOT be written before
-the relevant SDD exists and the owner explicitly approves implementation.
+The project follows the ten stages in
+[`analysis/migration_methodology.md`](../../analysis/migration_methodology.md):
+reconnaissance, independent control, live legacy walkthrough, requirements
+revision, SDD, independent design verification, build, delivery, live revision,
+and final acceptance. Production code MUST NOT be written before the relevant
+SDD exists, independent design verification is clean, and the owner explicitly
+approves implementation.
 
 ### II. Preserve an Honest Legacy Baseline
 
@@ -46,8 +51,13 @@ are marked unverified.
 Legacy requirements come from source code, screens, API/transaction mappings,
 batch jobs, data definitions, deployment descriptors, configuration, and tests.
 Project prose and agent memory are supporting context, not proof. The governed
-evidence map is `analysis/legacy_user_flows.xlsx`; every row cites concrete
-legacy evidence and marks inference or partial implementation explicitly.
+evidence map is
+[`analysis/legacy_user_flows.xlsx`](../../analysis/legacy_user_flows.xlsx);
+every row cites concrete legacy evidence and marks inference or partial
+implementation explicitly. The reusable
+[`analysis/legacy_user_flows_template.xlsx`](../../analysis/legacy_user_flows_template.xlsx)
+is an empty starting point for new projects and MUST NOT replace the filled
+Bank of Z map.
 
 ### IV. Business-Flow Parity with Explicit Decisions
 
@@ -113,13 +123,33 @@ Completed tasks are checked in `tasks.md` in the same PR that delivers and tests
 them. A green row with an unchecked task, a checked task without delivered code,
 or code that contradicts the spec is a defect.
 
+### XII. Auditable Independent Reviews and Handoffs
+
+Stages 2, 6, and 10 require a different agent with fresh context for every
+pass. An agent whose current context includes creating or editing an artifact
+in scope MUST self-disqualify. Every clean, findings, or blocked pass produces
+an immutable report under
+[`analysis/reviews/`](../../analysis/reviews/README.md) and an entry in
+[`analysis/migration_status.yaml`](../../analysis/migration_status.yaml); chat
+history is not evidence of completion.
+A blocked Stage 3 remains incomplete. If a complete live walkthrough cannot be
+performed, the agent MUST ask the owner to choose traceable simulation or an
+explicit waiver. The decision records approver, date, rationale, scope,
+residual risk, and permitted next stage. Mock or emulator evidence MUST be
+labeled simulated and MUST cite its legacy evidence basis. Neither simulation
+nor waiver verifies the real legacy runtime; affected workbook rows remain
+unverified until a real walkthrough confirms them.
+
 ## Repository Layout and Decisions
 
 - `legacy/`: immutable IBM Bank of Z source snapshot.
 - `modern/`: reserved target implementation root; currently no stack selected.
 - `analysis/`: governed workbook, methodology, audit tooling, and analysis notes.
+- `MIGRATION.md`: mandatory agent entry point and artifact routing contract.
+- `analysis/migration_status.yaml`: current stage, gates, blockers, and next action.
 - `.specify/memory/constitution.md`: this constitution.
-- `specs/NNN-<slug>/`: Stage 2 feature artifacts after owner approval.
+- `specs/NNN-<slug>/`: Stage 5 feature artifacts; implementation requires the
+  Stage 6 clean review and explicit owner approval.
 
 Target language/runtime, frontend, database, messaging, authentication,
 deployment topology, and concrete test frameworks are **Pending Decision**.
@@ -128,17 +158,19 @@ decision amends this section before implementation tasks are treated as final.
 
 ## Required Workflow
 
-The authoritative operating procedure is
-`analysis/legacy_user_flows_template_instructions.md`:
+The authoritative entry point is [`MIGRATION.md`](../../MIGRATION.md), and the
+canonical stage sequence is
+[`analysis/migration_methodology.md`](../../analysis/migration_methodology.md).
+Workbook-specific mechanics are governed by
+[`analysis/legacy_user_flows_template_instructions.md`](../../analysis/legacy_user_flows_template_instructions.md).
 
-1. Derive legacy behavior from code and executable artifacts.
-2. Build and adversarially re-audit the parity map.
-3. Ratify this constitution and create/clarify/plan/task SDD from the map.
-4. Obtain explicit owner approval before implementation.
-5. Implement a small slice with required automated tests.
-6. Update SDD and workbook in the same PR.
-7. Compare legacy and target through available APIs/UI/runtime and record proof.
-8. Obtain independent final review and owner acceptance.
+Agents MUST read `analysis/migration_status.yaml`, perform only work allowed by
+the active stage, and update that checkpoint when a stage, gate, blocker, or
+owner decision changes. An agent MUST NOT mark its own work independently
+verified. Before stopping, it records the required artifact and checks, updates
+the status without erasing history, and names the next gate. Stages 2, 6, and
+10 follow the
+[review protocol](../../analysis/reviews/README.md).
 
 ## Quality Gates
 
@@ -153,6 +185,11 @@ The authoritative operating procedure is
 - Database mutation never occurs as a side effect of normal startup.
 - Security deviations from legacy are explicit and tested.
 - A feature is not complete until code, tests, SDD, tasks, and workbook agree.
+- Every independent gate has an eligible-agent declaration, immutable report,
+  status-history entry, and stage-specific clean result.
+- Every transition past a blocked Stage 3 has an explicit owner fallback
+  decision; neither simulation nor waiver converts unobserved real behavior
+  into completed or live-verified behavior.
 
 ## Governance
 
@@ -161,4 +198,4 @@ redefinition, MINOR for a new enforceable principle/section, PATCH for wording
 clarification. Amendments state rationale and impact. Ratification and owner
 approval cannot be inferred from an agent action or from merge alone.
 
-**Version**: 0.1.0 (Draft) | **Ratified**: Pending owner approval | **Last Amended**: 2026-07-15
+**Version**: 0.4.0 (Draft) | **Ratified**: Pending owner approval | **Last Amended**: 2026-07-21

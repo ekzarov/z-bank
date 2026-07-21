@@ -1,8 +1,14 @@
 # Legacy User Flows Workbook Instructions
 
-Use `analysis/legacy_user_flows_template.xlsx` to reverse-engineer legacy
-behavior, plan the target migration through SDD, and later verify that the
-new implementation preserves the intended behavior.
+Start with [`../MIGRATION.md`](../MIGRATION.md). This document governs workbook
+mechanics within the stages defined by
+[`migration_methodology.md`](migration_methodology.md); it does not define a
+second migration lifecycle.
+
+Use [`legacy_user_flows_template.xlsx`](legacy_user_flows_template.xlsx) only
+to start a parity map for a new project. Bank of Z work continues in the filled
+[`legacy_user_flows.xlsx`](legacy_user_flows.xlsx). Never overwrite the filled
+map with the empty template.
 
 This workbook is not an implementation task list. It is an evidence and parity
 matrix. Agents must not start coding from this workbook alone. Implementation
@@ -26,7 +32,11 @@ applies to every action from the very start, not just at implementation time.
 - If the constitution file is missing or unratified, flag that and get it
   ratified before treating specs/plans/tasks as final.
 
-## Required Workflow
+## Workbook Lifecycle Within the Methodology
+
+The numbered operations below are workbook operations, not methodology stage
+numbers. The active methodology stage and next action come only from
+[`migration_status.yaml`](migration_status.yaml).
 
 1. **Collect legacy evidence from code first**
    - Inspect only the legacy source, deployable descriptors, configuration,
@@ -84,14 +94,9 @@ applies to every action from the very start, not just at implementation time.
    - Work from approved SDD artifacts, not directly from the workbook.
    - Keep changes scoped to the approved feature/user story.
    - Add tests required by the project constitution and the feature plan.
-   - **Migrations (constitution §VII):** if the change touches the EF model /
-     `DbContext`, ALWAYS author a migration (`dotnet ef migrations add <Name>`)
-     and commit it in the same PR — this is mandatory, not a judgement call.
-     Then **apply it to the local development database in the same step**
-     (`dotnet run --project backend -- --migrate`) so the owner can see and test
-     the change. The schema is never migrated at app startup; `--migrate` is the
-     explicit operator command. After pulling migration-bearing changes, run
-     `--migrate` once or the new tables won't exist locally (authored ≠ applied).
+   - Data model or reference-data changes use the versioned, explicitly invoked
+     mechanism approved by the feature plan and constitution. Normal application
+     startup must not create, migrate, seed, or repair storage.
 
 5. **Verify target parity after implementation**
    - Revisit the workbook after the new code exists.
@@ -104,23 +109,23 @@ applies to every action from the very start, not just at implementation time.
      (`[ ]`). For each, decide: already delivered (so it should be ticked + its
      workbook row greened) or genuinely pending.
    - Keep tasks.md and the workbook in lockstep (constitution §XI task-sync):
-     every delivered+tested flow is green / `[x]`; every still-orange row maps to
-     an open, unchecked task — no half-states where one says done and the other
-     doesn't.
+     every delivered+tested flow is green / `[x]`; every red or orange row maps
+     to an open, unchecked task or an explicitly approved permanent deviation —
+     no half-states where one says done and the other doesn't.
    - **Epic roll-up colour:** make the whole epic/flow summary row green
      (all columns A–N, like UF-008) **only when every child scenario is green in
      both the Destination block (Destination implemented? = Yes) and the SDD block
      (Covered in SDD? = Yes and Deferred in SDD? = No)** — i.e. nothing inside is
-     missed, deferred, or unimplemented. If any child is still orange/red or
-     deferred, the epic row stays orange.
+     missed, deferred, or unimplemented. If any child is red, the epic row is
+     red; otherwise, if at least one child is orange, the epic row is orange.
    - **Done rows go fully green (D–N).** Whenever a child scenario reaches
      done (Destination implemented + SDD covered, not deferred), green its
      whole data range D–N — including the source/requirement cells — so a
      completed flow has no leftover orange cells. Only the fill changes; the
      values stay. (See the detail-row colour rule under Workbook Structure.)
-   - **Deferred/pending rows go orange (D–N).** The moment a scenario is
-     decided deferred (or is simply not yet implemented), set its D–N fill to
-     orange — do NOT leave the template default fill in place. A green fill
+   - **Deferred rows go orange; other open rows go red (D–N).** The moment a
+     scenario is explicitly deferred, set its D–N fill to orange. If it is
+     simply not implemented or not classified, set D–N to red. A green fill
      with an empty `Destination implemented?` cell is forbidden: colour must
      always equal status, so scanning the sheet by colour alone tells the
      truth. Whenever `Destination implemented?` is cleared or a row is
@@ -150,7 +155,7 @@ applies to every action from the very start, not just at implementation time.
      assignment repaints unrelated cells), and snapshot values AND fills of
      all sheets before mutating, asserting afterwards that only the intended
      cells changed.
-   - For the remaining unchecked tasks / orange rows, **re-run the analysis**
+   - For the remaining unchecked tasks / red or orange rows, **re-run the analysis**
      (workbook rows + legacy evidence + the feature spec) to understand what each
      leftover actually requires and whether a dependency now exists, then turn
      those into the next implementation batch.
@@ -239,9 +244,9 @@ row types and a single Excel outline level:
   valid/invalid login, remember-me, logout, login modules). Fill `Use Case ID`
   (A) with the epic id (`UF-001`...), the **epic name** in `Use Case` (B), the
   epic **status** in the `Scenario` column (C: `Passed`, `Not Passed - Missed`,
-  or `Not Passed - Deferred/Partial`), and a short meaning of that status in
+  or `Not Passed - Deferred`), and a short meaning of that status in
   column D. Leave the other columns blank. Color the whole banner row by status:
-     red `FFFFC7CE` (Missed), orange `FFFCE4D6` (Deferred/Partial), green
+     red `FFFFC7CE` (Missed/Open), orange `FFFCE4D6` (Deferred), green
   `FFE2F0D9` (Passed).
 - **Detail rows** (outline level 1) — one per atomic, checkable behavior, listed
   directly under their epic so a single expand shows every flow and scenario:
@@ -354,6 +359,15 @@ queued, inventory updated, report refreshed.
 routes, descriptors, database tables, queues/topics, or config keys. Use enough
 detail that another agent can find the evidence without chat history.
 
+`Runtime evidence label`
+: When Stage 3 affects the row, append one controlled label to the source
+evidence: `Runtime: live-observed`, `Runtime: simulated`,
+`Runtime: static-only`, or `Runtime: waived`. A simulated label also cites the
+mock/emulator fixture and the legacy code, contract, trace, or owner decision
+from which it was derived. Simulated, static-only, and waived evidence must not
+be described as real legacy verification; runtime-dependent uncertainty remains
+`Inferred`, `Partial`, or explicitly unverified.
+
 ### Destination / Target Implementation
 
 `Destination implemented?`
@@ -391,18 +405,18 @@ Use row coloring to make review fast.
 exists, and no unresolved parity gap remains.
 
 `Red`
-: Missed. Legacy behavior exists, but the target does not implement it and SDD
-does not cover or defer it. These rows usually require a new SDD feature or a
-user decision.
+: Open. During code-only discovery every populated detail row is red. Later it
+means the target is not complete and the row has no approved deferral. Red is
+the actionable work list.
 
 `Orange`
-: Known gap, partial behavior, or planned/deferred behavior. Use this when the
-gap is intentional, already captured in SDD, blocked by a decision, or only
-partially implemented.
+: Deferred by explicit decision. `Deferred in SDD?` is `Yes`, and the reason is
+written in the destination/SDD evidence. Partial, merely planned, blocked, or
+unclassified work remains red until completed or explicitly deferred.
 
 `White`
-: Neutral/unclassified. Use for newly discovered rows before SDD/target review
-is complete.
+: Neutral formatting for headers, instructions, separators, and unused template
+space. A populated detail row must not use white as a lifecycle state.
 
 ## Quality Rules
 
@@ -412,7 +426,11 @@ is complete.
 - Preserve legacy vocabulary where it matters, but explain it in modern
 business language.
 - If the legacy behavior is unclear, write `Inferred` or `Partial` and explain
-the uncertainty.
+  the uncertainty.
+- If a live legacy walkthrough is unavailable, record the owner's Stage 3
+  `simulate` or `waive` decision and use the runtime evidence labels above.
+  Mocks may support design and tests but do not close a real-runtime
+  verification gap.
 - If SDD intentionally changes behavior, mark the destination as implemented
 only when the target implements the approved SDD behavior, and document the
 legacy difference in notes.
@@ -427,5 +445,5 @@ Before handing the workbook back:
 - Every destination `Yes` or `Partial` has target evidence.
 - Every `Deferred in SDD? = Yes` has SDD evidence.
 - Red rows are actionable and not vague.
-- Orange rows explain the reason for partial/deferred status.
+- Orange rows contain an explicit deferral and its reason.
 - The workbook can be understood without reading the chat history.
