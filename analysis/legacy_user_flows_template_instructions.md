@@ -154,6 +154,13 @@ numbers. The active methodology stage and next action come only from
      `node analysis/tools/workbook-audit.js` (see `analysis/tools/README.md`)
      and commit only on `AUDIT OK`. It enforces colour=status, epic roll-ups,
      revision completeness and Rev-sheet closure columns.
+   - **Render after every workbook edit (MUST).** After finalization and audit,
+     render `User Flows` and every `Rev N` sheet and inspect them at normal zoom.
+     Confirm that epic banners use the canonical typography, status fills are
+     uniform across D:N and A:N, revision-row fills are uniform, detail groups
+     open collapsed, headers remain intact, and no text is clipped or style is
+     visibly corrupted. A passing data audit without this visual pass is not a
+     complete workbook check.
    - **Mutation-script safety.** Scripts that edit the workbook must use the
      helpers in `analysis/tools/lib.js`: change fills only via the
      style-cloning `setFill` (ExcelJS shares style objects — direct `.fill`
@@ -451,4 +458,6 @@ Before handing the workbook back:
 - Every `Deferred in SDD? = Yes` has SDD evidence.
 - Red rows are actionable and not vague.
 - Orange rows contain an explicit deferral and its reason.
+- Every sheet was rendered after the final edit and visually checked for stable
+  colours, typography, grouping, headers, and clipping.
 - The workbook can be understood without reading the chat history.

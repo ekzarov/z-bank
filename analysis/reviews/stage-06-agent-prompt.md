@@ -47,6 +47,10 @@ check all of the following without sampling:
    npm --prefix analysis/tools run audit
    npm --prefix analysis/tools run audit:sdd
    ```
+7. Render `User Flows` and every `Rev N` sheet after the audits. Visually verify
+   canonical epic typography, uniform lifecycle fills, collapsed detail groups,
+   intact headers, and absence of clipping or style corruption. Record the
+   rendered sheets and the result in the review report.
 
 Record concrete findings with severity, workbook rows, SDD requirements, legacy
 file/line evidence, and required correction. Use `findings` for any actionable

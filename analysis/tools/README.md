@@ -33,6 +33,11 @@ Exit 0 / `AUDIT OK` means every invariant holds. Invariants checked:
   referenced by at least one `Rev N` sheet. A first-pass, code-only discovery
   map may contain no revision sheet while columns I:N are entirely blank.
 - **D. Rev sheets**: a green (closed) finding carries `Implemented? = Yes`.
+- **E. Rev finding types** use only `gap`, `decision`, or `deferred`.
+- **F. Format stability**: scenario status fills are uniform across D:N; epic
+  banners use one status fill and canonical `Carlito 11 bold` typography across
+  A:N; every `Rev N` data row has one uniform fill across A:I. This prevents
+  partial repainting and inconsistent epic headings after workbook exports.
 
 ## Writing mutation scripts
 

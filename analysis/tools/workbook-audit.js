@@ -35,7 +35,7 @@ const DATA_START = 7;
     else if (epics.length) epics[epics.length - 1].children.push(r);
   });
 
-  // A: colour = status on scenario rows
+  // A: colour = status on scenario rows, uniformly across D:N.
   const openRows = [];
   for (const e of epics) {
     for (const r of e.children) {
@@ -44,6 +44,7 @@ const DATA_START = 7;
       const deferred = cellText(row.getCell(13)).trim() === 'Yes';
       const reason = cellText(row.getCell(10)).trim() !== '';
       const fill = fillArgb(row.getCell(9));
+      const expectedFill = done ? COLORS.GREEN : deferred ? COLORS.ORANGE : COLORS.RED;
       if (!done) openRows.push(r);
       if (done && fill !== COLORS.GREEN) errors.push(`A r${r}: I=Yes but fill is ${fill} (expected green)`);
       if (!done && fill === COLORS.GREEN) errors.push(`A r${r}: green fill with I≠Yes (forbidden)`);
@@ -51,10 +52,14 @@ const DATA_START = 7;
       if (fill === COLORS.ORANGE && !done && !reason) errors.push(`A r${r}: orange without a reason in Destination notes (J)`);
       if (fill === COLORS.RED && (done || deferred)) errors.push(`A r${r}: red but I=Yes or M=Yes`);
       if (![COLORS.GREEN, COLORS.ORANGE, COLORS.RED].includes(fill)) errors.push(`A r${r}: unexpected I fill ${fill}`);
+      for (let c = 4; c <= 14; c++) {
+        const cellFill = fillArgb(row.getCell(c));
+        if (cellFill !== expectedFill) errors.push(`A r${r} c${c}: fill ${cellFill}, expected ${expectedFill}`);
+      }
     }
   }
 
-  // B: epic banner rows
+  // B: epic banner rows use one status fill and canonical typography across A:N.
   for (const e of epics) {
     const hdr = main.getRow(e.headerRow);
     const uf = cellText(hdr.getCell(1)).slice(0, 6);
@@ -63,6 +68,17 @@ const DATA_START = 7;
     const fill = fillArgb(hdr.getCell(1));
     const expected = allYes ? COLORS.GREEN : anyRed ? COLORS.RED : COLORS.ORANGE;
     if (fill !== expected) errors.push(`B ${uf} r${e.headerRow}: header fill ${fill}, expected ${expected}`);
+    const expectedFontColor = expected === COLORS.RED ? 'FF7F0000' : 'FF1F2937';
+    for (let c = 1; c <= 14; c++) {
+      const cell = hdr.getCell(c);
+      const font = cell.font || {};
+      const fontColor = font.color && font.color.argb ? font.color.argb.toUpperCase() : null;
+      const cellFill = fillArgb(cell);
+      if (cellFill !== expected) errors.push(`B ${uf} r${e.headerRow} c${c}: fill ${cellFill}, expected ${expected}`);
+      if (font.name !== 'Carlito' || font.size !== 11 || font.bold !== true || fontColor !== expectedFontColor) {
+        errors.push(`B ${uf} r${e.headerRow} c${c}: font ${font.name}/${font.size}/bold=${font.bold}/color=${fontColor}, expected Carlito/11/bold=true/color=${expectedFontColor}`);
+      }
+    }
     if (allYes && cellText(hdr.getCell(3)).trim() !== 'Passed') errors.push(`B ${uf}: fully green but Scenario column ≠ Passed`);
   }
 
@@ -105,6 +121,11 @@ const DATA_START = 7;
     ws.eachRow((row, r) => {
       if (r === 1) return;
       const type = cellText(row.getCell(4)).trim().toLowerCase();
+      const rowFill = fillArgb(row.getCell(1));
+      for (let c = 2; c <= 9; c++) {
+        const cellFill = fillArgb(row.getCell(c));
+        if (cellFill !== rowFill) errors.push(`F ${ws.name} r${r} c${c}: fill ${cellFill}, expected uniform ${rowFill}`);
+      }
       if (!['gap', 'decision', 'deferred'].includes(type)) errors.push(`E ${ws.name} r${r}: non-canonical type «${type}» — use gap / decision / deferred (unverified ⇒ commit as red gap)`);
     });
   }
