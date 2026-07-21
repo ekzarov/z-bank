@@ -100,6 +100,13 @@ no Bank of Z evidence; the filled workbook is the governed project record.
   not sufficient evidence that a pass occurred.
 - Keep code, tests, SDD, tasks, and the filled workbook synchronized in the
   same implementation PR.
+- Starting at Stage 7, deliver iteratively. Select one approved feature or a
+  small, tightly related group of features as a delivery slice, then take only
+  that slice through Stage 7 build, Stage 8 delivery, Stage 9 live revision,
+  and Stage 10 slice acceptance. Findings return the slice to Stage 5 (or to
+  Stage 1 when the legacy map is wrong); an accepted slice releases the next
+  slice. Do not implement the entire approved backlog in one batch. After all
+  slices are accepted, run the consolidated Stage 10 final acceptance.
 - Run every automated gate named by the active stage. After any filled-workbook
   edit, run `npm --prefix analysis/tools run audit` and require `AUDIT OK`.
 - Update `analysis/migration_status.yaml` when a stage, gate, blocker, or owner

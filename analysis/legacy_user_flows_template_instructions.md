@@ -92,13 +92,18 @@ numbers. The active methodology stage and next action come only from
 
 4. **Implement only after user approval**
    - Work from approved SDD artifacts, not directly from the workbook.
-   - Keep changes scoped to the approved feature/user story.
+   - Starting at methodology Stage 7, select one approved feature or a small,
+     tightly related group as the delivery slice. Keep changes scoped to it;
+     never implement the whole approved backlog in one batch.
    - Add tests required by the project constitution and the feature plan.
    - Data model or reference-data changes use the versioned, explicitly invoked
      mechanism approved by the feature plan and constitution. Normal application
      startup must not create, migrate, seed, or repair storage.
 
 5. **Verify target parity after implementation**
+   - Take every delivery slice through build, deploy, live revision, and
+     independent slice acceptance before selecting the next slice. Findings
+     return to SDD and the same slice repeats the loop.
    - Revisit the workbook after the new code exists.
    - Fill destination columns with implemented status, notes, and code evidence.
    - Use the workbook to identify gaps between legacy behavior, SDD, and the
@@ -158,7 +163,7 @@ numbers. The active methodology stage and next action come only from
    - For the remaining unchecked tasks / red or orange rows, **re-run the analysis**
      (workbook rows + legacy evidence + the feature spec) to understand what each
      leftover actually requires and whether a dependency now exists, then turn
-     those into the next implementation batch.
+     those into the next small delivery slice.
    - Repeat until no unchecked task remains without a clear reason (deferred /
      N/A with rationale), so nothing silently stays half-implemented.
 

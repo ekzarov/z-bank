@@ -1,8 +1,8 @@
 <!--
 Sync Impact Report
-0.4.0: Added a stack-agnostic Stage 3 fallback decision. When a real legacy
-walkthrough is unavailable, the owner chooses traceable simulation or an
-explicit waiver; neither is misrepresented as live legacy verification.
+0.4.1: Clarified the existing incremental-delivery principle as a mandatory
+Stage 7-10 loop. Each iteration delivers one feature or a small coherent group,
+returns findings to design, and admits the next slice only after acceptance.
 
 Follow-up before Stage 5 artifacts are final:
 - project owner ratified this constitution on 2026-07-21;
@@ -72,7 +72,14 @@ silently promoted to a requirement.
 The target is delivered in small dependency-ordered slices. Each slice includes
 its contract/domain behavior, required data changes, user or external-system
 surface, automated tests, SDD updates, and workbook updates in one scoped PR.
-Large rewrites without per-flow checkpoints are non-compliant.
+Starting at Stage 7, one approved feature or a small, tightly related feature
+group MUST pass through Stage 7 build, Stage 8 delivery, Stage 9 live revision,
+and Stage 10 slice acceptance before the next slice starts. Findings return to
+Stage 5 for SDD/task correction and re-verification, or to Stage 1 when the
+legacy map is wrong, before that slice re-enters Stage 7. Implementing the
+entire approved backlog in one batch or postponing verification until the end
+is non-compliant. After every slice is accepted, Stage 10 performs one final
+consolidated acceptance across the complete migrated system.
 
 ### VI. Branch-First, Main-Stable Workflow
 
@@ -185,6 +192,8 @@ the status without erasing history, and names the next gate. Stages 2, 6, and
 - Database mutation never occurs as a side effect of normal startup.
 - Security deviations from legacy are explicit and tested.
 - A feature is not complete until code, tests, SDD, tasks, and workbook agree.
+- A delivery slice is not complete until it has passed Stages 7-10; the next
+  slice does not start before that acceptance is recorded.
 - Every independent gate has an eligible-agent declaration, immutable report,
   status-history entry, and stage-specific clean result.
 - Every transition past a blocked Stage 3 has an explicit owner fallback
@@ -198,4 +207,4 @@ redefinition, MINOR for a new enforceable principle/section, PATCH for wording
 clarification. Amendments state rationale and impact. Ratification and owner
 approval cannot be inferred from an agent action or from merge alone.
 
-**Version**: 0.4.0 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-21
+**Version**: 0.4.1 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-21

@@ -82,6 +82,26 @@ re-verification), **Coding** (Stage 7), **Deployment** (Stage 8), and
 stay per-stage; the cross-phase return QA → Architecture is the
 Stage 9/10 → Stage 5 loop.
 
+## Iterative delivery loop from Stage 7
+
+Stages 7-10 are not one big-bang pass over the whole approved backlog. Select
+one approved feature or a small, tightly related group as a **delivery slice**
+and repeat this loop:
+
+1. **Stage 7 — Build:** implement and test only the selected slice; synchronize
+   its SDD, tasks, and workbook rows in the same PR.
+2. **Stage 8 — Delivery:** deploy that slice and close its smoke test.
+3. **Stage 9 — Live revision:** compare that slice with the legacy baseline and
+   map through every affected channel.
+4. **Stage 10 — Slice acceptance:** an eligible independent agent checks the
+   delivered slice. Findings return to Stage 5 (or Stage 1 for a map error),
+   then the corrected slice repeats the loop. A clean accepted slice releases
+   selection of the next slice.
+
+The whole approved backlog MUST NOT be implemented before this feedback is
+collected. When every slice is accepted, Stage 10 runs once more as the final
+consolidated acceptance of the complete migrated system.
+
 ## Stages
 
 ### Stage 1 — Reconnaissance (legacy code → parity map)
@@ -196,6 +216,8 @@ Stage 9/10 → Stage 5 loop.
 
 ### Stage 7 — Build (code, tests, and documents in one PR)
 
+- Select one approved feature or a small, tightly related feature group. Do not
+  pull the entire approved backlog into one implementation batch.
 - Branch first (`main` stays stable) → implement on the target stack.
 - **Automated tests are a hard gate**: no PR ships on red.
 - The same PR synchronizes code, SDD artifacts, and the workbook (rows greened
@@ -205,6 +227,7 @@ Stage 9/10 → Stage 5 loop.
 
 ### Stage 8 — Delivery (one-command deploy)
 
+- Deliver the current slice before implementation starts on the next slice.
 - Deploy with a single command to a demo stand where **legacy and the new
   system run side by side**: the same flow can be shown in both worlds.
 - The two systems have different delivery rhythms: **legacy is deployed to the
@@ -214,6 +237,7 @@ Stage 9/10 → Stage 5 loop.
 
 ### Stage 9 — Live revision (map vs the living systems, every channel)
 
+- Revise the current delivered slice before selecting the next one.
 - An agent walks **both systems as a real user — through every channel the
   system has**: pages, links, and forms in a web UI; screens and transactions
   in a terminal (3270/COBOL/IMS); API routes; batch jobs — and compares what
@@ -236,8 +260,11 @@ Stage 9/10 → Stage 5 loop.
   have an explicit owner decision, and the workbook audit passes. Stage 9 does
   not require a fresh independent agent for each working iteration.
 
-### Stage 10 — Final acceptance (someone else's hands)
+### Stage 10 — Slice and final acceptance (someone else's hands)
 
+- Every delivery slice receives an independent acceptance pass. A clean slice
+  releases the next slice; findings return the current slice to Stage 5 and it
+  repeats Stages 7-10 after correction.
 - One **consolidated backlog** of everything still open; the automated audit
   proves completeness — an open row outside the backlog is impossible.
 - The final checklist run (across all channels) and audit are given to **third-party agents of
@@ -250,7 +277,8 @@ Stage 9/10 → Stage 5 loop.
   `analysis/reviews/stage-10-pass-NNN.md`. A finding returns to Stage 5 and the
   next attempt requires another eligible fresh agent. Final acceptance requires
   a clean report, a complete consolidated backlog, passing automated gates, and
-  the owner's recorded signature.
+  the owner's recorded signature. After all slices are accepted, repeat this
+  stage once across the complete system for final consolidated acceptance.
 
 ## Loops (return arrows)
 
