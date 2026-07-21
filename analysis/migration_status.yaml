@@ -3,24 +3,22 @@ project: Bank of Z modernization
 updated: 2026-07-21
 
 methodology_stage:
-  number: 1
-  name: Reconnaissance
-  status: reopened-by-stage-02-pass-003-findings
-  last_completed_stage: 0
+  number: 2
+  name: Control reconnaissance
+  status: awaiting-independent-pass-004
+  last_completed_stage: 1
 
 next_action:
-  actor: primary-agent
+  actor: independent-agent
   pass_number: 4
-  report: analysis/reviews/stage-02-pass-003.md
+  report: analysis/reviews/stage-02-pass-004.md
   instruction: >-
-    Address every finding in analysis/reviews/stage-02-pass-003.md in the
-    filled parity map and legacy reconnaissance, without changing legacy code
-    or creating SDD/implementation artifacts. Run the workbook audit after map
-    edits, then return control reconnaissance to a different eligible fresh
-    independent agent for Stage 2 pass 004.
+    Perform a fresh complete code-first inventory including hidden legacy/.setup
+    artifacts, then compare it with the corrected parity map and reconnaissance.
+    Recheck all pass-003 findings and record Stage 2 pass 004.
   completion_gate: >-
-    All pass-003 findings are corrected with concrete legacy evidence, the
-    workbook audit reports AUDIT OK, and status advances to Stage 2 pass 004.
+    A different eligible independent agent records a clean Stage 2 pass with no
+    new findings and the workbook audit reports AUDIT OK.
 
 review_pass_schema:
   required_fields:
@@ -74,11 +72,11 @@ owner_gates:
 known_blockers:
   - id: stage-02-pass-003-findings
     affects_stage: 2
-    status: open
+    status: resolved-awaiting-independent-verification
     detail: >-
-      Five parity-map and reconnaissance findings require Stage 1 correction
-      before another independent control pass.
-    evidence: analysis/reviews/stage-02-pass-003.md
+      All five findings were corrected in the parity map and reconnaissance;
+      pass 004 must independently verify the corrections and completeness.
+    evidence: analysis/reviews/stage-02-pass-003.md; analysis/legacy_user_flows.xlsx; analysis/legacy_reconnaissance.md
   - id: stage-02-pass-002-incomplete-code-first-inventory
     affects_stage: 2
     status: resolved-by-pass-003-complete-inventory

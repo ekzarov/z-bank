@@ -31,9 +31,10 @@ The analyzed snapshot is upstream IBM Bank of Z commit
 - Static Carbon-based web control panel that routes C-prefixed IDs to CICS and
   I-prefixed IDs to IMS.
 - PL/I/JCL monthly statement batch and separate CICS/IMS data loaders.
-- Deployment automation for DB2 objects/plans and CICS/IMS resources.
+- DBB build/package, Z Code Scan, Wazi Deploy, and native z/OS Connect
+  provisioning automation in addition to DB2/CICS/IMS resource setup.
 
-The parity map contains 12 epics and 119 atomic, checkable scenarios. All target
+The parity map contains 12 epics and 125 atomic, checkable scenarios. All target
 and SDD columns are intentionally empty because target design has not started.
 
 ## Proven partial or unavailable legacy surfaces
@@ -63,6 +64,10 @@ and SDD columns are intentionally empty because target design has not started.
   returns scalar balances while the page's display branch expects arrays.
 - Account-type mapping is route-specific: the CICS account list passes raw
   values and IMS can emit `CHECKING`, which is absent from the OpenAPI enum.
+- Deployment configuration enables `INQACCTY`, but no executable implementation
+  or transaction binding is present in the supplied source.
+- ACCTYPE, CUSTTYPE, TSTATTYP, and TTYPE inputs are staged by IMS population
+  setup, but the supplied flow submits no loaders for those reference datasets.
 
 ## Runtime constraint
 
@@ -82,11 +87,11 @@ program family. The second pass added three missed operational behaviors:
 3. supplying shared CICS company name and sort code (`GETCOMPY.cbl`,
    `GETSCODE.cbl`).
 
-The final pass reconciled all CICS COBOL program families, all IMS COBOL loaders
-and transactions, every frontend page, all declared OpenAPI paths, all existing
-z/OS Connect operation mappings, the monthly statement job, and deployment
-definitions against at least one workbook row. Helper copybooks/data mappings
-are evidence for parent flows rather than independent user flows.
+The initial passes reconciled CICS/IMS program families, frontend pages,
+OpenAPI mappings, and monthly statement behavior. Later independent review
+showed that the hidden deployment/operator surface required additional rows;
+helper copybooks and data mappings remain evidence for parent flows rather than
+independent user flows.
 
 Stage 2 pass 001 then found ten concrete map defects. Stage 1 was reopened and
 the workbook was corrected by splitting logout retrieval/replacement failures,
@@ -95,8 +100,12 @@ activity, route-specific deposit presentation, and route-specific account-type
 mapping. It also corrected the dormant old-account helper, history dual-write,
 name-search presentation, and the mechanically recalculated scenario count.
 The evidence and required corrections are recorded in
-[`reviews/stage-02-pass-001.md`](reviews/stage-02-pass-001.md). A different
-independent agent must complete Stage 2 pass 002 before this inventory is clean.
+[`reviews/stage-02-pass-001.md`](reviews/stage-02-pass-001.md). Pass 002 is an
+immutable blocked review because it omitted hidden deployment artifacts before
+comparison. Pass 003 independently verified all pass-001 corrections, then
+found five additional deployment and completeness defects. Those corrections
+are now represented in the 125-scenario map; a different independent agent must
+complete Stage 2 pass 004 before this inventory is clean.
 
 ## Stage 4-5 owner decisions
 
