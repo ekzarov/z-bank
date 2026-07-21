@@ -34,7 +34,7 @@ The analyzed snapshot is upstream IBM Bank of Z commit
 - DBB build/package, Z Code Scan, Wazi Deploy, and native z/OS Connect
   provisioning automation in addition to DB2/CICS/IMS resource setup.
 
-The parity map contains 12 epics and 125 atomic, checkable scenarios. All target
+The parity map contains 12 epics and 133 atomic, checkable scenarios. All target
 and SDD columns are intentionally empty because target design has not started.
 
 ## Proven partial or unavailable legacy surfaces
@@ -68,6 +68,13 @@ and SDD columns are intentionally empty because target design has not started.
   or transaction binding is present in the supplied source.
 - ACCTYPE, CUSTTYPE, TSTATTYP, and TTYPE inputs are staged by IMS population
   setup, but the supplied flow submits no loaders for those reference datasets.
+- Eight generated API response selections reference absent sibling YAML files,
+  including five error mappings on otherwise bound CICS operations.
+- The standalone history diagnostic queries hard-coded account 1501 and is not
+  the parameterized IBGHIST flow.
+- Remote setup/validation and repository tooling (secret scan, VSIX setup,
+  zOpenDebug, and documentation TOC generation) are executable operator
+  surfaces and remain explicit until Stage 4 scope decisions are recorded.
 
 ## Runtime constraint
 
@@ -103,9 +110,10 @@ The evidence and required corrections are recorded in
 [`reviews/stage-02-pass-001.md`](reviews/stage-02-pass-001.md). Pass 002 is an
 immutable blocked review because it omitted hidden deployment artifacts before
 comparison. Pass 003 independently verified all pass-001 corrections, then
-found five additional deployment and completeness defects. Those corrections
-are now represented in the 125-scenario map; a different independent agent must
-complete Stage 2 pass 004 before this inventory is clean.
+found five additional deployment and completeness defects. Pass 004 verified
+those corrections and found four further API/setup/diagnostic/tooling gaps.
+Those corrections are now represented in the 133-scenario map; a different
+independent agent must complete Stage 2 pass 005 before this inventory is clean.
 
 ## Stage 4-5 owner decisions
 
