@@ -3,21 +3,23 @@ project: Bank of Z modernization
 updated: 2026-07-21
 
 methodology_stage:
-  number: 2
-  name: Control reconnaissance
-  status: awaiting-independent-pass-006
-  last_completed_stage: 1
+  number: 1
+  name: Reconnaissance
+  status: reopened-by-stage-02-pass-006-findings
+  last_completed_stage: 0
 
 next_action:
-  actor: independent-agent
-  pass_number: 6
+  actor: primary-agent
+  pass_number: 7
   report: analysis/reviews/stage-02-pass-006.md
   instruction: >-
-    Perform a fresh complete code-first inventory, then verify the corrected TOC
-    tooling scenario and the full parity map/reconnaissance in pass 006.
+    Add the omitted Zowe TLS-verification and CICS management-security partial
+    scenarios to the filled parity map and reconnaissance without changing
+    legacy code or creating SDD/implementation artifacts. Run the workbook
+    audit, then return control to a fresh independent agent for pass 007.
   completion_gate: >-
-    A different eligible independent agent records a clean Stage 2 pass with no
-    new findings and the workbook audit reports AUDIT OK.
+    The pass-006 finding is corrected with concrete legacy evidence, the
+    workbook audit reports AUDIT OK, and status advances to Stage 2 pass 007.
 
 review_pass_schema:
   required_fields:
@@ -63,6 +65,12 @@ review_passes:
     agent: OpenAI Codex independent reviewer
     result: findings
     report: analysis/reviews/stage-02-pass-005.md
+  - stage: 2
+    pass: 6
+    date: 2026-07-21
+    agent: OpenAI Codex independent reviewer
+    result: findings
+    report: analysis/reviews/stage-02-pass-006.md
 
 owner_gates:
   constitution_ratification: pending
@@ -81,13 +89,21 @@ owner_gates:
     permitted_next_stage: null
 
 known_blockers:
+  - id: stage-02-pass-006-findings
+    affects_stage: 2
+    status: open
+    detail: >-
+      The parity map and reconnaissance omit the supplied Zowe profile's TLS
+      certificate-verification bypass and the provisioned CICS management and
+      resource-security settings.
+    evidence: analysis/reviews/stage-02-pass-006.md
   - id: stage-02-pass-005-findings
     affects_stage: 2
-    status: resolved-awaiting-independent-verification
+    status: resolved-verified-by-pass-006
     detail: >-
       The TOC tooling contradiction was corrected in the parity map and
-      reconnaissance; pass 006 must independently verify it and completeness.
-    evidence: analysis/reviews/stage-02-pass-005.md; analysis/legacy_user_flows.xlsx; analysis/legacy_reconnaissance.md
+      reconnaissance; pass 006 independently verified the correction.
+    evidence: analysis/reviews/stage-02-pass-005.md; analysis/reviews/stage-02-pass-006.md; analysis/legacy_user_flows.xlsx; analysis/legacy_reconnaissance.md
   - id: stage-02-pass-004-findings
     affects_stage: 2
     status: resolved-verified-by-pass-005
