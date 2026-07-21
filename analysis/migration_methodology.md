@@ -32,6 +32,13 @@ any action and overrides convenience.
   a successful test run, or an agent statement.
 - If a stage cannot be executed, record the blocker and leave affected rows
   unverified. Skipping a stage does not count as completing it.
+- Advancing beyond a blocked stage requires an explicit owner waiver in
+  `analysis/migration_status.yaml`, including approver, date, rationale, and
+  permitted next stage. The waiver does not complete the blocked stage or
+  verify affected rows.
+- Stages 2, 6, and 10 produce immutable reports under `analysis/reviews/` and
+  append their result to `review_passes` in the status file. A clean result in
+  chat is not a completed gate.
 
 ## Actors
 
@@ -40,7 +47,10 @@ any action and overrides convenience.
 - **Primary agent** — does the stage's main work.
 - **Independent agent** — a *different* agent (fresh context, no shared chat
   history) used for control and re-verification stages. An agent never
-  verifies its own work.
+  verifies its own work. Before every Stage 2, 6, or 10 pass, it checks its
+  eligibility: if its current context contains creation or editing of an
+  artifact in scope, it self-disqualifies and requests a fresh agent. Every
+  iteration uses an eligible fresh agent.
 - **Automated gate** — a check that must pass before the flow may continue
   (tests, workbook audit script, smoke test).
 
@@ -64,11 +74,18 @@ is always cheaper than one found at acceptance.
 ### Stage 2 — Control reconnaissance (second agent)
 
 - Once the map is built, a **second, independent agent repeats the same
-  analysis from scratch** and diffs its result against the map: missed flows
-  and scenarios, broken evidence references, wrong statuses.
+  analysis from scratch**. It first inventories behavior from executable
+  artifacts without reading the filled map or `legacy_reconnaissance.md`; only
+  then does it diff its result against those artifacts for missed flows and
+  scenarios, broken evidence references, wrong statuses, and unsupported
+  claims.
+- Every pass, including a clean or blocked pass, is written to the next
+  `analysis/reviews/stage-02-pass-NNN.md` declared by the status file.
 - **Every finding loops back to Stage 1**: the map is corrected and extended,
-  then the control pass is repeated.
-- The stage is closed only by a control pass that produces **no new findings**.
+  then the control pass is repeated by another eligible fresh agent.
+- The stage is closed only when a report records **no new findings**, the pass
+  is appended to status history, and the workbook audit succeeds after any map
+  edits.
 
 ### Stage 3 — Live legacy walkthrough (deploy and walk everything)
 
@@ -81,6 +98,9 @@ is always cheaper than one found at acceptance.
 - Compare everything observed against the map. Behavior with no row → add the
   row (**loop back to Stage 1**). A row that cannot be observed or deployed
   stays explicitly *unverified* in the map — never "assumed working".
+- If required infrastructure is unavailable, Stage 3 remains blocked. Work may
+  proceed to Stage 4 only through a recorded owner waiver; affected rows remain
+  unverified and Stage 3 must be resumed when the blocker is removed.
 
 ### Stage 4 — Requirements revision (consistency check, with the business)
 
@@ -122,7 +142,13 @@ is always cheaper than one found at acceptance.
   - map ↔ SDD: is every row covered by the specs or explicitly deferred with
     a written reason?
 - Discrepancies return to Stage 5. Implementation does not start until this
-  re-verification is clean. Passing it is the **gate to build**.
+  re-verification is clean. For every workbook row, the reviewer checks the
+  cited legacy evidence and traces the row to an approved requirement, decision,
+  or explicit deferral; sampling is not sufficient.
+- Every pass is recorded as `analysis/reviews/stage-06-pass-NNN.md`. Findings
+  require a Stage 5 correction and another eligible fresh-agent pass. The gate
+  to build opens only after a clean report, recorded pass history, a successful
+  workbook audit, and explicit owner approval of the relevant SDD.
 
 ### Stage 7 — Build (code, tests, and documents in one PR)
 
@@ -158,6 +184,10 @@ is always cheaper than one found at acceptance.
     acceptance backlog.
 - The workbook audit script (`node analysis/tools/workbook-audit.js`) must
   pass before any workbook commit.
+- Stage 9 closes for a delivered slice only when every observed difference is
+  represented in the workbook and SDD, all gaps have looped back to Stage 5 or
+  have an explicit owner decision, and the workbook audit passes. Stage 9 does
+  not require a fresh independent agent for each working iteration.
 
 ### Stage 10 — Final acceptance (someone else's hands)
 
@@ -169,6 +199,11 @@ is always cheaper than one found at acceptance.
 - The third-party agent receives only the instruction, the workbook, and the
   stand URL. When its results match the map, the acceptance is signed by the
   owner.
+- Every acceptance attempt is recorded as
+  `analysis/reviews/stage-10-pass-NNN.md`. A finding returns to Stage 5 and the
+  next attempt requires another eligible fresh agent. Final acceptance requires
+  a clean report, a complete consolidated backlog, passing automated gates, and
+  the owner's recorded signature.
 
 ## Loops (return arrows)
 

@@ -10,15 +10,43 @@ methodology_stage:
 
 next_action:
   actor: independent-agent
+  pass_number: 1
+  report: analysis/reviews/stage-02-pass-001.md
   instruction: >-
-    Re-analyze the legacy executable artifacts from scratch and compare the
-    result with analysis/legacy_user_flows.xlsx. Report missing scenarios,
-    incorrect grouping, unsupported claims, and broken evidence references.
-  completion_gate: A fresh independent pass produces no new findings.
+    First build a behavior inventory from legacy executable artifacts without
+    reading the filled workbook or legacy reconnaissance. Then compare that
+    inventory with analysis/legacy_user_flows.xlsx and report missing
+    scenarios, incorrect grouping, unsupported claims, and broken evidence
+    references in analysis/reviews/stage-02-pass-001.md.
+  completion_gate: >-
+    An eligible fresh independent agent records a clean pass, the report is
+    appended to review_passes, and the workbook audit succeeds after any map
+    edits.
+
+review_pass_schema:
+  required_fields:
+    - stage
+    - pass
+    - date
+    - agent
+    - result
+    - report
+  allowed_results:
+    - clean
+    - findings
+    - blocked
+
+review_passes: []
 
 owner_gates:
   constitution_ratification: pending
   implementation_approval: not-applicable-before-stage-5
+  stage_3_waiver:
+    status: not-granted
+    approved_by: null
+    approved_on: null
+    rationale: null
+    permitted_next_stage: null
 
 known_blockers:
   - id: full-legacy-runtime
@@ -29,10 +57,20 @@ known_blockers:
       authorized IBM z/OS/Wazi or verified compatible environment.
     evidence: analysis/cobol_deployment_overview.md
 
+stage_transition_policy:
+  blocked_stage: >-
+    A blocked stage remains incomplete. Advancing beyond it requires an
+    explicit owner waiver recorded under owner_gates, including approver,
+    date, rationale, and permitted next stage. Affected workbook rows remain
+    unverified until the blocker is removed and the stage is completed.
+  approval_inference: >-
+    A merge, successful check, or agent statement never implies owner approval.
+
 governed_artifacts:
   filled_workbook: analysis/legacy_user_flows.xlsx
   empty_template: analysis/legacy_user_flows_template.xlsx
   workbook_instructions: analysis/legacy_user_flows_template_instructions.md
+  review_protocol: analysis/reviews/README.md
+  review_template: analysis/reviews/review_template.md
   methodology: analysis/migration_methodology.md
   constitution: .specify/memory/constitution.md
-

@@ -1,10 +1,9 @@
 <!--
 Sync Impact Report
-0.2.0: Added the root migration entry point and machine-readable stage
-checkpoint; aligned governance with the canonical ten-stage methodology;
-clarified the roles of the filled Bank of Z workbook and empty template; fixed
-the obsolete Stage 2 SDD reference; and made independent verification and
-explicit stage transitions enforceable.
+0.3.0: Made independent reviews auditable through per-pass eligibility checks,
+immutable reports, and status history; added explicit owner-waiver control for
+blocked stages; and required deterministic session handoffs. The ten-stage
+manager-facing process and visual diagram are unchanged.
 
 Follow-up before Stage 5 artifacts are final:
 - project owner ratifies this constitution;
@@ -125,6 +124,19 @@ Completed tasks are checked in `tasks.md` in the same PR that delivers and tests
 them. A green row with an unchecked task, a checked task without delivered code,
 or code that contradicts the spec is a defect.
 
+### XII. Auditable Independent Reviews and Handoffs
+
+Stages 2, 6, and 10 require a different agent with fresh context for every
+pass. An agent whose current context includes creating or editing an artifact
+in scope MUST self-disqualify. Every clean, findings, or blocked pass produces
+an immutable report under
+[`analysis/reviews/`](../../analysis/reviews/README.md) and an entry in
+[`analysis/migration_status.yaml`](../../analysis/migration_status.yaml); chat
+history is not evidence of completion.
+A blocked stage remains incomplete. Progress beyond it requires an explicit
+owner waiver recording approver, date, rationale, and permitted next stage,
+while affected workbook rows remain unverified.
+
 ## Repository Layout and Decisions
 
 - `legacy/`: immutable IBM Bank of Z source snapshot.
@@ -152,7 +164,10 @@ Workbook-specific mechanics are governed by
 Agents MUST read `analysis/migration_status.yaml`, perform only work allowed by
 the active stage, and update that checkpoint when a stage, gate, blocker, or
 owner decision changes. An agent MUST NOT mark its own work independently
-verified. Stages 2, 6, and 10 require a different agent with fresh context.
+verified. Before stopping, it records the required artifact and checks, updates
+the status without erasing history, and names the next gate. Stages 2, 6, and
+10 follow the
+[review protocol](../../analysis/reviews/README.md).
 
 ## Quality Gates
 
@@ -167,6 +182,10 @@ verified. Stages 2, 6, and 10 require a different agent with fresh context.
 - Database mutation never occurs as a side effect of normal startup.
 - Security deviations from legacy are explicit and tested.
 - A feature is not complete until code, tests, SDD, tasks, and workbook agree.
+- Every independent gate has an eligible-agent declaration, immutable report,
+  status-history entry, and stage-specific clean result.
+- Every transition past a blocked stage has an explicit owner waiver; no waiver
+  converts blocked or unverified behavior into completed behavior.
 
 ## Governance
 
@@ -175,4 +194,4 @@ redefinition, MINOR for a new enforceable principle/section, PATCH for wording
 clarification. Amendments state rationale and impact. Ratification and owner
 approval cannot be inferred from an agent action or from merge alone.
 
-**Version**: 0.2.0 (Draft) | **Ratified**: Pending owner approval | **Last Amended**: 2026-07-21
+**Version**: 0.3.0 (Draft) | **Ratified**: Pending owner approval | **Last Amended**: 2026-07-21
