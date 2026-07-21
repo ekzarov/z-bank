@@ -5,17 +5,19 @@ updated: 2026-07-21
 methodology_stage:
   number: 2
   name: Control reconnaissance
-  status: awaiting-independent-pass-002
+  status: awaiting-independent-pass-003
   last_completed_stage: 1
 
 next_action:
   actor: independent-agent
-  pass_number: 2
-  report: analysis/reviews/stage-02-pass-002.md
+  pass_number: 3
+  report: analysis/reviews/stage-02-pass-003.md
   instruction: >-
-    Perform a fresh code-first inventory, then compare it with the corrected
-    parity map and legacy reconnaissance. Recheck every pass-001 finding and
-    record the result in analysis/reviews/stage-02-pass-002.md.
+    From a fresh context, inventory every visible and hidden executable or
+    deployable artifact under legacy/ before reading the filled parity map,
+    reconnaissance, or prior reviews. Then compare the frozen inventory with
+    those artifacts, recheck every pass-001 correction and the preliminary
+    broken row-68 evidence reference from pass 002, and record pass 003.
   completion_gate: >-
     A different eligible independent agent records a clean Stage 2 pass with no
     new findings and the workbook audit reports AUDIT OK.
@@ -40,6 +42,12 @@ review_passes:
     agent: OpenAI Codex independent reviewer
     result: findings
     report: analysis/reviews/stage-02-pass-001.md
+  - stage: 2
+    pass: 2
+    date: 2026-07-21
+    agent: OpenAI Codex independent reviewer
+    result: blocked
+    report: analysis/reviews/stage-02-pass-002.md
 
 owner_gates:
   constitution_ratification: pending
@@ -58,6 +66,15 @@ owner_gates:
     permitted_next_stage: null
 
 known_blockers:
+  - id: stage-02-pass-002-incomplete-code-first-inventory
+    affects_stage: 2
+    status: open
+    detail: >-
+      Pass 002 omitted hidden legacy/.setup deployment artifacts from its
+      initial inventory and discovered the omission only after reading the
+      artifacts under review. A fresh pass 003 is required because the mandated
+      independent ordering cannot be restored in the same context.
+    evidence: analysis/reviews/stage-02-pass-002.md
   - id: stage-02-pass-001-findings
     affects_stage: 2
     status: resolved-awaiting-independent-verification
