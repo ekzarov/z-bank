@@ -25,14 +25,15 @@ The analyzed snapshot is upstream IBM Bank of Z commit
   transfers, account lookup, and shared failure handling.
 - IMS transaction channel for login/logout, customer inquiry/update, account
   summaries, deposits/withdrawals, and history persistence.
-- DB2-backed CICS data plus IMS databases and optional IMS-to-Java/DB2 history.
+- DB2-backed CICS data plus IMS databases and an IMS transaction path that
+  attempts DB2 history through Java before also inserting IMS history.
 - z/OS Connect REST facade over selected CICS and IMS programs.
 - Static Carbon-based web control panel that routes C-prefixed IDs to CICS and
   I-prefixed IDs to IMS.
 - PL/I/JCL monthly statement batch and separate CICS/IMS data loaders.
 - Deployment automation for DB2 objects/plans and CICS/IMS resources.
 
-The parity map contains 12 epics and 98 atomic, checkable scenarios. All target
+The parity map contains 12 epics and 119 atomic, checkable scenarios. All target
 and SDD columns are intentionally empty because target design has not started.
 
 ## Proven partial or unavailable legacy surfaces
@@ -50,6 +51,18 @@ and SDD columns are intentionally empty because target design has not started.
 - A Java history utility disables TLS certificate and hostname verification.
 - Transfer overdraft enforcement is not clear from static code and remains an
   inferred behavior requiring executable observation or owner decision.
+- IMS cash activity does not validate that the supplied customer owns the
+  supplied account; account mutation and returned customer portfolio use the
+  two identifiers independently.
+- Direct IMS cash messages accept signed and zero amounts. Negative values
+  reverse deposit/withdrawal direction, while zero still advances history and
+  last-transaction processing. Web/OpenAPI validation is a separate boundary.
+- IMS logout can return `LOGOFF SUCCESSFUL` after a failed replacement because
+  the failure message is overwritten unconditionally.
+- CICS web deposits succeed but display `New balance: $N/A` because the mapping
+  returns scalar balances while the page's display branch expects arrays.
+- Account-type mapping is route-specific: the CICS account list passes raw
+  values and IMS can emit `CHECKING`, which is absent from the OpenAPI enum.
 
 ## Runtime constraint
 
@@ -59,7 +72,7 @@ and does not provide CICS, IMS, or DB2. Full legacy execution therefore requires
 an authorized IBM z/OS/Wazi (or verified compatible) environment. Until one is
 available, runtime-only behavior must remain unverified rather than assumed.
 
-## Adversarial completeness pass
+## Adversarial completeness passes
 
 After the first map draft, the source inventory was rechecked by channel and
 program family. The second pass added three missed operational behaviors:
@@ -75,6 +88,16 @@ z/OS Connect operation mappings, the monthly statement job, and deployment
 definitions against at least one workbook row. Helper copybooks/data mappings
 are evidence for parent flows rather than independent user flows.
 
+Stage 2 pass 001 then found ten concrete map defects. Stage 1 was reopened and
+the workbook was corrected by splitting logout retrieval/replacement failures,
+adding invalid CICS menu input, IMS ownership mismatch, signed/zero IMS cash
+activity, route-specific deposit presentation, and route-specific account-type
+mapping. It also corrected the dormant old-account helper, history dual-write,
+name-search presentation, and the mechanically recalculated scenario count.
+The evidence and required corrections are recorded in
+[`reviews/stage-02-pass-001.md`](reviews/stage-02-pass-001.md). A different
+independent agent must complete Stage 2 pass 002 before this inventory is clean.
+
 ## Stage 4-5 owner decisions
 
 Before specs/plans/tasks are final, the owner must decide:
@@ -85,7 +108,11 @@ Before specs/plans/tasks are final, the owner must decide:
 - which partial web/API surfaces are desired requirements versus legacy dead UI;
 - authentication/authorization scope, especially the placeholder OAuth contract
   and IMS login/logout behavior;
-- transfer overdraft rule and treatment of the IMS old-account zero-balance rule;
+- transfer overdraft rule and treatment of dormant IMS old-account code;
+- whether target security closes the IMS account/customer ownership gap and
+  logout false-success behavior while documenting intentional parity deviation;
+- whether signed/zero direct IMS cash behavior is rejected or preserved behind
+  a compatibility boundary;
 - whether the PL/I monthly statement is MVP, later milestone, or approved deferment;
 - how full parity will be observed without an available CICS/IMS/DB2 environment.
 
