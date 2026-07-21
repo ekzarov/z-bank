@@ -1,0 +1,259 @@
+{
+  "metadata": {
+    "evidenceClass": "simulated",
+    "warning": "Derived from legacy source and contracts. This is not IBM runtime evidence.",
+    "clock": "2026-07-21T12:00:00.000Z",
+    "sortCode": "987654"
+  },
+  "customers": [
+    {
+      "system": "CICS",
+      "customerId": "0000000001",
+      "title": "Ms",
+      "firstName": "Martha",
+      "lastName": "Antonelli",
+      "dateOfBirth": "1982-04-14",
+      "phoneNumber": "914-513-5089",
+      "address": {
+        "addressLine1": "922 East Meighan Boulevard",
+        "addressLine2": "",
+        "city": "Art",
+        "postalCode": "76820",
+        "country": "US"
+      },
+      "customerStatus": "ACTIVE",
+      "createdDate": "2003-07-23T17:56:00Z",
+      "creditScore": 672
+    },
+    {
+      "system": "IMS",
+      "customerId": "000000001",
+      "title": "Mrs",
+      "firstName": "Martha",
+      "lastName": "Antonelli",
+      "dateOfBirth": "1982-04-14",
+      "phoneNumber": "914-513-5089",
+      "address": {
+        "addressLine1": "922 East Meighan Boulevard",
+        "addressLine2": "",
+        "city": "ART",
+        "postalCode": "76820",
+        "country": "US"
+      },
+      "customerStatus": "ACTIVE",
+      "createdDate": "2003-07-23T17:56:00Z",
+      "password": "password",
+      "loggedIn": false
+    },
+    {
+      "system": "CICS",
+      "customerId": "0000000099",
+      "title": "Mr",
+      "firstName": "No",
+      "lastName": "Accounts",
+      "dateOfBirth": "1975-01-01",
+      "phoneNumber": "555-0100",
+      "address": {
+        "addressLine1": "1 Empty Portfolio Road",
+        "addressLine2": "",
+        "city": "London",
+        "postalCode": "E1 1AA",
+        "country": "UK"
+      },
+      "customerStatus": "ACTIVE",
+      "createdDate": "2020-01-01T00:00:00Z",
+      "creditScore": 500
+    },
+    {
+      "system": "IMS",
+      "customerId": "000000002",
+      "title": "Ms",
+      "firstName": "Sharon",
+      "lastName": "Gaudreau",
+      "dateOfBirth": "1978-08-20",
+      "phoneNumber": "914-765-5346",
+      "address": {
+        "addressLine1": "Highway 27 P O Box 549",
+        "addressLine2": "",
+        "city": "HAKALAU",
+        "postalCode": "96710",
+        "country": "US"
+      },
+      "customerStatus": "ACTIVE",
+      "createdDate": "2003-07-23T17:56:00Z",
+      "password": "password",
+      "loggedIn": false
+    }
+  ],
+  "accounts": [
+    {
+      "system": "CICS",
+      "accountId": "10000001",
+      "accountNumber": "10000001",
+      "customerId": "0000000001",
+      "accountType": "CURRENT",
+      "currency": "GBP",
+      "status": "ACTIVE",
+      "openingDate": "2020-01-15",
+      "interestRate": 1.25,
+      "overdraftLimit": 250,
+      "availableBalance": 1250,
+      "actualBalance": 1250
+    },
+    {
+      "system": "CICS",
+      "accountId": "10000002",
+      "accountNumber": "10000002",
+      "customerId": "0000000001",
+      "accountType": "LOAN",
+      "currency": "GBP",
+      "status": "ACTIVE",
+      "openingDate": "2021-03-01",
+      "interestRate": 4.5,
+      "overdraftLimit": 0,
+      "availableBalance": -5000,
+      "actualBalance": -5000
+    },
+    {
+      "system": "IMS",
+      "accountId": "101",
+      "accountNumber": "101",
+      "customerId": "000000001",
+      "accountType": "CHECKING",
+      "currency": "USD",
+      "status": "ACTIVE",
+      "openingDate": "2003-07-23",
+      "interestRate": 0,
+      "overdraftLimit": 0,
+      "availableBalance": 8830,
+      "actualBalance": 8830,
+      "lastTransactionId": 1
+    },
+    {
+      "system": "IMS",
+      "accountId": "102",
+      "accountNumber": "102",
+      "customerId": "000000001",
+      "accountType": "SAVINGS",
+      "currency": "USD",
+      "status": "ACTIVE",
+      "openingDate": "2003-07-23",
+      "interestRate": 0,
+      "overdraftLimit": 0,
+      "availableBalance": 6325,
+      "actualBalance": 6325,
+      "lastTransactionId": 1
+    },
+    {
+      "system": "IMS",
+      "accountId": "201",
+      "accountNumber": "201",
+      "customerId": "000000002",
+      "accountType": "SAVINGS",
+      "currency": "USD",
+      "status": "ACTIVE",
+      "openingDate": "2003-07-23",
+      "interestRate": 0,
+      "overdraftLimit": 0,
+      "availableBalance": 7945,
+      "actualBalance": 7945,
+      "lastTransactionId": 1
+    }
+  ],
+  "transactions": [
+    {
+      "system": "CICS",
+      "transactionId": "PRTR-000001",
+      "accountId": "10000001",
+      "amount": 250,
+      "currency": "GBP",
+      "creditDebitIndicator": "CREDIT",
+      "status": "BOOKED",
+      "bookingDateTime": "2026-07-01T09:30:00.000Z",
+      "transactionInformation": "Opening demo credit"
+    },
+    {
+      "system": "CICS",
+      "transactionId": "PRTR-000002",
+      "accountId": "10000001",
+      "amount": 40,
+      "currency": "GBP",
+      "creditDebitIndicator": "DEBIT",
+      "status": "BOOKED",
+      "bookingDateTime": "2026-07-03T11:00:00.000Z",
+      "transactionInformation": "Demo debit"
+    },
+    {
+      "system": "IMS",
+      "transactionId": "1010000000001",
+      "accountId": "101",
+      "amount": 8830,
+      "currency": "USD",
+      "creditDebitIndicator": "CREDIT",
+      "status": "BOOKED",
+      "bookingDateTime": "2003-07-23T17:56:00.000Z",
+      "transactionInformation": "Loaded IMS history"
+    }
+  ],
+  "evidence": {
+    "api-contract": {
+      "workbookRows": [87, 88, 89, 90, 91, 92, 93, 95, 97],
+      "sources": [
+        "legacy/src/api/src/main/api/openapi.yaml",
+        "legacy/src/frontend/js/api.js"
+      ]
+    },
+    "cics-menu": {
+      "workbookRows": [8, 9, 10, 11],
+      "sources": [
+        "legacy/src/base/cics/cobol/BNKMENU.cbl:135-171,363-384,958",
+        "legacy/src/base/cics/bms/BNK1MAI.bms"
+      ]
+    },
+    "cics-cash": {
+      "workbookRows": [60, 61, 62, 63, 72, 73, 74],
+      "sources": [
+        "legacy/src/base/cics/cobol/DBCRFUN.cbl:200-555",
+        "legacy/src/base/cics/copy/PAYDBCR.cpy"
+      ]
+    },
+    "cics-transfer": {
+      "workbookRows": [80, 81, 82, 83, 84],
+      "sources": [
+        "legacy/src/base/cics/cobol/XFRFUN.cbl:150-1700",
+        "legacy/src/base/cics/copy/XFRFUN.cpy"
+      ]
+    },
+    "ims-session": {
+      "workbookRows": [15, 16, 17, 18, 19, 20],
+      "sources": [
+        "legacy/src/base/ims/pli/IBLOGIN.pli",
+        "legacy/src/base/ims/cobol/IBLOGOUT.cbl"
+      ]
+    },
+    "ims-transaction": {
+      "workbookRows": [64, 65, 66, 67, 68, 75, 76, 77, 78],
+      "sources": [
+        "legacy/src/base/ims/cobol/IBTRAN.cbl:290-383",
+        "legacy/src/base/ims/LoadData/ACCOUNT.data",
+        "legacy/src/base/ims/LoadData/CUSTACCS.data",
+        "legacy/src/base/ims/LoadData/HISTORY.data"
+      ]
+    },
+    "monthly-statement": {
+      "workbookRows": [100, 101, 102, 103, 104, 105, 106, 107],
+      "sources": [
+        "legacy/src/base/batch/pli/BNKSTMT.pli",
+        "legacy/src/base/batch/jcl/BNKSTMT.jcl"
+      ]
+    },
+    "web-edge": {
+      "workbookRows": [113, 114, 115, 116, 117],
+      "sources": [
+        "legacy/src/frontend/server.js",
+        "legacy/src/frontend/index.html",
+        "legacy/src/frontend/admin.html"
+      ]
+    }
+  }
+}

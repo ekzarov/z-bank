@@ -1,0 +1,15 @@
+{
+  "name": "bank-of-z-legacy-simulator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Traceable Stage 3 simulator for unavailable Bank of Z mainframe behavior",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "walkthrough": "node scripts/walkthrough.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
