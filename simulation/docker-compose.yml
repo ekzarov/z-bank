@@ -1,0 +1,30 @@
+services:
+  simulator:
+    build:
+      context: .
+    container_name: zbank-legacy-simulator
+    environment:
+      PORT: 9080
+    ports:
+      - "127.0.0.1:9180:9080"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1:9080/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  frontend:
+    image: node:24-alpine
+    container_name: zbank-simulated-legacy-frontend
+    working_dir: /app
+    command: node server.js
+    environment:
+      PORT: 3001
+      API_BASE_URL: http://simulator:9080
+    ports:
+      - "127.0.0.1:3001:3001"
+    volumes:
+      - ../legacy/src/frontend:/app:ro
+    depends_on:
+      simulator:
+        condition: service_healthy

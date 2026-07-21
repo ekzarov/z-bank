@@ -3,22 +3,36 @@ project: Bank of Z modernization
 updated: 2026-07-21
 
 methodology_stage:
-  number: 3
-  name: Live legacy walkthrough
-  status: simulation-authorized
+  number: 4
+  name: Requirements revision
+  status: owner-review-required
   last_completed_stage: 2
+  progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: primary-agent
+  actor: project-owner-and-primary-agent
   pass_number: null
-  report: analysis/stage-03-simulated-walkthrough.md
+  report: analysis/stage-04-requirements-revision.md
   instruction: >-
-    Build the smallest traceable simulator/contract harness for the unavailable
-    CICS, IMS, DB2, API, terminal, and batch behavior; execute the observable
-    flows, record evidence, and keep real legacy runtime rows unverified.
+    Review every contradiction, obsolete behavior, strange rule, security
+    deviation, partial surface, and Stage 3 decision candidate with the owner;
+    record keep, change, defer, or do-not-port decisions in the workbook before
+    creating Stage 5 SDD.
   completion_gate: >-
-    The simulated walkthrough report and fixtures cite legacy evidence, the
-    harness checks pass, and status records partial-simulated before Stage 4.
+    Every flagged row has an explicit owner decision and rationale, the Stage 4
+    report and workbook agree, and the workbook audit passes before Stage 5.
+
+stage_3_fallback_result:
+  mode: simulate
+  outcome: partial-simulated
+  completed_on: 2026-07-21
+  report: analysis/stage-03-simulated-walkthrough.md
+  harness: simulation/
+  automated_tests: 21-passed
+  browser_smoke: passed-with-original-legacy-frontend
+  docker_smoke: blocked-docker-desktop-linux-engine-not-running
+  real_runtime_verified: false
+  permitted_next_stage: 4
 
 review_pass_schema:
   required_fields:
