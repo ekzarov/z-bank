@@ -5,7 +5,7 @@ walkthrough is unavailable, the owner chooses traceable simulation or an
 explicit waiver; neither is misrepresented as live legacy verification.
 
 Follow-up before Stage 5 artifacts are final:
-- project owner ratifies this constitution;
+- project owner ratified this constitution on 2026-07-21;
 - target architecture, languages, persistence, authentication, and deployment
   model are selected in an approved planning decision;
 - testing tools are selected consistently with that target stack.
@@ -198,4 +198,4 @@ redefinition, MINOR for a new enforceable principle/section, PATCH for wording
 clarification. Amendments state rationale and impact. Ratification and owner
 approval cannot be inferred from an agent action or from merge alone.
 
-**Version**: 0.4.0 (Draft) | **Ratified**: Pending owner approval | **Last Amended**: 2026-07-21
+**Version**: 0.4.0 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-21
