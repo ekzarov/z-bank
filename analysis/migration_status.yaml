@@ -12,15 +12,20 @@ methodology_stage:
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: project-owner
-  pass_number: 1
-  report: analysis/reviews/stage-06-pass-001.md
+  actor: fresh-independent-agent
+  pass_number: 3
+  report: analysis/reviews/stage-06-pass-003.md
   instruction: >-
-    Review the clean Stage 6 independent design re-verification report and
-    explicitly approve target implementation of the first delivery slice
-    (Feature 001: Secure Access and Application Shell) before starting Stage 7.
+    Execute the owner-requested additional Stage 6 independent design
+    re-verification (Pass 003) from scratch and without sampling. The agent
+    must pass the eligibility self-check: no prior work on the parity map,
+    the SDD artifacts, the methodology documents, or Stage 6 passes 001-002
+    (both the primary Codex sessions and the Claude session blocked in Pass
+    002 are ineligible). Do not modify the reviewed workbook, specs, or code.
   completion_gate: >-
-    The project owner explicitly approves implementation of Feature 001.
+    A recorded Stage 6 Pass 003 report by an eligible fresh agent; on
+    result=clean, implementation approval still requires an explicit owner
+    decision; on result=findings, return to Stage 5.
 
 stage_3_fallback_result:
   mode: simulate
@@ -96,6 +101,12 @@ review_passes:
     agent: Antigravity independent reviewer
     result: clean
     report: analysis/reviews/stage-06-pass-001.md
+  - stage: 6
+    pass: 2
+    date: 2026-07-21
+    agent: Claude (Fable 5) owner-session agent, self-disqualified
+    result: blocked
+    report: analysis/reviews/stage-06-pass-002.md
 
 owner_gates:
   constitution_ratification:
