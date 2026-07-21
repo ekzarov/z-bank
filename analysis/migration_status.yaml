@@ -82,7 +82,7 @@ owner_gates:
     status: approved
     approved_by: project owner
     approved_on: 2026-07-21
-    version: 0.4.0
+    version: 0.4.1
   implementation_approval: not-applicable-before-stage-5
   stage_3_fallback_decision:
     status: approved
@@ -158,6 +158,18 @@ known_blockers:
     evidence: analysis/cobol_deployment_overview.md
 
 stage_transition_policy:
+  delivery_slices:
+    mode: iterative
+    scope: one-feature-or-small-tightly-related-group
+    cycle:
+      - 7
+      - 8
+      - 9
+      - 10
+    next_slice_gate: clean-slice-acceptance
+    finding_return_stage: 5
+    map_error_return_stage: 1
+    final_gate: consolidated-stage-10-acceptance
   blocked_stage: >-
     A blocked Stage 3 remains incomplete. If a full live walkthrough is not
     possible, the agent asks the owner to select simulate or waive and records
