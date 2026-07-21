@@ -1,14 +1,7 @@
 <!--
 Sync Impact Report
-0.4.1: Clarified the existing incremental-delivery principle as a mandatory
-Stage 7-10 loop. Each iteration delivers one feature or a small coherent group,
-returns findings to design, and admits the next slice only after acceptance.
-
-Follow-up before Stage 5 artifacts are final:
-- project owner ratified this constitution on 2026-07-21;
-- target architecture, languages, persistence, authentication, and deployment
-  model are selected in an approved planning decision;
-- testing tools are selected consistently with that target stack.
+0.4.2: Recorded the owner-approved target stack and verification tools required
+before Stage 5 can close. No principle was added, removed, or weakened.
 -->
 
 # Bank of Z Modernization Constitution
@@ -150,7 +143,10 @@ unverified until a real walkthrough confirms them.
 ## Repository Layout and Decisions
 
 - `legacy/`: immutable IBM Bank of Z source snapshot.
-- `modern/`: reserved target implementation root; currently no stack selected.
+- `modern/backend/`: .NET 10 LTS ASP.NET Core Web API, application/domain code,
+  EF Core 10 persistence, versioned migrations, and xUnit test projects.
+- `modern/frontend/`: Angular 22 standalone application with the Angular CLI
+  application builder, Vitest tests, and Playwright end-to-end tests.
 - `analysis/`: governed workbook, methodology, audit tooling, and analysis notes.
 - `MIGRATION.md`: mandatory agent entry point and artifact routing contract.
 - `analysis/migration_status.yaml`: current stage, gates, blockers, and next action.
@@ -158,10 +154,22 @@ unverified until a real walkthrough confirms them.
 - `specs/NNN-<slug>/`: Stage 5 feature artifacts; implementation requires the
   Stage 6 clean review and explicit owner approval.
 
-Target language/runtime, frontend, database, messaging, authentication,
-deployment topology, and concrete test frameworks are **Pending Decision**.
-Agents MUST NOT scaffold or select them implicitly. An approved architecture
-decision amends this section before implementation tasks are treated as final.
+The owner-approved target uses .NET 10 LTS, ASP.NET Core Web API, EF Core 10,
+SQL Server, and Angular 22. The browser and API use secure same-origin HTTP-only
+cookie sessions with CSRF protection and explicit customer/operator/admin
+authorization policies. CICS and IMS business concepts are unified in one
+domain model; `SourceSystem` records provenance without recreating separate
+runtime channels. Deployment uses Docker Compose with independently versioned
+API, Angular/nginx, and SQL Server services. Schema and demo/reference data are
+applied only by explicit migration/operator commands, never at application
+startup.
+
+Backend unit tests use xUnit; API tests use `WebApplicationFactory`; database
+integration tests run against a real categorized SQL Server test database.
+Angular unit/component tests use the Angular CLI's Vitest setup. Playwright
+covers critical cross-application happy paths. Concrete package patch versions
+are pinned when each delivery slice enters implementation and may move only
+within the approved major versions through a tested dependency update.
 
 ## Required Workflow
 
@@ -207,4 +215,4 @@ redefinition, MINOR for a new enforceable principle/section, PATCH for wording
 clarification. Amendments state rationale and impact. Ratification and owner
 approval cannot be inferred from an agent action or from merge alone.
 
-**Version**: 0.4.1 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-21
+**Version**: 0.4.2 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-21
