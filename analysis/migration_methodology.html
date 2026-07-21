@@ -32,7 +32,7 @@
   .wrap{ max-width:980px; margin:0 auto; padding:30px 22px 56px; }
   h1{ font-family:"Bahnschrift","Segoe UI Semibold","Arial Narrow",system-ui,sans-serif;
     font-size:29px; margin:0 0 4px; letter-spacing:.2px; text-wrap:balance; }
-  .lede{ color:var(--muted); margin:0 0 20px; max-width:70ch; }
+  .lede{ color:var(--muted); margin:0 0 20px; }
   h2.section{ font-family:"Bahnschrift","Segoe UI Semibold","Arial Narrow",system-ui,sans-serif;
     font-size:14px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted);
     margin:34px 0 14px; display:flex; align-items:center; gap:10px; }
@@ -125,16 +125,26 @@
     width:calc(100% - 66px); border-top:2.5px dashed var(--spine); }
   .gstep:not(:last-child)::before{ content:""; position:absolute; top:20.5px; right:-7px; z-index:1;
     border:6px solid transparent; border-left:9px solid var(--spine); }
-  /* петля возврата под лентой */
-  /* большая петля: от последнего шага назад к шагу 05 (центры шагов при 10 колонках: 5% / 15% / 25% / … / 95%) */
-  .gloop{ position:absolute; left:45%; right:5%; bottom:2px; height:26px;
+  /* петли возврата под лентой (центры шагов при 10 колонках: 5% / 15% / 25% / … / 95%) */
+  /* правый кластер — назад к шагу 05: от 06 (верхняя), от 09 (средняя), от 10 (нижняя) */
+  .gloop5{ position:absolute; left:45.9%; right:45%; bottom:36px; height:14px;
     border-bottom:2.5px dashed var(--xl-red-b); border-left:2.5px dashed var(--xl-red-b);
     border-right:2.5px dashed var(--xl-red-b); border-bottom-left-radius:12px; border-bottom-right-radius:12px; }
-  .gloop::before{ content:""; position:absolute; top:-9px; left:-8px;
+  .gloop5::before{ content:""; position:absolute; top:-9px; left:-8px;
     border:6px solid transparent; border-bottom:9px solid var(--xl-red-b); }
-  .gloop-label{ position:absolute; bottom:-9px; left:50%; transform:translateX(-50%);
+  .gloop6{ position:absolute; left:44.6%; right:15%; bottom:20px; height:30px;
+    border-bottom:2.5px dashed var(--xl-red-b); border-left:2.5px dashed var(--xl-red-b);
+    border-right:2.5px dashed var(--xl-red-b); border-bottom-left-radius:12px; border-bottom-right-radius:12px; }
+  .gloop6::before{ content:""; position:absolute; top:-9px; left:-8px;
+    border:6px solid transparent; border-bottom:9px solid var(--xl-red-b); }
+  .gloop7{ position:absolute; left:43.3%; right:5%; bottom:4px; height:46px;
+    border-bottom:2.5px dashed var(--xl-red-b); border-left:2.5px dashed var(--xl-red-b);
+    border-right:2.5px dashed var(--xl-red-b); border-bottom-left-radius:12px; border-bottom-right-radius:12px; }
+  .gloop7::before{ content:""; position:absolute; top:-9px; left:-8px;
+    border:6px solid transparent; border-bottom:9px solid var(--xl-red-b); }
+  .gloop7-label{ position:absolute; bottom:-5px; left:69%; transform:translateX(-50%);
     background:var(--xl-red); color:#1A2430; border:1px solid var(--xl-red-b); border-radius:6px;
-    padding:1px 10px; font-size:11px; white-space:nowrap; }
+    padding:1px 8px; font-size:10px; white-space:nowrap; }
   /* мини-петли назад к шагу 01: от 02 (верхняя), от 03 (средняя), от 04 (нижняя) */
   .gloop2{ position:absolute; left:5.9%; right:85%; bottom:36px; height:14px;
     border-bottom:2.5px dashed var(--xl-red-b); border-left:2.5px dashed var(--xl-red-b);
@@ -173,189 +183,6 @@
 <div class="wrap">
   <h1>Перенос легаси-системы: по какому сценарию мы движемся</h1>
   <p class="lede">Каждое поведение легаси — строка карты паритета; каждая строка доводится до зелёного с доказательством. Методология не привязана к стеку и применима к любому переносу.</p>
-
-  <div class="legends">
-    <div class="legend"><span class="t">Статус строки карты</span>
-      <span><span class="sw" style="background:var(--xl-green);border-color:var(--xl-green-b)"></span>сделано и проверено</span>
-      <span><span class="sw" style="background:var(--xl-red);border-color:var(--xl-red-b)"></span>дыра — чинить</span>
-      <span><span class="sw" style="background:var(--xl-gray);border-color:var(--xl-gray-b)"></span>нужно решение владельца</span>
-      <span><span class="sw" style="background:var(--xl-amber);border-color:var(--xl-amber-b)"></span>отложено, причина записана</span>
-    </div>
-    <div class="legend"><span class="t">Кто выполняет шаг</span>
-      <span><span class="fr" style="border:1.6px dashed var(--owner)"></span>точка контроля владельца</span>
-      <span><span class="fr" style="border:1.6px dashed var(--agent)"></span>независимый агент</span>
-      <span><span class="fr" style="border:1.6px solid var(--gate);background:var(--xl-green)"></span>автоматический гейт</span>
-    </div>
-  </div>
-
-  <p class="principle"><b>Принцип работы с агентами: глубина важнее скорости.</b> На каждой стадии агент работает в режиме глубокого исследования — полные проходы вместо выборочных, адверсариальные перепроверки, независимые вторые мнения. Это медленнее, но дыра, пойманная рано, всегда дешевле дыры, найденной на приёмке.</p>
-
-  <div class="flow">
-
-    <div class="loop-scope recon">
-      <div class="loop-line" aria-hidden="true"></div>
-      <div class="loop-tag">дыры в карте → снова в разведку</div>
-
-    <div class="loop-scope mini">
-      <div class="loop-line" aria-hidden="true"></div>
-      <div class="loop-tag">дыры → снова в разведку</div>
-
-      <section class="phase">
-        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></div>
-        <h3>1 · Разведка <small>легаси-код → карта паритета</small></h3>
-        <p class="d">Поведение достаётся <b>только из кода легаси</b> — не из документации и не по памяти. Каждый пользовательский сценарий становится строкой <b>воркбука — карты паритета</b> с доказательством (файл/класс/страница): реальные системы прячут второстепенные флоу, поэтому первый проход — всегда черновик.</p>
-        <div class="steps">
-          <span class="chip">Легаси-код</span><span class="sep">→</span>
-          <span class="chip">Выделение user&nbsp;flows</span><span class="sep">→</span>
-          <span class="chip key">Воркбук — карта паритета</span>
-        </div>
-      </section>
-
-      <div class="down"></div>
-
-      <section class="phase">
-        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/><path d="M11.5 14l1.8 1.8 3.2-3.2"/></svg></div>
-        <h3>2 · Контрольная разведка <small>второй агент ищет, что пропустил первый</small></h3>
-        <p class="d">Когда карта построена, <b>второй, независимый агент</b> делает такой же анализ легаси с нуля и сравнивает свой результат с картой: пропущенные флоу и сценарии, битые доказательства, неверные статусы. Каждая находка возвращает работу <b>назад в разведку</b> — карта исправляется и дополняется, затем контроль повторяется. Стадия закрыта только проходом без новых находок.</p>
-        <div class="steps">
-          <span class="chip agent">Второй агент: анализ с нуля</span><span class="sep">→</span>
-          <span class="chip">Дифф с картой: дыры и ошибки</span><span class="sep">→</span>
-          <span class="chip">Исправления в карте</span><span class="sep">→</span>
-          <span class="chip gate">Чистый проход — карта принята</span>
-        </div>
-      </section>
-
-    </div><!-- /loop-scope mini -->
-
-    <div class="down"></div>
-
-    <section class="phase">
-      <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="14" rx="2"/><path d="M6.5 8.5l3 2.5-3 2.5"/><path d="M12 13.5h5"/><path d="M9 21h6"/></svg></div>
-      <h3>3 · Живой прогон легаси <small>развернуть и пройти все сценарии руками</small></h3>
-      <p class="d">Карта из кода — это гипотеза. Легаси разворачивается и проходится вживую, как его проходит реальный пользователь: веб — <b>прокликать каждую страницу и форму</b>, зелёный экран — <b>пройти каждую транзакцию в терминале</b>, API — вызвать каждый маршрут, батч — прогнать джоб. К технологии не привязываемся — важно пройти <b>все возможные сценарии</b> и сверить каждый с картой. Поведение без строки — строка добавляется; что развернуть или наблюдать нельзя — остаётся в карте непроверенным, а не «предположительно работает».</p>
-      <div class="steps">
-        <span class="chip">Развернуть легаси</span><span class="sep">→</span>
-        <span class="chip agent">Пройти всё: страницы / экраны терминала / API / джобы</span><span class="sep">→</span>
-        <span class="chip">Сверка с картой</span><span class="sep">→</span>
-        <span class="chip key">Карта дополнена и подтверждена</span>
-      </div>
-    </section>
-
-    <div class="down"></div>
-
-    <section class="phase">
-      <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M17 4l4 4-4 4"/><path d="M21 8H8"/><path d="M7 12l-4 4 4 4"/><path d="M3 16h13"/></svg></div>
-      <h3>4 · Ревизия требований <small>consistency check — вместе с бизнесом</small></h3>
-      <p class="d">Перед проектированием агент проверяет саму карту как набор требований — <b>прицельно ищет противоречия</b>, а не просто перечитывает: несостыковки между флоу и каналами (пример: логин есть в одном канале и отсутствует в другом), <b>устаревшие требования</b> — со сверкой по документации легаси, <b>странные и необоснованные</b> (unreasonable/strange) требования. Каждая находка разбирается <b>вместе с бизнесом и девелопером</b>: оставить как есть / изменить / не переносить — решение фиксируется в карте до начала SDD.</p>
-      <div class="steps">
-        <span class="chip agent">Поиск противоречий в карте</span><span class="sep">→</span>
-        <span class="chip">Устаревшее: сверка с документацией</span><span class="sep">→</span>
-        <span class="chip">Странные/необоснованные требования</span><span class="sep">→</span>
-        <span class="chip owner">Разбор с бизнесом и девелопером</span><span class="sep">→</span>
-        <span class="chip key">Решения зафиксированы в карте</span>
-      </div>
-    </section>
-
-    </div><!-- /loop-scope recon -->
-
-    <div class="down"></div>
-
-    <div class="loop-scope">
-      <div class="loop-line" aria-hidden="true"></div>
-      <div class="loop-tag">находки возвращаются в цикл</div>
-
-      <section class="phase">
-        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4"/><path d="M10 12h6M10 16h6"/></svg></div>
-        <h3>5 · Проектирование — SDD <small>карта → спецификации: spec / plan / tasks</small></h3>
-        <p class="d">Здесь пишется <b>SDD (Spec-Driven Development)</b> — спецификации, от которых дальше ведётся вся разработка. Точка входа всегда воркбук: <b>сначала актуализируются сами строки</b> (формулировки, SDD-колонки: что покрывается, что откладывается — с причиной), и только затем каждый флоу превращается в SDD-артефакты: spec → plan → tasks. Карта и SDD связаны колонками покрытия и расходиться не могут. Ни строчки кода до утверждения SDD владельцем.</p>
-        <div class="steps">
-          <span class="chip key">Актуализация воркбука</span><span class="sep">→</span>
-          <span class="chip">SDD: Spec</span><span class="sep">→</span>
-          <span class="chip">Plan</span><span class="sep">→</span>
-          <span class="chip">Tasks</span><span class="sep">→</span>
-          <span class="chip owner">Утверждение SDD владельцем</span>
-        </div>
-      </section>
-
-      <div class="down"></div>
-
-      <section class="phase">
-        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg></div>
-        <h3>6 · Перепроверка проектирования <small>всё ли учтено — чужими глазами</small></h3>
-        <p class="d">До начала сборки <b>другой агент</b> сверяет результат стадий 1–5: все ли легаси-флоу учтены картой (ничего не потеряно ни при разведке, ни при живом прогоне), учтены ли решения ревизии требований и все ли строки карты покрыты SDD-спецификациями или отложены с причиной. Расхождения возвращаются в стадию 5 — реализация не стартует, пока перепроверка не чистая.</p>
-        <div class="steps">
-          <span class="chip agent">Другой агент</span><span class="sep">→</span>
-          <span class="chip">Карта ↔ легаси: полнота</span><span class="sep">→</span>
-          <span class="chip">Карта ↔ спеки: покрытие</span><span class="sep">→</span>
-          <span class="chip gate">Допуск к сборке</span>
-        </div>
-      </section>
-
-      <div class="down"></div>
-
-      <section class="phase">
-        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3v6a3 3 0 0 0 3 3h6a3 3 0 0 1 3 3v6"/><circle cx="6" cy="3" r="2"/><circle cx="18" cy="21" r="2"/><circle cx="18" cy="9" r="2"/><path d="M18 11v4"/></svg></div>
-        <h3>7 · Сборка <small>код, тесты и документы — одним PR</small></h3>
-        <p class="d">Ветка → реализация на целевом стеке → <b>автотесты как жёсткий гейт</b>: PR не выпускается на красных. В том же PR вместе с кодом синхронизируются спецификации и воркбук (зеленение строк с доказательствами). Мерж — только владелец.</p>
-        <div class="steps">
-          <span class="chip">Ветка</span><span class="sep">→</span>
-          <span class="chip">Реализация</span><span class="sep">→</span>
-          <span class="chip gate"><b>Тесты-гейт</b></span><span class="sep">→</span>
-          <span class="chip">PR: код + SDD + воркбук</span><span class="sep">→</span>
-          <span class="chip owner">Мерж — владелец</span>
-        </div>
-      </section>
-
-      <div class="down"></div>
-
-      <section class="phase">
-        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c4 3 5 7 5 10l3 4h-5a3 3 0 0 1-6 0H4l3-4c0-3 1-7 5-10z"/><circle cx="12" cy="10" r="2"/></svg></div>
-        <h3>8 · Поставка <small>деплой одной командой</small></h3>
-        <p class="d">Деплой одной командой → демо-стенд, где <b>легаси и новая система живут бок о бок</b>: один и тот же флоу показывается в двух мирах. Смоук-тест закрывает поставку.</p>
-        <div class="steps">
-          <span class="chip">Деплой</span><span class="sep">→</span>
-          <span class="chip key">Демо-стенд: легаси + новое</span><span class="sep">→</span>
-          <span class="chip gate">Смоук</span>
-        </div>
-      </section>
-
-      <div class="down"></div>
-
-      <section class="phase">
-        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h13v10H8l-4 4z"/><path d="M13 14l2 6 2-3 3 1-2-6"/></svg></div>
-        <h3>9 · Живая ревизия <small>карта против живых систем — по всем каналам</small></h3>
-        <p class="d">Агент проходит <b>обе системы как реальный пользователь — по всем каналам, какие есть</b>: страницы и формы в вебе, экраны и транзакции в терминале, вызовы API, джобы — и сверяет увиденное с картой. Каждая находка в момент фиксации меняет и карту, и спецификации.</p>
-        <div class="steps">
-          <span class="chip agent">Проход по всем каналам: UI / терминал / API / джобы</span><span class="sep">→</span>
-          <span class="chip">Сверка с картой</span><span class="sep">→</span>
-          <span class="chip gate">Автоаудит инвариантов воркбука</span>
-        </div>
-        <div class="rulebox"><b>Непроверенное = не сделано (красное).</b> Каждый геп несёт происхождение: подтверждено наблюдением / не проверено — проверка = первый шаг закрытия.</div>
-        <div class="findings">
-          <div class="f red"><b>Дыра</b>заявлено, но не работает<div class="to">→ назад в цикл: карта → спеки → код</div></div>
-          <div class="f gray"><b>Решение</b>сделано иначе, чем в легаси<div class="to">→ владелец: девиация или доработка</div></div>
-          <div class="f amber"><b>Отсрочка</b>причина/зависимость записана<div class="to">→ бэклог финальной приёмки</div></div>
-        </div>
-      </section>
-
-      <div class="down"></div>
-
-      <section class="phase">
-        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M8.5 12l2.5 2.5 4.5-4.5"/></svg></div>
-        <h3>10 · Финальная приёмка <small>чужими руками</small></h3>
-        <p class="d">Остаётся <b>один консолидированный бэклог</b> всего открытого; автоматический аудит доказывает полноту — открытая строка вне бэклога невозможна. Финальный прогон чеклиста по всем каналам и аудита отдаётся <b>агентам других вендоров</b> (Google Antigravity, OpenAI Codex или аналог): агент, писавший код, не подтверждает сам себя. Сторонний агент получает только инструкцию, воркбук и URL стенда; совпали результаты с картой — приёмка подписана.</p>
-        <div class="steps">
-          <span class="chip key">Единый бэклог всего открытого</span><span class="sep">→</span>
-          <span class="chip gate">Аудит полноты</span><span class="sep">→</span>
-          <span class="chip agent">Перепроверка сторонними агентами</span><span class="sep">→</span>
-          <span class="chip owner">Приёмка подписана</span>
-        </div>
-      </section>
-
-    </div><!-- /loop-scope -->
-  </div>
-
-  <p class="outcome"><b>Петли:</b> дыры в карте, найденные контрольной разведкой (стадия 2), живым прогоном (стадия 3) и ревизией требований (стадия 4), возвращаются в стадию 1 — разведку; находки стадий 6, 9 и 10 возвращаются в стадию 5 (карта → SDD) и далее в сборку — циклы повторяются до чистой приёмки.&nbsp;&nbsp;<b>Выход:</b> карта без красного и серого + независимая приёмка = <b>перенос доказан, а не заявлен</b>.</p>
 
   <h2 class="section">Одним взглядом</h2>
 
@@ -421,14 +248,204 @@
         <div class="gname">Приёмка</div>
         <div class="gcap">перепроверка сторонними агентами</div>
       </div>
-      <div class="gloop" aria-hidden="true"></div>
-      <div class="gloop-label">находки → назад в цикл</div>
       <div class="gloop2" aria-hidden="true"></div>
       <div class="gloop3" aria-hidden="true"></div>
       <div class="gloop4" aria-hidden="true"></div>
       <div class="gloop4-label">дыры → в разведку</div>
+      <div class="gloop5" aria-hidden="true"></div>
+      <div class="gloop6" aria-hidden="true"></div>
+      <div class="gloop7" aria-hidden="true"></div>
+      <div class="gloop7-label">находки → в проектирование</div>
     </div>
   </div>
+
+  <h2 class="section">Стадии в деталях</h2>
+
+  <div class="legends">
+    <div class="legend"><span class="t">Статус строки карты</span>
+      <span><span class="sw" style="background:var(--xl-green);border-color:var(--xl-green-b)"></span>сделано и проверено</span>
+      <span><span class="sw" style="background:var(--xl-red);border-color:var(--xl-red-b)"></span>дыра — чинить</span>
+      <span><span class="sw" style="background:var(--xl-gray);border-color:var(--xl-gray-b)"></span>нужно решение владельца</span>
+      <span><span class="sw" style="background:var(--xl-amber);border-color:var(--xl-amber-b)"></span>отложено, причина записана</span>
+    </div>
+    <div class="legend"><span class="t">Кто выполняет шаг</span>
+      <span><span class="fr" style="border:1.6px dashed var(--owner)"></span>точка контроля владельца</span>
+      <span><span class="fr" style="border:1.6px dashed var(--agent)"></span>независимый агент</span>
+      <span><span class="fr" style="border:1.6px solid var(--gate);background:var(--xl-green)"></span>автоматический гейт</span>
+    </div>
+  </div>
+
+  <p class="principle" style="margin-bottom:10px"><b>Принцип работы с агентами: глубина важнее скорости.</b> На каждой стадии агент работает в режиме глубокого исследования — полные проходы вместо выборочных, адверсариальные перепроверки, независимые вторые мнения. Это медленнее, но дыра, пойманная рано, всегда дешевле дыры, найденной на приёмке.</p>
+
+  <p class="principle" style="border-left-color:var(--xl-red-b)"><b>Критерий остановки перепроверок: сухой проход.</b> Каждая петля возврата — стадии 2, 3, 4 → в разведку и 6, 9, 10 → в проектирование — закрывается не после фиксированного числа повторов, а <b>сухим проходом</b>: полным проходом без единой новой находки (на практике 2–3 итерации). Каждая повторная проверка — новый независимый агент со свежим контекстом: агент никогда не перепроверяет сам себя.</p>
+
+  <div class="flow">
+
+    <div class="loop-scope recon">
+      <div class="loop-line" aria-hidden="true"></div>
+      <div class="loop-tag">дыры в карте → снова в разведку · ↻ до сухого прохода</div>
+
+    <div class="loop-scope mini">
+      <div class="loop-line" aria-hidden="true"></div>
+      <div class="loop-tag">дыры → снова в разведку</div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></div>
+        <h3>1 · Разведка <small>легаси-код → карта паритета</small></h3>
+        <p class="d">Поведение достаётся <b>только из кода легаси</b> — не из документации и не по памяти. Каждый пользовательский сценарий становится строкой <b>воркбука — карты паритета</b> с доказательством (файл/класс/страница): реальные системы прячут второстепенные флоу, поэтому первый проход — всегда черновик.</p>
+        <div class="steps">
+          <span class="chip">Легаси-код</span><span class="sep">→</span>
+          <span class="chip">Выделение user&nbsp;flows</span><span class="sep">→</span>
+          <span class="chip key">Воркбук — карта паритета</span>
+        </div>
+      </section>
+
+      <div class="down"></div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/><path d="M11.5 14l1.8 1.8 3.2-3.2"/></svg></div>
+        <h3>2 · Контрольная разведка <small>второй агент ищет, что пропустил первый</small></h3>
+        <p class="d">Когда карта построена, <b>второй, независимый агент</b> делает такой же анализ легаси с нуля и сравнивает свой результат с картой: пропущенные флоу и сценарии, битые доказательства, неверные статусы. Каждая находка возвращает работу <b>назад в разведку</b> — карта исправляется и дополняется, затем контроль повторяется. Стадия закрыта только <b>сухим проходом</b> — без единой новой находки (обычно 2–3 итерации, каждая — свежим агентом).</p>
+        <div class="steps">
+          <span class="chip agent">Второй агент: анализ с нуля</span><span class="sep">→</span>
+          <span class="chip">Дифф с картой: дыры и ошибки</span><span class="sep">→</span>
+          <span class="chip">Исправления в карте</span><span class="sep">→</span>
+          <span class="chip gate">Сухой проход: 0 новых находок — карта принята</span>
+        </div>
+      </section>
+
+    </div><!-- /loop-scope mini -->
+
+    <div class="down"></div>
+
+    <section class="phase">
+      <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="14" rx="2"/><path d="M6.5 8.5l3 2.5-3 2.5"/><path d="M12 13.5h5"/><path d="M9 21h6"/></svg></div>
+      <h3>3 · Живой прогон легаси <small>развернуть и пройти все сценарии руками</small></h3>
+      <p class="d">Карта из кода — это гипотеза. Легаси разворачивается и проходится вживую, как его проходит реальный пользователь: веб — <b>прокликать каждую страницу и форму</b>, зелёный экран — <b>пройти каждую транзакцию в терминале</b>, API — вызвать каждый маршрут, батч — прогнать джоб. К технологии не привязываемся — важно пройти <b>все возможные сценарии</b> и сверить каждый с картой. Поведение без строки — строка добавляется; что развернуть или наблюдать нельзя — остаётся в карте непроверенным, а не «предположительно работает».</p>
+      <div class="steps">
+        <span class="chip">Развернуть легаси</span><span class="sep">→</span>
+        <span class="chip agent">Пройти всё: страницы / экраны терминала / API / джобы</span><span class="sep">→</span>
+        <span class="chip">Сверка с картой</span><span class="sep">→</span>
+        <span class="chip key">Карта дополнена и подтверждена</span>
+      </div>
+    </section>
+
+    <div class="down"></div>
+
+    <section class="phase">
+      <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M17 4l4 4-4 4"/><path d="M21 8H8"/><path d="M7 12l-4 4 4 4"/><path d="M3 16h13"/></svg></div>
+      <h3>4 · Ревизия требований <small>consistency check — вместе с бизнесом</small></h3>
+      <p class="d">Перед проектированием агент проверяет саму карту как набор требований — <b>прицельно ищет противоречия</b>, а не просто перечитывает: несостыковки между флоу и каналами (пример: логин есть в одном канале и отсутствует в другом), <b>устаревшие требования</b> — со сверкой по документации легаси, <b>странные и необоснованные</b> (unreasonable/strange) требования. Каждая находка разбирается <b>вместе с бизнесом и девелопером</b>: оставить как есть / изменить / не переносить — решение фиксируется в карте до начала SDD.</p>
+      <div class="steps">
+        <span class="chip agent">Поиск противоречий в карте</span><span class="sep">→</span>
+        <span class="chip">Устаревшее: сверка с документацией</span><span class="sep">→</span>
+        <span class="chip">Странные/необоснованные требования</span><span class="sep">→</span>
+        <span class="chip owner">Разбор с бизнесом и девелопером</span><span class="sep">→</span>
+        <span class="chip key">Решения зафиксированы в карте</span>
+      </div>
+    </section>
+
+    </div><!-- /loop-scope recon -->
+
+    <div class="down"></div>
+
+    <div class="loop-scope">
+      <div class="loop-line" aria-hidden="true"></div>
+      <div class="loop-tag">находки возвращаются в цикл · ↻ до сухого прохода</div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4"/><path d="M10 12h6M10 16h6"/></svg></div>
+        <h3>5 · Проектирование — SDD <small>карта → спецификации: spec / plan / tasks</small></h3>
+        <p class="d">Здесь пишется <b>SDD (Spec-Driven Development)</b> — спецификации, от которых дальше ведётся вся разработка. Точка входа всегда воркбук: <b>сначала актуализируются сами строки</b> (формулировки, SDD-колонки: что покрывается, что откладывается — с причиной), и только затем каждый флоу превращается в SDD-артефакты: spec → plan → tasks. Карта и SDD связаны колонками покрытия и расходиться не могут. Ни строчки кода до утверждения SDD владельцем.</p>
+        <div class="steps">
+          <span class="chip key">Актуализация воркбука</span><span class="sep">→</span>
+          <span class="chip">SDD: Spec</span><span class="sep">→</span>
+          <span class="chip">Plan</span><span class="sep">→</span>
+          <span class="chip">Tasks</span><span class="sep">→</span>
+          <span class="chip owner">Утверждение SDD владельцем</span>
+        </div>
+      </section>
+
+      <div class="down"></div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <h3>6 · Перепроверка проектирования <small>всё ли учтено — чужими глазами</small></h3>
+        <p class="d">До начала сборки <b>другой агент</b> сверяет результат стадий 1–5: все ли легаси-флоу учтены картой (ничего не потеряно ни при разведке, ни при живом прогоне), учтены ли решения ревизии требований и все ли строки карты покрыты SDD-спецификациями или отложены с причиной. Проверка не бумажная: по колонкам <b>source code evidence</b> агент <b>точечно возвращается в исходники легаси</b> — открывает указанные файлы и строки и сверяет, что требование и спека действительно соответствуют коду, вылавливая недоработки и недосказанности. Расхождения возвращаются в стадию 5 — реализация не стартует, пока перепроверка не чистая.</p>
+        <div class="steps">
+          <span class="chip agent">Другой агент</span><span class="sep">→</span>
+          <span class="chip">Карта ↔ легаси: полнота</span><span class="sep">→</span>
+          <span class="chip">Точечно в сорсы по evidence-колонкам</span><span class="sep">→</span>
+          <span class="chip">Карта ↔ спеки: покрытие</span><span class="sep">→</span>
+          <span class="chip gate">0 расхождений — допуск к сборке</span>
+        </div>
+      </section>
+
+      <div class="down"></div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3v6a3 3 0 0 0 3 3h6a3 3 0 0 1 3 3v6"/><circle cx="6" cy="3" r="2"/><circle cx="18" cy="21" r="2"/><circle cx="18" cy="9" r="2"/><path d="M18 11v4"/></svg></div>
+        <h3>7 · Сборка <small>код, тесты и документы — одним PR</small></h3>
+        <p class="d">Ветка → реализация на целевом стеке → <b>автотесты как жёсткий гейт</b>: PR не выпускается на красных. В том же PR вместе с кодом синхронизируются спецификации и воркбук (зеленение строк с доказательствами). Мерж — только владелец.</p>
+        <div class="steps">
+          <span class="chip">Ветка</span><span class="sep">→</span>
+          <span class="chip">Реализация</span><span class="sep">→</span>
+          <span class="chip gate"><b>Тесты-гейт</b></span><span class="sep">→</span>
+          <span class="chip">PR: код + SDD + воркбук</span><span class="sep">→</span>
+          <span class="chip owner">Мерж — владелец</span>
+        </div>
+      </section>
+
+      <div class="down"></div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c4 3 5 7 5 10l3 4h-5a3 3 0 0 1-6 0H4l3-4c0-3 1-7 5-10z"/><circle cx="12" cy="10" r="2"/></svg></div>
+        <h3>8 · Поставка <small>деплой одной командой</small></h3>
+        <p class="d">Деплой одной командой → демо-стенд, где <b>легаси и новая система живут бок о бок</b>: один и тот же флоу показывается в двух мирах. Смоук-тест закрывает поставку.</p>
+        <div class="steps">
+          <span class="chip">Деплой</span><span class="sep">→</span>
+          <span class="chip key">Демо-стенд: легаси + новое</span><span class="sep">→</span>
+          <span class="chip gate">Смоук</span>
+        </div>
+      </section>
+
+      <div class="down"></div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h13v10H8l-4 4z"/><path d="M13 14l2 6 2-3 3 1-2-6"/></svg></div>
+        <h3>9 · Живая ревизия <small>карта против живых систем — по всем каналам</small></h3>
+        <p class="d">Агент проходит <b>обе системы как реальный пользователь — по всем каналам, какие есть</b>: страницы и формы в вебе, экраны и транзакции в терминале, вызовы API, джобы — и сверяет увиденное с картой. Каждая находка в момент фиксации меняет и карту, и спецификации.</p>
+        <div class="steps">
+          <span class="chip agent">Проход по всем каналам: UI / терминал / API / джобы</span><span class="sep">→</span>
+          <span class="chip">Сверка с картой</span><span class="sep">→</span>
+          <span class="chip gate">Автоаудит инвариантов воркбука</span>
+        </div>
+        <div class="rulebox"><b>Непроверенное = не сделано (красное).</b> Каждый геп несёт происхождение: подтверждено наблюдением / не проверено — проверка = первый шаг закрытия.</div>
+        <div class="findings">
+          <div class="f red"><b>Дыра</b>заявлено, но не работает<div class="to">→ назад в цикл: карта → спеки → код</div></div>
+          <div class="f gray"><b>Решение</b>сделано иначе, чем в легаси<div class="to">→ владелец: девиация или доработка</div></div>
+          <div class="f amber"><b>Отсрочка</b>причина/зависимость записана<div class="to">→ бэклог финальной приёмки</div></div>
+        </div>
+      </section>
+
+      <div class="down"></div>
+
+      <section class="phase">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M8.5 12l2.5 2.5 4.5-4.5"/></svg></div>
+        <h3>10 · Финальная приёмка <small>чужими руками</small></h3>
+        <p class="d">Остаётся <b>один консолидированный бэклог</b> всего открытого; автоматический аудит доказывает полноту — открытая строка вне бэклога невозможна. Финальный прогон чеклиста по всем каналам и аудита отдаётся <b>агентам других вендоров</b> (Google Antigravity, OpenAI Codex или аналог): агент, писавший код, не подтверждает сам себя. Сторонний агент получает только инструкцию, воркбук и URL стенда; совпали результаты с картой — приёмка подписана, при расхождениях цикл повторяется — тоже до сухого прохода.</p>
+        <div class="steps">
+          <span class="chip key">Единый бэклог всего открытого</span><span class="sep">→</span>
+          <span class="chip gate">Аудит полноты</span><span class="sep">→</span>
+          <span class="chip agent">Перепроверка сторонними агентами</span><span class="sep">→</span>
+          <span class="chip owner">Приёмка подписана</span>
+        </div>
+      </section>
+
+    </div><!-- /loop-scope -->
+  </div>
+
+  <p class="outcome"><b>Петли:</b> дыры в карте, найденные контрольной разведкой (стадия 2), живым прогоном (стадия 3) и ревизией требований (стадия 4), возвращаются в стадию 1 — разведку; находки стадий 6, 9 и 10 возвращаются в стадию 5 (карта → SDD) и далее в сборку — циклы повторяются до сухого прохода на каждой петле и чистой приёмки в конце.&nbsp;&nbsp;<b>Выход:</b> карта без красного и серого + независимая приёмка = <b>перенос доказан, а не заявлен</b>.</p>
 
   <div class="foot">
     <span><b>Правила зашиты:</b> инструкция воркбука + скрипт-аудит (цвет=статус, три типа находок, полнота бэклога, непроверенное=красное)</span>

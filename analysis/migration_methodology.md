@@ -32,6 +32,14 @@ sampling, adversarial re-checks, independent second opinions. This is slower —
 and that is accepted. Never trade completeness for speed: a hole caught early
 is always cheaper than one found at acceptance.
 
+## Stop criterion for re-checks: the dry pass
+
+Every return loop — Stages 2, 3, 4 → Stage 1 and Stages 6, 9, 10 → Stage 5 —
+closes not after a fixed number of repetitions but on a **dry pass**: a full
+pass that yields not a single new finding (in practice 2–3 iterations). Every
+repeated check is performed by a fresh independent agent with a clean context:
+an agent never re-verifies its own work.
+
 ## Stages
 
 ### Stage 1 — Reconnaissance (legacy code → parity map)
@@ -102,6 +110,10 @@ is always cheaper than one found at acceptance.
   - map ↔ decisions: are the requirements-revision decisions reflected?
   - map ↔ SDD: is every row covered by the specs or explicitly deferred with
     a written reason?
+- The check is not paper-only: following the **source code evidence** columns,
+  the agent goes back into the legacy sources row by row — opening the cited
+  files and lines and verifying that the requirement and the spec really match
+  the code, catching omissions and understatements.
 - Discrepancies return to Stage 5. Implementation does not start until this
   re-verification is clean. Passing it is the **gate to build**.
 
@@ -162,7 +174,8 @@ is always cheaper than one found at acceptance.
 | Stage 9 (live revision) | Stage 5 | gaps → map → SDD → code |
 | Stage 10 (final acceptance) | Stage 5 | third-party findings |
 
-Cycles repeat until acceptance is clean.
+Cycles repeat until every loop ends in a dry pass and the final acceptance is
+clean.
 
 ## Exit criterion
 
