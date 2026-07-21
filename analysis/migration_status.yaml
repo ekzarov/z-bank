@@ -3,21 +3,22 @@ project: Bank of Z modernization
 updated: 2026-07-21
 
 methodology_stage:
-  number: 2
-  name: Control reconnaissance
-  status: awaiting-independent-pass-007
-  last_completed_stage: 1
+  number: 3
+  name: Live legacy walkthrough
+  status: blocked-awaiting-owner-fallback-decision
+  last_completed_stage: 2
 
 next_action:
-  actor: independent-agent
-  pass_number: 7
-  report: analysis/reviews/stage-02-pass-007.md
+  actor: owner
+  pass_number: null
+  report: null
   instruction: >-
-    Perform a fresh complete code-first inventory, then verify the corrected
-    management-channel security scenarios and full map in pass 007.
+    Provide an authorized IBM legacy runtime for the complete Stage 3 live
+    walkthrough, or explicitly select simulate or waive and record the required
+    approver, date, rationale, scope, residual risk, and permitted next stage.
   completion_gate: >-
-    A different eligible independent agent records a clean Stage 2 pass with no
-    new findings and the workbook audit reports AUDIT OK.
+    Complete live legacy evidence is recorded, or the owner records a valid
+    Stage 3 simulate/waive fallback decision without claiming live verification.
 
 review_pass_schema:
   required_fields:
@@ -69,6 +70,12 @@ review_passes:
     agent: OpenAI Codex independent reviewer
     result: findings
     report: analysis/reviews/stage-02-pass-006.md
+  - stage: 2
+    pass: 7
+    date: 2026-07-21
+    agent: OpenAI Codex independent reviewer
+    result: clean
+    report: analysis/reviews/stage-02-pass-007.md
 
 owner_gates:
   constitution_ratification: pending
@@ -89,11 +96,11 @@ owner_gates:
 known_blockers:
   - id: stage-02-pass-006-findings
     affects_stage: 2
-    status: resolved-awaiting-independent-verification
+    status: resolved-verified-by-pass-007
     detail: >-
       The Zowe TLS-verification bypass and provisioned CICS management-security
-      settings were added; pass 007 must independently verify them.
-    evidence: analysis/reviews/stage-02-pass-006.md; analysis/legacy_user_flows.xlsx; analysis/legacy_reconnaissance.md
+      settings were added and independently verified by clean pass 007.
+    evidence: analysis/reviews/stage-02-pass-006.md; analysis/reviews/stage-02-pass-007.md; analysis/legacy_user_flows.xlsx; analysis/legacy_reconnaissance.md
   - id: stage-02-pass-005-findings
     affects_stage: 2
     status: resolved-verified-by-pass-006
