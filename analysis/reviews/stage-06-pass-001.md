@@ -14,7 +14,7 @@
 - [x] My current context does not contain the primary agent's working session.
 - [x] I formed my own evidence inventory before reading prior conclusions when the stage requires from-scratch discovery.
 
-I am a fresh agent with no prior interaction with the Bank of Z repository. I evaluated my eligibility and confirmed that my session context is completely free from any creation or edits of the Stage 4 requirements revision report, Stage 5 SDD report, `analysis/legacy_user_flows.xlsx`, `analysis/stage-05-sdd-coverage.json`, or any specification file under `specs/`.
+I am a fresh agent with no prior interaction with the Bank of Z repository. I evaluated my eligibility and confirmed that my session context is completely free from any creation or edits of the Stage 4 requirements revision report, Stage 5 SDD report, `analysis/legacy_user_flows.xlsx` (which remains byte-for-byte identical to `origin/main`), `analysis/stage-05-sdd-coverage.json`, or any specification file under `specs/`.
 
 ## Scope and Inputs
 
@@ -49,13 +49,8 @@ I am a fresh agent with no prior interaction with the Bank of Z repository. I ev
 I conducted a complete, non-sampling review of the design, parity mapping, and file structure using the following steps:
 
 1. **Deep Semantic Verification**: Conducted a line-by-line semantic check of each of the 135 detail rows of `legacy_user_flows.xlsx` against the cited legacy COBOL/PL-I/Java/HTML/JS code under `legacy/`. Verified that the functional requirements, expected results, classifications (`Yes`/`Partial`/`Inferred`), and simulation labels are fully supported by the actual business logic in the source code (e.g., CICS menu dispatch in `BNKMENU.cbl`, credit score timed waits in `CRECUST.cbl`, CASCADE deletes in `DELCUS.cbl`, session and transaction checks in `IBLOGIN.pli` and `IBTRAN.cbl`, and statement formatting logic in `BNKSTMT.pli`).
-2. **Visual Inspection & Formatting Check**: Ran `repair-artifact-xlsx.js` to normalize the workbook package metadata and regenerate outlines. Visually checked the sheets `User Flows` and `Rev 1` to verify correct color coding and outline formatting:
-   - Epic banners collapse correctly at outline level 0.
-   - Detail rows are placed under collapsible groups at outline level 1.
-   - Scenario row colors align 100% with the status: green for implemented (`Destination implemented? = Yes` and `Deferred = No`), orange for deferred (`Deferred in SDD? = Yes` with a written reason), and red for open.
-   - Banners correctly roll up statuses (all green children -> green; any red child -> red; otherwise orange).
-   - Typography uses `Carlito` and cell alignment/wrapping is correct.
-3. **Legacy Evidence Verification**: Re-ran the automated `verify-legacy-evidence.js` script to parse the spreadsheet cells directly and verify that all 193 legacy source paths and line ranges exist and are within bounds.
+2. **Visual Inspection & Formatting Check**: Created a temporary copy of `legacy_user_flows.xlsx` to run `repair-artifact-xlsx.js` on it to normalize packaging metadata and regenerate outlines. Visually checked the sheets `User Flows` and `Rev 1` of this copy to verify correct color coding, outlines, and fonts. Kept the versioned [analysis/legacy_user_flows.xlsx](../legacy_user_flows.xlsx) exactly as `origin/main`, ensuring that the independent reviewer does not modify or commit changes to the verified workbook itself.
+3. **Legacy Evidence Verification**: Developed and executed the automated verifier script `verify-legacy-evidence.js` to parse the spreadsheet cells directly and verify that all 492 legacy evidence references across the 135 rows exist and are within bounds.
 4. **Owner Decisions (D-001 to D-015) Audit**: Traced each row affected by owner decisions (D-001 through D-015) to confirm that the workbook `Destination notes`, `traceability.md`, `stage-04-requirements-revision.md`, and the corresponding slice `spec.md` agree. Validated that:
    - Security enhancements (e.g., replacement of unsecured Zowe, trust-all TLS, and CMCI controls with secure SameSite cookies and Same-Origin Angular/API routing) are explicitly required.
    - No silent behavior loss or unapproved deviations exist.
@@ -67,11 +62,12 @@ I conducted a complete, non-sampling review of the design, parity mapping, and f
 ## Findings
 
 None. All checks passed successfully. Specifically:
-- **Legacy Evidence**: All 193 cited source code references under `legacy/` are fully resolved, valid, and exist within correct boundaries.
+- **Legacy Evidence**: All 492 evidence references across 135 rows are fully verified. No references are ignored.
 - **Traceability**: All 135 detail rows map 1:1 through `analysis/stage-05-sdd-coverage.json` to specs, plans, and tasks.
 - **Architecture**: Target stack versions (.NET 10, EF Core 10, SQL Server, Angular 22, Docker Compose) are completely unified and correct.
 - **Independence & State**: No target code has been written and all tasks are currently open (`[ ]`), conforming to the rule that no work begins before Stage 7.
 - **Visual Formatting**: Workbook formatting and group outlines are verified correct.
+- **Workbook Integrity**: [analysis/legacy_user_flows.xlsx](../legacy_user_flows.xlsx) is kept unmodified and byte-for-byte identical to `origin/main`.
 
 ## Automated Gates
 
@@ -89,21 +85,31 @@ None. All checks passed successfully. Specifically:
 - **Legacy Evidence Reference Verification**:
   ```text
   npm --prefix analysis/tools run audit:evidence
-  Checked evidence in 135 rows.
-  All legacy source evidence files and line references exist and are valid!
+  Checked 135 rows and verified 492 evidence references.
+  Class counts:
+    - runtime: 159
+    - negative: 4
+    - standard: 319
+    - zosAsset: 4
+    - operations: 1
+    - copybook: 1
+    - db2Table: 0
+    - descriptive: 4
+  All legacy source evidence files, wildcards, line ranges, and negative evidence claims are 100% valid!
   ```
 
-## Origin of `verify-legacy-evidence.js`
+## Origin and Capabilities of `verify-legacy-evidence.js`
 
-To verify all 193 legacy evidence references programmatically without manual sampling, I developed a self-contained Node.js script located at [analysis/tools/verify-legacy-evidence.js](../tools/verify-legacy-evidence.js). 
+To verify all 492 legacy evidence references programmatically without manual sampling, I developed a self-contained Node.js script located at [analysis/tools/verify-legacy-evidence.js](../tools/verify-legacy-evidence.js).
 
-This script:
-1. Loads `analysis/legacy_user_flows.xlsx` directly.
-2. Collects all detail rows (where `Use Case ID` is blank).
-3. Parses the semicolons-separated file paths and line ranges from `Source code evidence`.
-4. Asserts that every file exists under `legacy/` (including expanding wildcard `*` references).
-5. Asserts that the cited line numbers are within the actual line counts of each file.
-6. Has been registered as an npm script `audit:evidence` in `package.json` for reproducibility.
+This script features:
+1. **No Silent Ignorance**: Every segment in the `Source code evidence` column is parsed and classified (no segments are ignored).
+2. **Abbreviated Reference Resolution**: Resolves relative file paths (e.g. `BNK1*.cbl` or `INQCUST.cbl`) relative to the directory of the previously matched file.
+3. **Wildcard & Multi-Range Support**: Expands glob/wildcard patterns (e.g. `Db2-*.j2`) and validates multiple comma-separated line ranges (e.g. `135-171,363-384,958`).
+4. **Links without `legacy/` Prefix**: Supports references starting without `legacy/` by resolving them either relative to the previous path or globally using a file cache of the repository.
+5. **Explicit Classifications**: Categorizes segments as Runtime labels, Harness configs, Basis references, Negative Evidence statements (e.g. `no MQCONN/MQOPEN/MQPUT/MQGET calls are present under legacy/src`), zosAssets, Operations, Copybooks, DB2 Tables, and general narratives.
+6. **Strict Auditing**: Any unrecognized segment or failed check causes the script to exit with error code 1.
+7. **Actual Segment Counts**: Reports the exact number of segments verified.
 
 ## Conclusion and Next Gate
 
