@@ -12,19 +12,19 @@
     --xl-red:#FFC7CE;   --xl-red-b:#C0505F;
     --xl-gray:#EDEDED;  --xl-gray-b:#9AA3AC;
     --xl-amber:#FCE4D6; --xl-amber-b:#D08A4E;
-    --owner:#C9971E; --agent:#6E7F90; --gate:#3D8455;
+    --owner:#C9971E; --agent:#6E7F90; --gate:#3D8455; --iter:#7E5FC9;
     --s1:#54689B; --s2:#4F6EA0; --s3:#4B77A0; --s4:#46809D; --s5:#418998; --s6:#3D8F8E; --s7:#3E9280; --s8:#45966F; --s9:#549C61; --s10:#6FA55A;
   }
   @media (prefers-color-scheme: dark){
     :root{ --ground:#141B23; --panel:#1C2632; --ink:#E7ECF1; --muted:#94A3B2;
-      --line:#34404D; --spine:#4E5F6F; --owner:#D9AE45; --agent:#8B9CAC; --gate:#5CAB84;
+      --line:#34404D; --spine:#4E5F6F; --owner:#D9AE45; --agent:#8B9CAC; --gate:#5CAB84; --iter:#A78BFA;
       --s1:#6479AE; --s2:#5F7EB0; --s3:#5886AF; --s4:#528EA9; --s5:#4D95A0; --s6:#4A9A93; --s7:#4F9E84; --s8:#58A275; --s9:#67A96C; --s10:#7DB56A; }
   }
   :root[data-theme="dark"]{ --ground:#141B23; --panel:#1C2632; --ink:#E7ECF1; --muted:#94A3B2;
-      --line:#34404D; --spine:#4E5F6F; --owner:#D9AE45; --agent:#8B9CAC; --gate:#5CAB84;
+      --line:#34404D; --spine:#4E5F6F; --owner:#D9AE45; --agent:#8B9CAC; --gate:#5CAB84; --iter:#A78BFA;
       --s1:#6479AE; --s2:#5F7EB0; --s3:#5886AF; --s4:#528EA9; --s5:#4D95A0; --s6:#4A9A93; --s7:#4F9E84; --s8:#58A275; --s9:#67A96C; --s10:#7DB56A; }
   :root[data-theme="light"]{ --ground:#EFF1F4; --panel:#FFFFFF; --ink:#1A2430; --muted:#5D6C7B;
-      --line:#CBD4DD; --spine:#9AACBD; --owner:#C9971E; --agent:#6E7F90; --gate:#3D8455;
+      --line:#CBD4DD; --spine:#9AACBD; --owner:#C9971E; --agent:#6E7F90; --gate:#3D8455; --iter:#7E5FC9;
       --s1:#54689B; --s2:#4F6EA0; --s3:#4B77A0; --s4:#46809D; --s5:#418998; --s6:#3D8F8E; --s7:#3E9280; --s8:#45966F; --s9:#549C61; --s10:#6FA55A; }
 
   body{ background:var(--ground); color:var(--ink);
@@ -265,9 +265,9 @@
   .dgroup .down::after{ left:calc(50% - 43px); }
   .dgroup .down::before{ left:calc(50% - 43px); }
 
-  .ggroups{ padding-top:38px; }
-  .ilbl{ position:absolute; background:var(--xl-amber); color:#1A2430;
-    border:1px solid var(--owner); border-radius:6px; padding:2px 9px;
+  .ggroups{ padding-top:26px; }
+  .ilbl{ position:absolute; background:#EDE7FA; color:#1A2430;
+    border:1px solid var(--iter); border-radius:6px; padding:2px 9px;
     font-size:12px; white-space:nowrap; z-index:2; }
 </style>
 </head>
@@ -410,28 +410,30 @@
         rect.setAttribute('x', x1); rect.setAttribute('y', y1);
         rect.setAttribute('width', x2 - x1); rect.setAttribute('height', y2 - y1);
         rect.setAttribute('rx', 14); rect.setAttribute('fill', 'none');
-        rect.setAttribute('stroke', 'var(--owner)'); rect.setAttribute('stroke-width', '2');
+        rect.setAttribute('stroke', 'var(--iter)'); rect.setAttribute('stroke-width', '2');
         rect.setAttribute('stroke-dasharray', '7 6');
         svg.appendChild(rect);
-        // дуга цикла: из QA поверх контура назад в Кодинг (следующий слайс)
-        var qaCx = (qa.l + qa.r) / 2, codeCx = (code.l + code.r) / 2;
-        var arcY = y1 - 18;
-        var arc = document.createElementNS(NS, 'path');
-        var d = 'M' + qaCx + ' ' + (y1 - 1) +
-                ' L' + qaCx + ' ' + (arcY + 12) + ' Q' + qaCx + ' ' + arcY + ' ' + (qaCx - 12) + ' ' + arcY +
-                ' L' + (codeCx + 12) + ' ' + arcY + ' Q' + codeCx + ' ' + arcY + ' ' + codeCx + ' ' + (arcY + 12) +
-                ' L' + codeCx + ' ' + (y1 - 4);
-        arc.setAttribute('d', d); arc.setAttribute('fill', 'none');
-        arc.setAttribute('stroke', 'var(--owner)'); arc.setAttribute('stroke-width', '2');
-        arc.setAttribute('stroke-dasharray', '7 6'); arc.setAttribute('stroke-linecap', 'round');
-        arc.setAttribute('marker-end', 'url(#iarrm)');
-        svg.appendChild(arc);
+        // подпись на верхнем ребре
         var lb = document.createElement('div'); lb.className = 'ilbl';
         lb.textContent = 'Итеративный подход: разработка идёт циклами по несколько фичей (слайс) — слайс принят → следующий ↻';
         lay.appendChild(lb);
         var bb3 = lb.getBoundingClientRect();
-        lb.style.left = ((qaCx + codeCx)/2 - bb3.width/2) + 'px';
-        lb.style.top = (arcY - bb3.height/2) + 'px';
+        var cx = (x1 + x2) / 2;
+        lb.style.left = (cx - bb3.width/2) + 'px';
+        lb.style.top = (y1 - bb3.height/2) + 'px';
+        // направленные стрелки по периметру — круговорот: низ →, право ↑, верх ←, лево ↓
+        function tri(x, y, ang){ var p = document.createElementNS(NS, 'path');
+          p.setAttribute('d', 'M-5 -4 L5 0 L-5 4 z');
+          p.setAttribute('transform', 'translate(' + x + ' ' + y + ') rotate(' + ang + ')');
+          p.setAttribute('fill', 'var(--iter)'); svg.appendChild(p); }
+        function along(len, step){ var n = Math.max(1, Math.round(len / step)); var pts = [];
+          for (var i = 0; i < n; i++) pts.push((i + 0.5) * len / n); return pts; }
+        var labelHalf = bb3.width/2 + 16;
+        along(x2 - x1 - 32, 110).forEach(function(t){ tri(x1 + 16 + t, y2, 0); });
+        along(y2 - y1 - 32, 110).forEach(function(t){ tri(x2, y2 - 16 - t, -90); });
+        along(x2 - x1 - 32, 110).forEach(function(t){ var x = x2 - 16 - t;
+          if (Math.abs(x - cx) > labelHalf) tri(x, y1, 180); });
+        along(y2 - y1 - 32, 110).forEach(function(t){ tri(x1, y1 + 16 + t, 90); });
       })();
     }
     function draw2(){
