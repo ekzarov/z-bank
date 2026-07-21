@@ -26,7 +26,9 @@ async function repair(file) {
     'xl/workbook.xml',
     'xl/styles.xml',
     'xl/sharedStrings.xml',
-    'xl/worksheets/sheet1.xml',
+    ...Object.keys(zip.files).filter((name) =>
+      /^xl\/worksheets\/sheet\d+\.xml$/.test(name)
+    ),
   ];
   for (const name of spreadsheetXml) {
     const part = zip.file(name);

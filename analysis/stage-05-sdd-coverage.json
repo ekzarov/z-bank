@@ -1,0 +1,72 @@
+{
+  "slices": [
+    {
+      "id": "001",
+      "slug": "secure-access-shell",
+      "workbookRows": [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 109, 113, 114, 115, 116, 117]
+    },
+    {
+      "id": "002",
+      "slug": "customer-management",
+      "workbookRows": [22, 23, 24, 25, 26, 27, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 87, 90, 97]
+    },
+    {
+      "id": "003",
+      "slug": "account-management",
+      "workbookRows": [41, 42, 43, 44, 45, 46, 47, 48, 50, 51, 52, 53, 54, 55, 56, 57, 58, 88, 110, 111, 112]
+    },
+    {
+      "id": "004",
+      "slug": "cash-transactions",
+      "workbookRows": [60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 89]
+    },
+    {
+      "id": "005",
+      "slug": "funds-transfers",
+      "workbookRows": [80, 81, 82, 83, 84, 85]
+    },
+    {
+      "id": "006",
+      "slug": "transaction-history",
+      "workbookRows": [91, 92, 93, 94, 95, 96, 98]
+    },
+    {
+      "id": "007",
+      "slug": "monthly-statements",
+      "workbookRows": [100, 101, 102, 103, 104, 105, 106, 107]
+    },
+    {
+      "id": "008",
+      "slug": "data-initialization",
+      "workbookRows": [119, 120, 121, 122, 123, 124, 125, 126]
+    },
+    {
+      "id": "009",
+      "slug": "delivery-operations",
+      "workbookRows": [128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153]
+    }
+  ],
+  "decisionNotes": {
+    "8-11": "Deviation D-001: replace terminal menu and PF-key behavior with accessible Angular navigation.",
+    "13": "Deviation D-001: one target domain and UI; no CICS/IMS channel selector.",
+    "15-20": "Deviation D-002: secure Identity sessions and reliable logout replace IMS session quirks.",
+    "31-32": "Decision D-010: preserve credit assessment through a port; demo provider is explicitly simulated.",
+    "39": "Decision D-009: implement authorized customer retirement instead of the unsupported web placeholder.",
+    "46": "Deviation D-011: dormant old-account logic is not ported.",
+    "53,56,58": "Decision D-009: implement supported account lifecycle UI/API instead of Feature Not Implemented.",
+    "67": "Deviation D-003: reject customer/account ownership mismatch.",
+    "68": "Deviation D-006: make balance, history, and audit persistence atomic.",
+    "69": "Deviation D-011: display the returned balance instead of legacy N/A.",
+    "72-78": "Deviation D-004/D-005: one positive-amount, ownership, product, and sufficient-funds rule set.",
+    "84": "Deviation D-004: enforce available-funds/overdraft policy before transfer.",
+    "85": "Deviation D-011: non-deployed bank-to-bank surface is not ported.",
+    "91": "Deviation D-008: unbound all-account route is not recreated without a target business use case.",
+    "92-93": "Decision D-008: provide supported unified history resources, not missing legacy mappings.",
+    "95-96": "Deviation D-008: target Problem Details replace missing generated response files.",
+    "109": "Deviation D-002: placeholder OAuth endpoints are not advertised; target uses secure same-origin sessions.",
+    "110-112": "Deviation D-007: normalize all legacy account types to one target enum.",
+    "113-117": "Deviation D-001/D-002/D-014: secure same-origin Angular/API shell replaces the unauthenticated proxy panel.",
+    "119-126": "Deviation D-013: explicit EF migrations and import/demo command replace IBM loaders and DB2 preparation.",
+    "128-153": "Deviation D-014/D-015: Docker Compose and secure modern operations replace IBM-only tooling; IBM runtime remains unverified."
+  }
+}

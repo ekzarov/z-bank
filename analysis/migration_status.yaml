@@ -3,24 +3,27 @@ project: Bank of Z modernization
 updated: 2026-07-21
 
 methodology_stage:
-  number: 4
-  name: Requirements revision
-  status: owner-review-required
-  last_completed_stage: 2
+  number: 6
+  name: Design re-verification
+  status: independent-agent-required
+  last_completed_stage: 5
+  incomplete_stages:
+    - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: project-owner-and-primary-agent
-  pass_number: null
-  report: analysis/stage-04-requirements-revision.md
+  actor: fresh-independent-agent
+  pass_number: 1
+  report: analysis/reviews/stage-06-pass-001.md
   instruction: >-
-    Review every contradiction, obsolete behavior, strange rule, security
-    deviation, partial surface, and Stage 3 decision candidate with the owner;
-    record keep, change, defer, or do-not-port decisions in the workbook before
-    creating Stage 5 SDD.
+    Self-disqualify if you authored or edited any Stage 4/5 artifact. Otherwise
+    verify all 135 workbook rows against the cited legacy code, the recorded
+    owner decisions, and the exact SDD requirement/task coverage. Sampling is
+    forbidden. Write the immutable Stage 6 pass report and update pass history.
   completion_gate: >-
-    Every flagged row has an explicit owner decision and rationale, the Stage 4
-    report and workbook agree, and the workbook audit passes before Stage 5.
+    A fresh independent agent records a clean Stage 6 report, both workbook and
+    SDD audits pass, and the project owner explicitly approves implementation
+    of the first delivery slice before Stage 7.
 
 stage_3_fallback_result:
   mode: simulate
@@ -96,8 +99,31 @@ owner_gates:
     status: approved
     approved_by: project owner
     approved_on: 2026-07-21
-    version: 0.4.1
-  implementation_approval: not-applicable-before-stage-5
+    version: 0.4.2
+  requirements_revision:
+    status: approved
+    approved_by: project owner
+    approved_on: 2026-07-21
+    report: analysis/stage-04-requirements-revision.md
+    decisions:
+      - correct-unsafe-and-defective-legacy-behavior
+      - preserve-business-capabilities-not-dead-technical-artifacts
+      - unify-cics-and-ims-with-source-provenance
+  target_architecture:
+    status: approved
+    approved_by: project owner
+    approved_on: 2026-07-21
+    backend: dotnet-10-aspnet-core-web-api
+    persistence: ef-core-10-sql-server
+    frontend: angular-22
+    delivery: docker-compose-explicit-migrations
+  stage_5_sdd:
+    status: authored-pending-independent-review
+    completed_on: 2026-07-21
+    report: analysis/stage-05-sdd-report.md
+    slices: 9
+    workbook_rows_covered: 135
+  implementation_approval: pending-clean-stage-6
   stage_3_fallback_decision:
     status: approved
     allowed_modes:
