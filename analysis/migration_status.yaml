@@ -3,22 +3,23 @@ project: Bank of Z modernization
 updated: 2026-07-21
 
 methodology_stage:
-  number: 2
-  name: Control reconnaissance
-  status: awaiting-independent-pass-005
-  last_completed_stage: 1
+  number: 1
+  name: Reconnaissance
+  status: reopened-by-stage-02-pass-005-findings
+  last_completed_stage: 0
 
 next_action:
-  actor: independent-agent
-  pass_number: 5
+  actor: primary-agent
+  pass_number: 6
   report: analysis/reviews/stage-02-pass-005.md
   instruction: >-
-    Perform a fresh complete code-first inventory including hidden and visible
-    executable/deployable artifacts, then compare it with the corrected parity
-    map and reconnaissance. Recheck pass-004 findings and record pass 005.
+    Correct the documentation TOC tooling contradiction in the filled parity
+    map and legacy reconnaissance without changing legacy code or creating
+    SDD/implementation artifacts. Run the workbook audit, then return control
+    reconnaissance to a different eligible fresh agent for Stage 2 pass 006.
   completion_gate: >-
-    A different eligible independent agent records a clean Stage 2 pass with no
-    new findings and the workbook audit reports AUDIT OK.
+    The pass-005 finding is corrected with concrete legacy evidence, the
+    workbook audit reports AUDIT OK, and status advances to Stage 2 pass 006.
 
 review_pass_schema:
   required_fields:
@@ -58,6 +59,12 @@ review_passes:
     agent: OpenAI Codex independent reviewer
     result: findings
     report: analysis/reviews/stage-02-pass-004.md
+  - stage: 2
+    pass: 5
+    date: 2026-07-21
+    agent: OpenAI Codex independent reviewer
+    result: findings
+    report: analysis/reviews/stage-02-pass-005.md
 
 owner_gates:
   constitution_ratification: pending
@@ -76,13 +83,20 @@ owner_gates:
     permitted_next_stage: null
 
 known_blockers:
+  - id: stage-02-pass-005-findings
+    affects_stage: 2
+    status: open
+    detail: >-
+      One parity-map and reconnaissance contradiction requires Stage 1
+      correction before another independent control pass.
+    evidence: analysis/reviews/stage-02-pass-005.md
   - id: stage-02-pass-004-findings
     affects_stage: 2
-    status: resolved-awaiting-independent-verification
+    status: resolved-verified-by-pass-005
     detail: >-
       All four findings were corrected in the parity map and reconnaissance;
-      pass 005 must independently verify the corrections and completeness.
-    evidence: analysis/reviews/stage-02-pass-004.md; analysis/legacy_user_flows.xlsx; analysis/legacy_reconnaissance.md
+      pass 005 independently verified every correction.
+    evidence: analysis/reviews/stage-02-pass-004.md; analysis/reviews/stage-02-pass-005.md; analysis/legacy_user_flows.xlsx; analysis/legacy_reconnaissance.md
   - id: stage-02-pass-003-findings
     affects_stage: 2
     status: resolved-verified-by-pass-004
