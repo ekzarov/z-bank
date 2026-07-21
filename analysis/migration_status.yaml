@@ -3,24 +3,24 @@ project: Bank of Z modernization
 updated: 2026-07-21
 
 methodology_stage:
-  number: 2
-  name: Control reconnaissance
-  status: awaiting-independent-pass-003
-  last_completed_stage: 1
+  number: 1
+  name: Reconnaissance
+  status: reopened-by-stage-02-pass-003-findings
+  last_completed_stage: 0
 
 next_action:
-  actor: independent-agent
-  pass_number: 3
+  actor: primary-agent
+  pass_number: 4
   report: analysis/reviews/stage-02-pass-003.md
   instruction: >-
-    From a fresh context, inventory every visible and hidden executable or
-    deployable artifact under legacy/ before reading the filled parity map,
-    reconnaissance, or prior reviews. Then compare the frozen inventory with
-    those artifacts, recheck every pass-001 correction and the preliminary
-    broken row-68 evidence reference from pass 002, and record pass 003.
+    Address every finding in analysis/reviews/stage-02-pass-003.md in the
+    filled parity map and legacy reconnaissance, without changing legacy code
+    or creating SDD/implementation artifacts. Run the workbook audit after map
+    edits, then return control reconnaissance to a different eligible fresh
+    independent agent for Stage 2 pass 004.
   completion_gate: >-
-    A different eligible independent agent records a clean Stage 2 pass with no
-    new findings and the workbook audit reports AUDIT OK.
+    All pass-003 findings are corrected with concrete legacy evidence, the
+    workbook audit reports AUDIT OK, and status advances to Stage 2 pass 004.
 
 review_pass_schema:
   required_fields:
@@ -48,6 +48,12 @@ review_passes:
     agent: OpenAI Codex independent reviewer
     result: blocked
     report: analysis/reviews/stage-02-pass-002.md
+  - stage: 2
+    pass: 3
+    date: 2026-07-21
+    agent: OpenAI Codex independent reviewer
+    result: findings
+    report: analysis/reviews/stage-02-pass-003.md
 
 owner_gates:
   constitution_ratification: pending
@@ -66,22 +72,28 @@ owner_gates:
     permitted_next_stage: null
 
 known_blockers:
-  - id: stage-02-pass-002-incomplete-code-first-inventory
+  - id: stage-02-pass-003-findings
     affects_stage: 2
     status: open
     detail: >-
+      Five parity-map and reconnaissance findings require Stage 1 correction
+      before another independent control pass.
+    evidence: analysis/reviews/stage-02-pass-003.md
+  - id: stage-02-pass-002-incomplete-code-first-inventory
+    affects_stage: 2
+    status: resolved-by-pass-003-complete-inventory
+    detail: >-
       Pass 002 omitted hidden legacy/.setup deployment artifacts from its
-      initial inventory and discovered the omission only after reading the
-      artifacts under review. A fresh pass 003 is required because the mandated
-      independent ordering cannot be restored in the same context.
-    evidence: analysis/reviews/stage-02-pass-002.md
+      initial inventory. Pass 003 independently enumerated and froze all hidden
+      and visible legacy artifacts before comparison.
+    evidence: analysis/reviews/stage-02-pass-002.md; analysis/reviews/stage-02-pass-003.md
   - id: stage-02-pass-001-findings
     affects_stage: 2
-    status: resolved-awaiting-independent-verification
+    status: resolved-verified-by-pass-003
     detail: >-
       All ten findings were corrected in the parity map and reconnaissance;
-      pass 002 must independently verify the corrections and completeness.
-    evidence: analysis/reviews/stage-02-pass-001.md; analysis/legacy_user_flows.xlsx; analysis/legacy_reconnaissance.md
+      pass 003 independently verified every correction.
+    evidence: analysis/reviews/stage-02-pass-001.md; analysis/reviews/stage-02-pass-003.md; analysis/legacy_user_flows.xlsx; analysis/legacy_reconnaissance.md
   - id: full-legacy-runtime
     affects_stage: 3
     status: blocked-by-external-infrastructure
