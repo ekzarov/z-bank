@@ -4,7 +4,8 @@
   "description": "Invariant audit + shared helpers for analysis/legacy_user_flows.xlsx",
   "scripts": {
     "audit": "node workbook-audit.js",
-    "audit:sdd": "node stage5-sdd-audit.js"
+    "audit:sdd": "node stage5-sdd-audit.js",
+    "audit:evidence": "node verify-legacy-evidence.js"
   },
   "dependencies": {
     "exceljs": "^4.4.0"
