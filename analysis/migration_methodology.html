@@ -232,7 +232,7 @@
 
   /* шире, воздух, симметричные отступы, SVG-дуги */
   .wrap{ max-width:1120px; }
-  .ggroups{ gap:16px; padding-bottom:86px; }
+  .ggroups{ gap:16px; padding-bottom:64px; }
   .ggroup{ padding:10px 34px; }
   .ggroup:not(.glast)::after{ right:-18px; width:15px; }
   .ggroup:not(.glast)::before{ right:-19px; }
@@ -264,6 +264,11 @@
   /* стрелки внутри групп — на центр карточки (компенсация асимметричных паддингов 104/18) */
   .dgroup .down::after{ left:calc(50% - 43px); }
   .dgroup .down::before{ left:calc(50% - 43px); }
+
+  .ggroups{ padding-top:38px; }
+  .ilbl{ position:absolute; background:var(--xl-amber); color:#1A2430;
+    border:1px solid var(--owner); border-radius:6px; padding:2px 9px;
+    font-size:12px; white-space:nowrap; z-index:2; }
 </style>
 </head>
 <body>
@@ -292,19 +297,19 @@
         <div class="varr"></div>
         <div class="gvstep" id="st06"><span class="gdot" style="background:var(--s6)">06</span><span class="gvname">Перепроверка<small>другой агент: всё ли учтено</small></span></div>
       </div>
-      <div class="ggroup">
+      <div class="ggroup" id="grp-code">
         <div class="gtitle">Кодинг</div>
-        <div class="gvstep" id="st07"><span class="gdot" style="background:var(--s7)">07</span><span class="gvname">Кодинг / сборка<small>одна фича или небольшая связанная группа</small></span></div>
+        <div class="gvstep" id="st07"><span class="gdot" style="background:var(--s7)">07</span><span class="gvname">Сборка<small>код + тесты + документы одним PR</small></span></div>
       </div>
-      <div class="ggroup">
+      <div class="ggroup" id="grp-dep">
         <div class="gtitle">Deployment</div>
         <div class="gvstep" id="st08"><span class="gdot" style="background:var(--s8)">08</span><span class="gvname">Поставка<small>легаси — один раз; новое — с каждой фичей</small></span></div>
       </div>
       <div class="ggroup glast" id="grp-qa">
         <div class="gtitle">QA</div>
-        <div class="gvstep" id="st09"><span class="gdot" style="background:var(--s9)">09</span><span class="gvname">Живая ревизия<small>проверка текущего среза по всем каналам</small></span></div>
+        <div class="gvstep" id="st09"><span class="gdot" style="background:var(--s9)">09</span><span class="gvname">Живая ревизия<small>все каналы против карты</small></span></div>
         <div class="varr"></div>
-        <div class="gvstep" id="st10"><span class="gdot" style="background:var(--s10)">10</span><span class="gvname">Приёмка<small>срез принят → следующая фича; в конце — общая приёмка</small></span></div>
+        <div class="gvstep" id="st10"><span class="gdot" style="background:var(--s10)">10</span><span class="gvname">Приёмка<small>сторонние агенты</small></span></div>
       </div>
       <div class="rets" id="rets" aria-hidden="true"></div>
     </div>
@@ -324,7 +329,7 @@
       svg.id = 'retsvg'; svg.setAttribute('class', 'retsvg');
       svg.setAttribute('width', cr.width); svg.setAttribute('height', cr.height);
       var defs = document.createElementNS(NS, 'defs');
-      defs.innerHTML = '<marker id="rarrm" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.2" markerHeight="3.2" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--xl-red-b)"/></marker>';
+      defs.innerHTML = '<marker id="iarrm" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.2" markerHeight="3.2" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--owner)"/></marker><marker id="rarrm" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.2" markerHeight="3.2" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--xl-red-b)"/></marker>';
       svg.appendChild(defs);
       cont.appendChild(svg);
 
@@ -395,6 +400,39 @@
       inGroup('grp-req',  'st04', 'st01', 0,  8);
       inGroup('grp-arch', 'st06', 'st05', 0,  0);
       collectorReturn('grp-qa', ['st09', 'st10'], 'grp-arch', 'не прошла ревизия (09) или находки приёмки (10) → в Архитектуру');
+
+      // итеративный цикл поставки: стадии 07–10 повторяются для каждого слайса
+      (function(){
+        var code = R('grp-code'), qa = R('grp-qa');
+        var x1 = code.l - 8, x2 = qa.r + 8;
+        var y1 = Math.min(code.t, qa.t) - 8, y2 = Math.max(code.b, qa.b) + 8;
+        var rect = document.createElementNS(NS, 'rect');
+        rect.setAttribute('x', x1); rect.setAttribute('y', y1);
+        rect.setAttribute('width', x2 - x1); rect.setAttribute('height', y2 - y1);
+        rect.setAttribute('rx', 14); rect.setAttribute('fill', 'none');
+        rect.setAttribute('stroke', 'var(--owner)'); rect.setAttribute('stroke-width', '2');
+        rect.setAttribute('stroke-dasharray', '7 6');
+        svg.appendChild(rect);
+        // дуга цикла: из QA поверх контура назад в Кодинг (следующий слайс)
+        var qaCx = (qa.l + qa.r) / 2, codeCx = (code.l + code.r) / 2;
+        var arcY = y1 - 18;
+        var arc = document.createElementNS(NS, 'path');
+        var d = 'M' + qaCx + ' ' + (y1 - 1) +
+                ' L' + qaCx + ' ' + (arcY + 12) + ' Q' + qaCx + ' ' + arcY + ' ' + (qaCx - 12) + ' ' + arcY +
+                ' L' + (codeCx + 12) + ' ' + arcY + ' Q' + codeCx + ' ' + arcY + ' ' + codeCx + ' ' + (arcY + 12) +
+                ' L' + codeCx + ' ' + (y1 - 4);
+        arc.setAttribute('d', d); arc.setAttribute('fill', 'none');
+        arc.setAttribute('stroke', 'var(--owner)'); arc.setAttribute('stroke-width', '2');
+        arc.setAttribute('stroke-dasharray', '7 6'); arc.setAttribute('stroke-linecap', 'round');
+        arc.setAttribute('marker-end', 'url(#iarrm)');
+        svg.appendChild(arc);
+        var lb = document.createElement('div'); lb.className = 'ilbl';
+        lb.textContent = 'Итеративный подход: разработка идёт циклами по несколько фичей (слайс) — слайс принят → следующий ↻';
+        lay.appendChild(lb);
+        var bb3 = lb.getBoundingClientRect();
+        lb.style.left = ((qaCx + codeCx)/2 - bb3.width/2) + 'px';
+        lb.style.top = (arcY - bb3.height/2) + 'px';
+      })();
     }
     function draw2(){
       var cont = document.getElementById('dflow');
@@ -586,8 +624,8 @@
       <div class="dgtitle">Кодинг</div>
       <section class="phase" id="ph7">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3v6a3 3 0 0 0 3 3h6a3 3 0 0 1 3 3v6"/><circle cx="6" cy="3" r="2"/><circle cx="18" cy="21" r="2"/><circle cx="18" cy="9" r="2"/><path d="M18 11v4"/></svg></div>
-        <h3>7 · Кодинг / сборка <small>одна фича или небольшая связанная группа за итерацию</small></h3>
-        <p class="d">Начиная с этого шага работа идёт небольшими итерациями: выбирается одна утверждённая фича или компактная связанная группа, и только она проходит шаги 7 → 8 → 9 → 10. Ветка → реализация на целевом стеке → <b>автотесты как жёсткий гейт</b>: PR не выпускается на красных. В том же PR вместе с кодом синхронизируются спецификации, задачи и воркбук. Реализовывать весь бэклог одним большим пакетом нельзя.</p>
+        <h3>7 · Сборка <small>код, тесты и документы — одним PR</small></h3>
+        <p class="d">Ветка → реализация на целевом стеке → <b>автотесты как жёсткий гейт</b>: PR не выпускается на красных. В том же PR вместе с кодом синхронизируются спецификации и воркбук (зеленение строк с доказательствами). Мерж — только владелец.</p>
         <div class="steps">
           <span class="chip">Ветка</span><span class="sep">→</span>
           <span class="chip">Реализация</span><span class="sep">→</span>
@@ -605,7 +643,7 @@
       <section class="phase" id="ph8">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c4 3 5 7 5 10l3 4h-5a3 3 0 0 1-6 0H4l3-4c0-3 1-7 5-10z"/><circle cx="12" cy="10" r="2"/></svg></div>
         <h3>8 · Поставка <small>деплой одной командой</small></h3>
-        <p class="d">Текущий небольшой срез деплоится до начала следующего. Деплой одной командой → демо-стенд, где <b>легаси и новая система живут бок о бок</b>: один и тот же флоу показывается в двух мирах. Ритм у систем разный: <b>легаси разворачивается на стенд один раз</b> и дальше просто живёт там как эталон для сравнения; <b>новая система передеплоивается после каждой поставленной фичи</b>. Смоук-тест закрывает каждую поставку.</p>
+        <p class="d">Деплой одной командой → демо-стенд, где <b>легаси и новая система живут бок о бок</b>: один и тот же флоу показывается в двух мирах. Ритм у систем разный: <b>легаси разворачивается на стенд один раз</b> и дальше просто живёт там как эталон для сравнения; <b>новая система передеплоивается после каждой поставленной фичи</b>. Смоук-тест закрывает каждую поставку.</p>
         <div class="steps">
           <span class="chip">Легаси на стенд — один раз</span><span class="sep">→</span>
           <span class="chip">Новое — деплой с каждой фичей</span><span class="sep">→</span>
@@ -622,7 +660,7 @@
       <section class="phase" id="ph9">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h13v10H8l-4 4z"/><path d="M13 14l2 6 2-3 3 1-2-6"/></svg></div>
         <h3>9 · Живая ревизия <small>карта против живых систем — по всем каналам</small></h3>
-        <p class="d">До выбора следующей фичи агент проверяет <b>текущий поставленный срез в обеих системах как реальный пользователь — по всем затронутым каналам</b>: страницы и формы в вебе, экраны и транзакции в терминале, вызовы API, джобы — и сверяет увиденное с картой. Каждая находка в момент фиксации меняет и карту, и спецификации и возвращает текущий срез в проектирование.</p>
+        <p class="d">Агент проходит <b>обе системы как реальный пользователь — по всем каналам, какие есть</b>: страницы и формы в вебе, экраны и транзакции в терминале, вызовы API, джобы — и сверяет увиденное с картой. Каждая находка в момент фиксации меняет и карту, и спецификации.</p>
         <div class="steps">
           <span class="chip agent">Проход по всем каналам: UI / терминал / API / джобы</span><span class="sep">→</span>
           <span class="chip">Сверка с картой</span><span class="sep">→</span>
@@ -640,8 +678,8 @@
 
       <section class="phase" id="ph10">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M8.5 12l2.5 2.5 4.5-4.5"/></svg></div>
-        <h3>10 · Приёмка среза и финальная приёмка <small>чужими руками</small></h3>
-        <p class="d">Каждый поставленный срез проверяет <b>независимый агент</b>: чистая приёмка открывает следующую фичу, а находка возвращает текущий срез в проектирование и затем снова в цикл 7 → 8 → 9 → 10. Когда приняты все срезы, остаётся <b>один консолидированный бэклог</b> всего открытого, и сторонний агент выполняет финальный прогон всей системы по всем каналам. Агент, писавший код, не подтверждает сам себя.</p>
+        <h3>10 · Финальная приёмка <small>чужими руками</small></h3>
+        <p class="d">Остаётся <b>один консолидированный бэклог</b> всего открытого; автоматический аудит доказывает полноту — открытая строка вне бэклога невозможна. Финальный прогон чеклиста по всем каналам и аудита отдаётся <b>агентам других вендоров</b> (Google Antigravity, OpenAI Codex или аналог): агент, писавший код, не подтверждает сам себя. Сторонний агент получает только инструкцию, воркбук и URL стенда; совпали результаты с картой — приёмка подписана, при расхождениях цикл повторяется — тоже до сухого прохода.</p>
         <div class="steps">
           <span class="chip key">Единый бэклог всего открытого</span><span class="sep">→</span>
           <span class="chip gate">Аудит полноты</span><span class="sep">→</span>
@@ -652,7 +690,7 @@
     </section>
   </div>
 
-  <p class="outcome"><b>Петли:</b> дыры в карте на стадиях 2–4 возвращаются в разведку. Начиная со стадии 7, одна фича или небольшая связанная группа проходит полный цикл 7 → 8 → 9 → 10; находки 9 и 10 возвращают этот же срез в стадию 5, а чистая приёмка открывает следующий. После принятия всех срезов выполняется общая финальная приёмка.&nbsp;&nbsp;<b>Выход:</b> карта без красного и серого + независимая приёмка = <b>перенос доказан, а не заявлен</b>.</p>
+  <p class="outcome"><b>Петли:</b> дыры в карте, найденные контрольной разведкой (стадия 2), живым прогоном (стадия 3) и ревизией требований (стадия 4), возвращаются в стадию 1 — разведку; находки стадий 6, 9 и 10 возвращаются в стадию 5 (карта → SDD) и далее в сборку — циклы повторяются до сухого прохода на каждой петле и чистой приёмки в конце.&nbsp;&nbsp;<b>Выход:</b> карта без красного и серого + независимая приёмка = <b>перенос доказан, а не заявлен</b>.</p>
 
   <div class="foot">
     <span><b>Правила зашиты:</b> инструкция воркбука + скрипт-аудит (цвет=статус, три типа находок, полнота бэклога, непроверенное=красное)</span>
