@@ -2,6 +2,7 @@
 node_modules/
 analysis/_work/
 analysis/rendered/
+analysis/*.inspect.ndjson
 
 # Modern application build output
 modern/**/bin/
@@ -14,4 +15,3 @@ modern/**/.angular/
 .idea/
 .DS_Store
 Thumbs.db
-
