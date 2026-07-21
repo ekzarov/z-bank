@@ -1,18 +1,37 @@
 # Legacy Migration Methodology
 
+Agents enter the process through [`../MIGRATION.md`](../MIGRATION.md), then use
+[`migration_status.yaml`](migration_status.yaml) to select the active stage.
 This document defines the end-to-end process every agent must follow when
 migrating a legacy system in this repository. It is stack-agnostic and applies
 to any legacy source (web, 3270/COBOL terminal, API, batch). The visual
-presentation of the same flow lives in `analysis/migration_methodology.html`.
+presentation of the same flow lives in
+[`migration_methodology.html`](migration_methodology.html). The Markdown file
+is canonical; the HTML is a human-oriented view and must not introduce rules
+that are absent here.
 
 Core principle: **every legacy behavior is a row in the parity map
-(`analysis/legacy_user_flows.xlsx`); every row is driven to green with
+([`legacy_user_flows.xlsx`](legacy_user_flows.xlsx)); every row is driven to green with
 evidence. A migration is proven, not claimed.**
 
 Workbook mechanics (columns, colors, finding types, audit tooling) are defined
-in `analysis/legacy_user_flows_template_instructions.md` and are mandatory.
-The project constitution at `.specify/memory/constitution.md` must be read
-before any action and overrides convenience.
+in [`legacy_user_flows_template_instructions.md`](legacy_user_flows_template_instructions.md)
+and are mandatory. The reusable blank workbook is
+[`legacy_user_flows_template.xlsx`](legacy_user_flows_template.xlsx); it is not
+the Bank of Z project record and must never replace the filled map. The
+[project constitution](../.specify/memory/constitution.md) must be read before
+any action and overrides convenience.
+
+## Stage Control
+
+- `analysis/migration_status.yaml` is the only current-stage checkpoint. Update
+  it whenever a stage, gate, blocker, or owner decision changes.
+- A stage starts only when its prerequisites and actor requirements are met.
+- Automated checks prove technical invariants but never imply owner approval.
+- Owner approval is recorded explicitly; it cannot be inferred from a merge,
+  a successful test run, or an agent statement.
+- If a stage cannot be executed, record the blocker and leave affected rows
+  unverified. Skipping a stage does not count as completing it.
 
 ## Actors
 

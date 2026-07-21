@@ -1,0 +1,38 @@
+schema_version: 1
+project: Bank of Z modernization
+updated: 2026-07-21
+
+methodology_stage:
+  number: 2
+  name: Control reconnaissance
+  status: awaiting-independent-clean-pass
+  last_completed_stage: 1
+
+next_action:
+  actor: independent-agent
+  instruction: >-
+    Re-analyze the legacy executable artifacts from scratch and compare the
+    result with analysis/legacy_user_flows.xlsx. Report missing scenarios,
+    incorrect grouping, unsupported claims, and broken evidence references.
+  completion_gate: A fresh independent pass produces no new findings.
+
+owner_gates:
+  constitution_ratification: pending
+  implementation_approval: not-applicable-before-stage-5
+
+known_blockers:
+  - id: full-legacy-runtime
+    affects_stage: 3
+    status: blocked-by-external-infrastructure
+    detail: >-
+      Full CICS, IMS, DB2, 3270, API, and batch observation requires an
+      authorized IBM z/OS/Wazi or verified compatible environment.
+    evidence: analysis/cobol_deployment_overview.md
+
+governed_artifacts:
+  filled_workbook: analysis/legacy_user_flows.xlsx
+  empty_template: analysis/legacy_user_flows_template.xlsx
+  workbook_instructions: analysis/legacy_user_flows_template_instructions.md
+  methodology: analysis/migration_methodology.md
+  constitution: .specify/memory/constitution.md
+
