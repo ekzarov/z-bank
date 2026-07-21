@@ -3,23 +3,21 @@ project: Bank of Z modernization
 updated: 2026-07-21
 
 methodology_stage:
-  number: 1
-  name: Reconnaissance
-  status: reopened-by-stage-02-pass-006-findings
-  last_completed_stage: 0
+  number: 2
+  name: Control reconnaissance
+  status: awaiting-independent-pass-007
+  last_completed_stage: 1
 
 next_action:
-  actor: primary-agent
+  actor: independent-agent
   pass_number: 7
-  report: analysis/reviews/stage-02-pass-006.md
+  report: analysis/reviews/stage-02-pass-007.md
   instruction: >-
-    Add the omitted Zowe TLS-verification and CICS management-security partial
-    scenarios to the filled parity map and reconnaissance without changing
-    legacy code or creating SDD/implementation artifacts. Run the workbook
-    audit, then return control to a fresh independent agent for pass 007.
+    Perform a fresh complete code-first inventory, then verify the corrected
+    management-channel security scenarios and full map in pass 007.
   completion_gate: >-
-    The pass-006 finding is corrected with concrete legacy evidence, the
-    workbook audit reports AUDIT OK, and status advances to Stage 2 pass 007.
+    A different eligible independent agent records a clean Stage 2 pass with no
+    new findings and the workbook audit reports AUDIT OK.
 
 review_pass_schema:
   required_fields:
@@ -91,12 +89,11 @@ owner_gates:
 known_blockers:
   - id: stage-02-pass-006-findings
     affects_stage: 2
-    status: open
+    status: resolved-awaiting-independent-verification
     detail: >-
-      The parity map and reconnaissance omit the supplied Zowe profile's TLS
-      certificate-verification bypass and the provisioned CICS management and
-      resource-security settings.
-    evidence: analysis/reviews/stage-02-pass-006.md
+      The Zowe TLS-verification bypass and provisioned CICS management-security
+      settings were added; pass 007 must independently verify them.
+    evidence: analysis/reviews/stage-02-pass-006.md; analysis/legacy_user_flows.xlsx; analysis/legacy_reconnaissance.md
   - id: stage-02-pass-005-findings
     affects_stage: 2
     status: resolved-verified-by-pass-006

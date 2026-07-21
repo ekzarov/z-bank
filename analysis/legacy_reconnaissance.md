@@ -34,7 +34,7 @@ The analyzed snapshot is upstream IBM Bank of Z commit
 - DBB build/package, Z Code Scan, Wazi Deploy, and native z/OS Connect
   provisioning automation in addition to DB2/CICS/IMS resource setup.
 
-The parity map contains 12 epics and 133 atomic, checkable scenarios. All target
+The parity map contains 12 epics and 135 atomic, checkable scenarios. All target
 and SDD columns are intentionally empty because target design has not started.
 
 ## Proven partial or unavailable legacy surfaces
@@ -76,6 +76,9 @@ and SDD columns are intentionally empty because target design has not started.
   zOpenDebug) are executable operator surfaces. The documentation TOC generator
   is present but non-runnable as supplied because of malformed syntax/
   indentation and no invocation of its generation function.
+- The shared Zowe profile disables TLS certificate verification, while the
+  applied CICS region configuration disables secure TCP/IP, CMCI authentication
+  and SSL, plus several resource-security controls.
 
 ## Runtime constraint
 
@@ -113,8 +116,8 @@ immutable blocked review because it omitted hidden deployment artifacts before
 comparison. Pass 003 independently verified all pass-001 corrections, then
 found five additional deployment and completeness defects. Pass 004 verified
 those corrections and found four further API/setup/diagnostic/tooling gaps.
-Those corrections are now represented in the 133-scenario map; a different
-independent agent must complete Stage 2 pass 006 before this inventory is clean.
+Those corrections are now represented in the 135-scenario map; a different
+independent agent must complete Stage 2 pass 007 before this inventory is clean.
 
 ## Stage 4-5 owner decisions
 
@@ -131,6 +134,8 @@ Before specs/plans/tasks are final, the owner must decide:
   logout false-success behavior while documenting intentional parity deviation;
 - whether signed/zero direct IMS cash behavior is rejected or preserved behind
   a compatibility boundary;
+- confirmation that target management channels require verified TLS,
+  authentication, and authorization rather than inheriting Zowe/CICS bypasses;
 - whether the PL/I monthly statement is MVP, later milestone, or approved deferment;
 - how full parity will be observed without an available CICS/IMS/DB2 environment.
 
