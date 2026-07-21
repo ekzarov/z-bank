@@ -49,7 +49,7 @@ async function repair(file) {
     const row = main.getRow(rowNumber);
     const id = String(row.getCell(1).value || '');
     row.outlineLevel = /^UF-\d+$/.test(id) ? 0 : 1;
-    row.hidden = false;
+    row.hidden = !/^UF-\d+$/.test(id);
   }
   await workbook.xlsx.writeFile(file);
   console.log(`repaired and outlined ${file}`);

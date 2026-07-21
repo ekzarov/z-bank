@@ -3,24 +3,22 @@ project: Bank of Z modernization
 updated: 2026-07-21
 
 methodology_stage:
-  number: 1
-  name: Reconnaissance
-  status: reopened-by-stage-2-findings
-  last_completed_stage: 0
+  number: 2
+  name: Control reconnaissance
+  status: awaiting-independent-pass-002
+  last_completed_stage: 1
 
 next_action:
-  actor: primary-agent
+  actor: independent-agent
   pass_number: 2
-  report: analysis/reviews/stage-02-pass-001.md
+  report: analysis/reviews/stage-02-pass-002.md
   instruction: >-
-    Address every finding in analysis/reviews/stage-02-pass-001.md in the
-    filled parity map and legacy reconnaissance, without changing legacy code
-    or creating SDD/implementation artifacts. Run the workbook audit after map
-    edits, then return control reconnaissance to a different eligible fresh
-    independent agent for Stage 2 pass 002.
+    Perform a fresh code-first inventory, then compare it with the corrected
+    parity map and legacy reconnaissance. Recheck every pass-001 finding and
+    record the result in analysis/reviews/stage-02-pass-002.md.
   completion_gate: >-
-    All pass-001 findings are corrected with concrete legacy evidence, the
-    workbook audit reports AUDIT OK, and status advances to Stage 2 pass 002.
+    A different eligible independent agent records a clean Stage 2 pass with no
+    new findings and the workbook audit reports AUDIT OK.
 
 review_pass_schema:
   required_fields:
@@ -62,11 +60,11 @@ owner_gates:
 known_blockers:
   - id: stage-02-pass-001-findings
     affects_stage: 2
-    status: open
+    status: resolved-awaiting-independent-verification
     detail: >-
-      Ten parity-map and reconnaissance findings require Stage 1 correction
-      before another independent control pass.
-    evidence: analysis/reviews/stage-02-pass-001.md
+      All ten findings were corrected in the parity map and reconnaissance;
+      pass 002 must independently verify the corrections and completeness.
+    evidence: analysis/reviews/stage-02-pass-001.md; analysis/legacy_user_flows.xlsx; analysis/legacy_reconnaissance.md
   - id: full-legacy-runtime
     affects_stage: 3
     status: blocked-by-external-infrastructure
