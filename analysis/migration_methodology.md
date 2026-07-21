@@ -73,6 +73,15 @@ stage-specific decision requires otherwise. When Stage 3 cannot be executed,
 its recorded `simulate` or `waive` owner decision replaces the dry-pass gate
 only for progression; the unobserved real scope remains incomplete.
 
+## Phase groups
+
+For presentation and planning, the ten stages are grouped into phases:
+**Requirements** (Stages 1–4), **Architecture** (Stages 5–6: SDD and its
+re-verification), **Coding** (Stage 7), **Deployment** (Stage 8), and
+**QA** (Stages 9–10). Grouping changes no rules: loops, gates, and actors
+stay per-stage; the cross-phase return QA → Architecture is the
+Stage 9/10 → Stage 5 loop.
+
 ## Stages
 
 ### Stage 1 — Reconnaissance (legacy code → parity map)
@@ -198,7 +207,10 @@ only for progression; the unobserved real scope remains incomplete.
 
 - Deploy with a single command to a demo stand where **legacy and the new
   system run side by side**: the same flow can be shown in both worlds.
-- A smoke test closes the delivery.
+- The two systems have different delivery rhythms: **legacy is deployed to the
+  stand once** and then simply lives there as the comparison baseline, while
+  **the new system is redeployed after every delivered feature**.
+- A smoke test closes every delivery.
 
 ### Stage 9 — Live revision (map vs the living systems, every channel)
 

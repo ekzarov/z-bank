@@ -34,7 +34,7 @@
     font-size:29px; margin:0 0 4px; letter-spacing:.2px; text-wrap:balance; }
   .lede{ color:var(--muted); margin:0 0 20px; }
   h2.section{ font-family:"Bahnschrift","Segoe UI Semibold","Arial Narrow",system-ui,sans-serif;
-    font-size:14px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted);
+    font-size:14px; text-transform:uppercase; letter-spacing:.12em; color:var(--ink);
     margin:34px 0 14px; display:flex; align-items:center; gap:10px; }
   h2.section::after{ content:""; flex:1; height:1px; background:var(--line); }
 
@@ -176,6 +176,94 @@
   }
   @media print{ body{ background:#fff; } .wrap{ padding:0; }
     .glance{ page-break-before:always; border:0; } }
+
+  /* ---- группированная лента ---- */
+  .ggroups{ display:flex; gap:12px; align-items:stretch; position:relative;
+    padding-bottom:48px; min-width:860px; }
+  .ggroup{ flex:1; min-width:0; border:1px solid var(--line); border-radius:10px;
+    background:var(--ground); padding:10px 10px 8px; position:relative;
+    display:flex; flex-direction:column; }
+  .ggroup .gtitle{ font-family:"Bahnschrift","Segoe UI Semibold",system-ui,sans-serif;
+    font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
+    text-align:center; margin-bottom:10px; }
+  .gvstep{ display:flex; gap:8px; align-items:flex-start; }
+  .gdot{ flex:none; width:26px; height:26px; border-radius:50%; color:#fff;
+    font-family:"Bahnschrift",system-ui,sans-serif; font-size:12px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 5px rgba(20,35,60,.25); }
+  .gvname{ font-size:12px; font-weight:600; line-height:1.25; min-width:0; }
+  .gvname small{ display:block; font-weight:400; color:var(--muted); font-size:10.8px; }
+  .varr{ width:0; border-left:2px dashed var(--spine); height:14px;
+    margin:3px 0 3px 12px; position:relative; }
+  .varr::after{ content:""; position:absolute; left:-5px; bottom:-3px;
+    border:4px solid transparent; border-top:6px solid var(--spine); }
+  .gret{ margin-top:auto; align-self:center; margin-top:10px;
+    background:var(--xl-red); border:1px solid var(--xl-red-b); border-radius:6px;
+    padding:2px 7px; font-size:10px; text-align:center; color:#1A2430; }
+  .ggroup:not(.glast)::after{ content:""; position:absolute; top:16px; right:-12px;
+    width:10px; border-top:2.5px dashed var(--spine); }
+  .ggroup:not(.glast)::before{ content:""; position:absolute; top:11.5px; right:-14px; z-index:1;
+    border:5px solid transparent; border-left:7px solid var(--spine); }
+  .ggroup.ghost{ border-style:dashed; }
+  .ggroup.ghost .gdot{ background:var(--spine); }
+  .ggroup.ghost .gvname, .ggroup.ghost .gtitle{ color:var(--muted); font-style:italic; }
+  /* сквозной возврат QA -> Архитектура */
+  .gxloop{ position:absolute; left:41.7%; right:8.3%; bottom:8px; height:30px;
+    border-bottom:2.5px dashed var(--xl-red-b); border-left:2.5px dashed var(--xl-red-b);
+    border-right:2.5px dashed var(--xl-red-b); border-bottom-left-radius:12px; border-bottom-right-radius:12px; }
+  .gxloop::before{ content:""; position:absolute; top:-9px; left:-8px;
+    border:6px solid transparent; border-bottom:9px solid var(--xl-red-b); }
+  .gxloop-label{ position:absolute; bottom:0; left:66%; transform:translateX(-50%);
+    background:var(--xl-red); color:#1A2430; border:1px solid var(--xl-red-b); border-radius:6px;
+    padding:1px 8px; font-size:10px; white-space:nowrap; }
+
+  .ggroup{ padding-left:32px; }
+  .ggroups{ padding-bottom:56px; }
+  .rets{ position:absolute; inset:0; pointer-events:none; z-index:2; }
+  .rseg-h{ position:absolute; border-top:2.5px dashed var(--xl-red-b); }
+  .rseg-v{ position:absolute; border-left:2.5px dashed var(--xl-red-b); }
+  .rarr{ position:absolute; width:0; height:0;
+    border:5px solid transparent; border-left:9px solid var(--xl-red-b); }
+  .rarr-up{ position:absolute; width:0; height:0;
+    border:5px solid transparent; border-bottom:9px solid var(--xl-red-b); }
+  .rlbl{ position:absolute; background:var(--xl-red); color:#1A2430;
+    border:1px solid var(--xl-red-b); border-radius:6px; padding:2px 9px;
+    font-size:12px; white-space:nowrap; }
+
+  /* шире, воздух, симметричные отступы, SVG-дуги */
+  .wrap{ max-width:1120px; }
+  .ggroups{ gap:16px; padding-bottom:86px; }
+  .ggroup{ padding:10px 34px; }
+  .ggroup:not(.glast)::after{ right:-18px; width:15px; }
+  .ggroup:not(.glast)::before{ right:-19px; }
+  .retsvg{ position:absolute; inset:0; pointer-events:none; overflow:visible; }
+
+
+  /* детальный флоу, сгруппированный как лента */
+  .dflow{ position:relative; }
+  .dgroup{ position:relative; border:1px solid var(--line); border-radius:12px;
+    background:var(--panel); padding:14px 18px 14px 104px; }
+  .dgroup .phase{ background:var(--ground); }
+  .dgtitle{ font-family:"Bahnschrift","Segoe UI Semibold",system-ui,sans-serif;
+    font-size:13px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted);
+    text-align:center; margin:0 0 14px; position:relative; left:-43px; }
+  .dtag{ position:absolute; transform:rotate(-90deg) translateX(50%);
+    transform-origin:left center; background:var(--xl-red); color:#1A2430;
+    border:1px solid var(--xl-red-b); border-radius:6px; padding:2px 10px;
+    font-size:12px; white-space:nowrap; }
+
+  /* иконки детальных стадий в цветах ленты */
+  .dgroup .node{ border:none; box-shadow:0 2px 6px rgba(20,35,60,.28); }
+  .dgroup .node svg{ stroke:#fff; }
+  #ph1 .node{ background:var(--s1); } #ph2 .node{ background:var(--s2); }
+  #ph3 .node{ background:var(--s3); } #ph4 .node{ background:var(--s4); }
+  #ph5 .node{ background:var(--s5); } #ph6 .node{ background:var(--s6); }
+  #ph7 .node{ background:var(--s7); } #ph8 .node{ background:var(--s8); }
+  #ph9 .node{ background:var(--s9); } #ph10 .node{ background:var(--s10); }
+
+  /* стрелки внутри групп — на центр карточки (компенсация асимметричных паддингов 104/18) */
+  .dgroup .down::after{ left:calc(50% - 43px); }
+  .dgroup .down::before{ left:calc(50% - 43px); }
 </style>
 </head>
 <body>
@@ -183,82 +271,205 @@
 <div class="wrap">
   <h1>Перенос легаси-системы: по какому сценарию мы движемся</h1>
   <p class="lede">Каждое поведение легаси — строка карты паритета; каждая строка доводится до зелёного с доказательством. Методология не привязана к стеку и применима к любому переносу.</p>
+
   <h2 class="section">Одним взглядом</h2>
 
   <div class="glance">
-    <div class="strip">
-      <div class="gstep">
-        <div class="bubble" style="background:var(--s1)"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></div>
-        <div class="gnum" style="color:var(--s1)">01</div>
-        <div class="gname">Разведка</div>
-        <div class="gcap">карта паритета из кода легаси</div>
+    <div class="ggroups" id="ggroups">
+      <div class="ggroup" id="grp-req">
+        <div class="gtitle">Требования</div>
+        <div class="gvstep" id="st01"><span class="gdot" style="background:var(--s1)">01</span><span class="gvname">Разведка<small>карта паритета из кода легаси</small></span></div>
+        <div class="varr"></div>
+        <div class="gvstep" id="st02"><span class="gdot" style="background:var(--s2)">02</span><span class="gvname">Контроль карты<small>второй агент ищет пропуски</small></span></div>
+        <div class="varr"></div>
+        <div class="gvstep" id="st03"><span class="gdot" style="background:var(--s3)">03</span><span class="gvname">Живой прогон<small>пройти легаси вживую целиком</small></span></div>
+        <div class="varr"></div>
+        <div class="gvstep" id="st04"><span class="gdot" style="background:var(--s4)">04</span><span class="gvname">Ревизия требований<small>противоречия и устаревшее</small></span></div>
       </div>
-      <div class="gstep">
-        <div class="bubble" style="background:var(--s2)"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/><path d="M11.5 14l1.8 1.8 3.2-3.2"/></svg></div>
-        <div class="gnum" style="color:var(--s2)">02</div>
-        <div class="gname">Контроль карты</div>
-        <div class="gcap">второй агент ищет пропуски</div>
+      <div class="ggroup" id="grp-arch">
+        <div class="gtitle">Архитектура</div>
+        <div class="gvstep" id="st05"><span class="gdot" style="background:var(--s5)">05</span><span class="gvname">Проектирование<small>SDD: spec → plan → tasks</small></span></div>
+        <div class="varr"></div>
+        <div class="gvstep" id="st06"><span class="gdot" style="background:var(--s6)">06</span><span class="gvname">Перепроверка<small>другой агент: всё ли учтено</small></span></div>
       </div>
-      <div class="gstep">
-        <div class="bubble" style="background:var(--s3)"><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="14" rx="2"/><path d="M6.5 8.5l3 2.5-3 2.5"/><path d="M12 13.5h5"/><path d="M9 21h6"/></svg></div>
-        <div class="gnum" style="color:var(--s3)">03</div>
-        <div class="gname">Живой прогон</div>
-        <div class="gcap">live; если нельзя — mock/skip по решению владельца</div>
+      <div class="ggroup">
+        <div class="gtitle">Кодинг</div>
+        <div class="gvstep" id="st07"><span class="gdot" style="background:var(--s7)">07</span><span class="gvname">Сборка<small>код + тесты + документы одним PR</small></span></div>
       </div>
-      <div class="gstep">
-        <div class="bubble" style="background:var(--s4)"><svg viewBox="0 0 24 24"><path d="M17 4l4 4-4 4"/><path d="M21 8H8"/><path d="M7 12l-4 4 4 4"/><path d="M3 16h13"/></svg></div>
-        <div class="gnum" style="color:var(--s4)">04</div>
-        <div class="gname">Ревизия требований</div>
-        <div class="gcap">противоречия и устаревшее</div>
+      <div class="ggroup">
+        <div class="gtitle">Deployment</div>
+        <div class="gvstep" id="st08"><span class="gdot" style="background:var(--s8)">08</span><span class="gvname">Поставка<small>легаси — один раз; новое — с каждой фичей</small></span></div>
       </div>
-      <div class="gstep">
-        <div class="bubble" style="background:var(--s5)"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4"/><path d="M10 12h6M10 16h6"/></svg></div>
-        <div class="gnum" style="color:var(--s5)">05</div>
-        <div class="gname">Проектирование</div>
-        <div class="gcap">SDD: spec → plan → tasks</div>
+      <div class="ggroup glast" id="grp-qa">
+        <div class="gtitle">QA</div>
+        <div class="gvstep" id="st09"><span class="gdot" style="background:var(--s9)">09</span><span class="gvname">Живая ревизия<small>все каналы против карты</small></span></div>
+        <div class="varr"></div>
+        <div class="gvstep" id="st10"><span class="gdot" style="background:var(--s10)">10</span><span class="gvname">Приёмка<small>сторонние агенты</small></span></div>
       </div>
-      <div class="gstep">
-        <div class="bubble" style="background:var(--s6)"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg></div>
-        <div class="gnum" style="color:var(--s6)">06</div>
-        <div class="gname">Перепроверка</div>
-        <div class="gcap">другой агент: всё ли учтено</div>
-      </div>
-      <div class="gstep">
-        <div class="bubble" style="background:var(--s7)"><svg viewBox="0 0 24 24"><path d="M6 3v6a3 3 0 0 0 3 3h6a3 3 0 0 1 3 3v6"/><circle cx="6" cy="3" r="2"/><circle cx="18" cy="21" r="2"/><circle cx="18" cy="9" r="2"/><path d="M18 11v4"/></svg></div>
-        <div class="gnum" style="color:var(--s7)">07</div>
-        <div class="gname">Сборка</div>
-        <div class="gcap">код + тесты + документы одним PR</div>
-      </div>
-      <div class="gstep">
-        <div class="bubble" style="background:var(--s8)"><svg viewBox="0 0 24 24"><path d="M12 3c4 3 5 7 5 10l3 4h-5a3 3 0 0 1-6 0H4l3-4c0-3 1-7 5-10z"/><circle cx="12" cy="10" r="2"/></svg></div>
-        <div class="gnum" style="color:var(--s8)">08</div>
-        <div class="gname">Поставка</div>
-        <div class="gcap">легаси и новое бок о бок</div>
-      </div>
-      <div class="gstep">
-        <div class="bubble" style="background:var(--s9)"><svg viewBox="0 0 24 24"><path d="M4 4h13v10H8l-4 4z"/><path d="M13 14l2 6 2-3 3 1-2-6"/></svg></div>
-        <div class="gnum" style="color:var(--s9)">09</div>
-        <div class="gname">Живая ревизия</div>
-        <div class="gcap">все каналы против карты</div>
-      </div>
-      <div class="gstep">
-        <div class="bubble" style="background:var(--s10)"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M8.5 12l2.5 2.5 4.5-4.5"/></svg></div>
-        <div class="gnum" style="color:var(--s10)">10</div>
-        <div class="gname">Приёмка</div>
-        <div class="gcap">перепроверка сторонними агентами</div>
-      </div>
-      <div class="gloop2" aria-hidden="true"></div>
-      <div class="gloop3" aria-hidden="true"></div>
-      <div class="gloop4" aria-hidden="true"></div>
-      <div class="gloop4-label">дыры → в разведку</div>
-      <div class="gloop5" aria-hidden="true"></div>
-      <div class="gloop6" aria-hidden="true"></div>
-      <div class="gloop7" aria-hidden="true"></div>
-      <div class="gloop7-label">находки → в проектирование</div>
+      <div class="rets" id="rets" aria-hidden="true"></div>
     </div>
   </div>
 
-  <h2 class="section">Стадии в деталях</h2>
+  <script>
+  (function(){
+    var NS = 'http://www.w3.org/2000/svg';
+    function draw(){
+      var cont = document.getElementById('ggroups');
+      var lay  = document.getElementById('rets');
+      if(!cont || !lay) return;
+      lay.innerHTML = '';
+      var old = document.getElementById('retsvg'); if (old) old.remove();
+      var cr = cont.getBoundingClientRect();
+      var svg = document.createElementNS(NS, 'svg');
+      svg.id = 'retsvg'; svg.setAttribute('class', 'retsvg');
+      svg.setAttribute('width', cr.width); svg.setAttribute('height', cr.height);
+      var defs = document.createElementNS(NS, 'defs');
+      defs.innerHTML = '<marker id="rarrm" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.2" markerHeight="3.2" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--xl-red-b)"/></marker>';
+      svg.appendChild(defs);
+      cont.appendChild(svg);
+
+      function R(id){ var r = document.getElementById(id).getBoundingClientRect();
+        return {l:r.left-cr.left, t:r.top-cr.top, r:r.right-cr.left, b:r.bottom-cr.top,
+                cy:(r.top+r.bottom)/2-cr.top}; }
+      // ломаная со скруглёнными углами
+      function path(pts, rad){
+        var d = 'M' + pts[0][0] + ' ' + pts[0][1];
+        for (var i = 1; i < pts.length - 1; i++){
+          var p0 = pts[i-1], p1 = pts[i], p2 = pts[i+1];
+          var v1 = [p1[0]-p0[0], p1[1]-p0[1]], v2 = [p2[0]-p1[0], p2[1]-p1[1]];
+          var l1 = Math.hypot(v1[0], v1[1]), l2 = Math.hypot(v2[0], v2[1]);
+          if (l1 < 0.5 || l2 < 0.5) { d += ' L' + p1[0] + ' ' + p1[1]; continue; }
+          var r1 = Math.min(rad, l1/2), r2 = Math.min(rad, l2/2);
+          var a = [p1[0]-v1[0]/l1*r1, p1[1]-v1[1]/l1*r1];
+          var b = [p1[0]+v2[0]/l2*r2, p1[1]+v2[1]/l2*r2];
+          d += ' L' + a[0] + ' ' + a[1] + ' Q' + p1[0] + ' ' + p1[1] + ' ' + b[0] + ' ' + b[1];
+        }
+        d += ' L' + pts[pts.length-1][0] + ' ' + pts[pts.length-1][1];
+        var el = document.createElementNS(NS, 'path');
+        el.setAttribute('d', d); el.setAttribute('fill', 'none');
+        el.setAttribute('stroke', 'var(--xl-red-b)'); el.setAttribute('stroke-width', '2.5');
+        el.setAttribute('stroke-dasharray', '6 5'); el.setAttribute('stroke-linecap', 'round');
+        el.setAttribute('marker-end', 'url(#rarrm)');
+        svg.appendChild(el);
+      }
+      function LBL(text, x, y){ var d = document.createElement('div'); d.className = 'rlbl';
+        d.textContent = text; d.style.left = x+'px'; d.style.top = y+'px'; lay.appendChild(d); }
+
+      // центр кружка с номером шага — визуальный якорь для стрелок
+      function D(id){ var el = document.getElementById(id).querySelector('.gdot');
+        var r = el.getBoundingClientRect();
+        return {l:r.left-cr.left, cy:(r.top+r.bottom)/2-cr.top}; }
+      // возврат внутри группы: из src влево в жёлоб, вверх, дугой в dst
+      function inGroup(grpId, srcId, dstId, lane, off){
+        var g = R(grpId), s0 = D(srcId), d0 = D(dstId);
+        var lx = g.l + 6 + lane*10;
+        path([[s0.l-3, s0.cy], [lx, s0.cy], [lx, d0.cy+off], [d0.l-3, d0.cy+off]], 12);
+      }
+      // возврат-коллектор: ветки от шагов группы-источника вливаются в общую линию,
+      // которая уходит под ленту и стрелкой вверх в целевую группу
+      function collectorReturn(sgId, stepIds, dgId, label){
+        var sg = R(sgId), dg = R(dgId);
+        var lx = sg.l + 12;
+        var sx = (sg.l + sg.r) / 2;
+        var dx = (dg.l + dg.r) / 2;
+        var uy = Math.max(sg.b, dg.b) + 38;
+        var last = R(stepIds[stepIds.length - 1]);
+        var yTurn = Math.min(last.b + 26, sg.b - 14);
+        var first = D(stepIds[0]);
+        path([[first.l-3, first.cy], [lx, first.cy], [lx, yTurn], [sx, yTurn], [sx, uy], [dx, uy], [dx, dg.b+5]], 14);
+        for (var i = 1; i < stepIds.length; i++){
+          var p = D(stepIds[i]);
+          path([[p.l-3, p.cy], [lx+2, p.cy]], 0);
+        }
+        if (label){
+          var lb = document.createElement('div'); lb.className = 'rlbl';
+          lb.textContent = label; lay.appendChild(lb);
+          var bb2 = lb.getBoundingClientRect();
+          lb.style.left = ((dx + lx)/2 - bb2.width/2) + 'px';
+          lb.style.top = (uy - bb2.height/2) + 'px';
+        }
+      }
+
+      inGroup('grp-req',  'st02', 'st01', 2, -8);
+      inGroup('grp-req',  'st03', 'st01', 1,  0);
+      inGroup('grp-req',  'st04', 'st01', 0,  8);
+      inGroup('grp-arch', 'st06', 'st05', 0,  0);
+      collectorReturn('grp-qa', ['st09', 'st10'], 'grp-arch', 'не прошла ревизия (09) или находки приёмки (10) → в Архитектуру');
+    }
+    function draw2(){
+      var cont = document.getElementById('dflow');
+      if(!cont) return;
+      var old = document.getElementById('dsvg'); if (old) old.remove();
+      var oldTag = document.getElementById('dtagqa'); if (oldTag) oldTag.remove();
+      var cr = cont.getBoundingClientRect();
+      var svg = document.createElementNS(NS, 'svg');
+      svg.id = 'dsvg'; svg.setAttribute('class', 'retsvg');
+      svg.setAttribute('width', cr.width); svg.setAttribute('height', cr.height);
+      var defs = document.createElementNS(NS, 'defs');
+      defs.innerHTML = '<marker id="darrm" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.2" markerHeight="3.2" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--xl-red-b)"/></marker>';
+      svg.appendChild(defs);
+      cont.appendChild(svg);
+      function R(id){ var r = document.getElementById(id).getBoundingClientRect();
+        return {l:r.left-cr.left, t:r.top-cr.top, r:r.right-cr.left, b:r.bottom-cr.top}; }
+      function N(id){ var el = document.getElementById(id).querySelector('.node');
+        var r = el.getBoundingClientRect();
+        return {l:r.left-cr.left, cy:(r.top+r.bottom)/2-cr.top}; }
+      function path(pts, rad){
+        var d = 'M' + pts[0][0] + ' ' + pts[0][1];
+        for (var i = 1; i < pts.length - 1; i++){
+          var p0 = pts[i-1], p1 = pts[i], p2 = pts[i+1];
+          var v1 = [p1[0]-p0[0], p1[1]-p0[1]], v2 = [p2[0]-p1[0], p2[1]-p1[1]];
+          var l1 = Math.hypot(v1[0], v1[1]), l2 = Math.hypot(v2[0], v2[1]);
+          if (l1 < 0.5 || l2 < 0.5) { d += ' L' + p1[0] + ' ' + p1[1]; continue; }
+          var r1 = Math.min(rad, l1/2), r2 = Math.min(rad, l2/2);
+          var a = [p1[0]-v1[0]/l1*r1, p1[1]-v1[1]/l1*r1];
+          var b = [p1[0]+v2[0]/l2*r2, p1[1]+v2[1]/l2*r2];
+          d += ' L' + a[0] + ' ' + a[1] + ' Q' + p1[0] + ' ' + p1[1] + ' ' + b[0] + ' ' + b[1];
+        }
+        d += ' L' + pts[pts.length-1][0] + ' ' + pts[pts.length-1][1];
+        var el = document.createElementNS(NS, 'path');
+        el.setAttribute('d', d); el.setAttribute('fill', 'none');
+        el.setAttribute('stroke', 'var(--xl-red-b)'); el.setAttribute('stroke-width', '2.5');
+        el.setAttribute('stroke-dasharray', '6 5'); el.setAttribute('stroke-linecap', 'round');
+        el.setAttribute('marker-end', 'url(#darrm)');
+        svg.appendChild(el);
+      }
+      // возврат внутри группы: из иконки src влево в жёлоб группы, вверх, дугой в иконку dst
+      function inG(grpId, srcPh, dstPh, lane, off){
+        var g = R(grpId), sn = N(srcPh), dn = N(dstPh);
+        var lx = g.l + 14 + lane*12;
+        path([[sn.l-3, sn.cy], [lx, sn.cy], [lx, dn.cy+off], [dn.l-3, dn.cy+off]], 12);
+      }
+      inG('dg-req',  'ph2', 'ph1', 2, -8);
+      inG('dg-req',  'ph3', 'ph1', 1,  0);
+      inG('dg-req',  'ph4', 'ph1', 0,  8);
+      inG('dg-arch', 'ph6', 'ph5', 2,  0);
+      // коллектор QA: ветки от 10 и 09 по внешней дорожке вверх, стрелкой в группу Архитектура
+      var qa10 = N('ph10'), qa9 = N('ph9');
+      var arch = R('dg-arch');
+      var ox = -26;
+      var entryY = (arch.t + arch.b) / 2;
+      path([[qa10.l-3, qa10.cy], [ox, qa10.cy], [ox, entryY], [arch.l-3, entryY]], 14);
+      path([[qa9.l-3, qa9.cy], [ox+2, qa9.cy]], 0);
+      var tag = document.createElement('div');
+      tag.id = 'dtagqa'; tag.className = 'dtag';
+      tag.textContent = 'не прошла ревизия (09) или находки приёмки (10) → в Архитектуру';
+      tag.style.left = (ox + 1) + 'px';
+      var midY = (entryY + qa10.cy) / 2;
+      tag.style.top = midY + 'px';
+      cont.appendChild(tag);
+      var bb = tag.getBoundingClientRect();
+      tag.style.top = (midY + bb.height - bb.width / 2) + 'px';
+    }
+    var t; function later(){ clearTimeout(t); t = setTimeout(function(){ draw(); draw2(); }, 120); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', later);
+    else later();
+    window.addEventListener('resize', later);
+    window.addEventListener('load', later);
+  })();
+  </script>
+
+  <h2 class="section">Детальное описание шагов</h2>
 
   <div class="legends">
     <div class="legend"><span class="t">Статус строки карты</span>
@@ -276,19 +487,12 @@
 
   <p class="principle" style="margin-bottom:10px"><b>Принцип работы с агентами: глубина важнее скорости.</b> На каждой стадии агент работает в режиме глубокого исследования — полные проходы вместо выборочных, адверсариальные перепроверки, независимые вторые мнения. Это медленнее, но дыра, пойманная рано, всегда дешевле дыры, найденной на приёмке.</p>
 
-  <p class="principle" style="border-left-color:var(--xl-red-b)"><b>Критерий остановки перепроверок: сухой проход.</b> Каждая исполнимая петля возврата — стадии 2, 3, 4 → в разведку и 6, 9, 10 → в проектирование — закрывается не после фиксированного числа повторов, а <b>сухим проходом</b>: полным проходом без единой новой находки (на практике 2–3 итерации). Для независимых гейтов 2, 6 и 10 каждый проход выполняет новый агент со свежим контекстом; рабочие итерации 3, 4 и 9 может вести ответственный агент. Если живой Stage 3 недоступен, его заменяет записанное решение владельца mock/skip, но непроверенный реальный объём не считается завершённым.</p>
+  <p class="principle" style="border-left-color:var(--xl-red-b)"><b>Критерий остановки перепроверок: сухой проход.</b> Каждая петля возврата — стадии 2, 3, 4 → в разведку и 6, 9, 10 → в проектирование — закрывается не после фиксированного числа повторов, а <b>сухим проходом</b>: полным проходом без единой новой находки (на практике 2–3 итерации). Каждая повторная проверка — новый независимый агент со свежим контекстом: агент никогда не перепроверяет сам себя.</p>
 
-  <div class="flow">
-
-    <div class="loop-scope recon">
-      <div class="loop-line" aria-hidden="true"></div>
-      <div class="loop-tag">дыры в карте → снова в разведку · ↻ до сухого прохода</div>
-
-    <div class="loop-scope mini">
-      <div class="loop-line" aria-hidden="true"></div>
-      <div class="loop-tag">дыры → снова в разведку</div>
-
-      <section class="phase">
+  <div class="dflow" id="dflow">
+    <section class="dgroup" id="dg-req">
+      <div class="dgtitle">Требования</div>
+      <section class="phase" id="ph1">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></div>
         <h3>1 · Разведка <small>легаси-код → карта паритета</small></h3>
         <p class="d">Поведение достаётся <b>только из кода легаси</b> — не из документации и не по памяти. Каждый пользовательский сценарий становится строкой <b>воркбука — карты паритета</b> с доказательством (файл/класс/страница): реальные системы прячут второстепенные флоу, поэтому первый проход — всегда черновик.</p>
@@ -301,7 +505,7 @@
 
       <div class="down"></div>
 
-      <section class="phase">
+      <section class="phase" id="ph2">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/><path d="M11.5 14l1.8 1.8 3.2-3.2"/></svg></div>
         <h3>2 · Контрольная разведка <small>второй агент ищет, что пропустил первый</small></h3>
         <p class="d">Когда карта построена, <b>второй, независимый агент</b> делает такой же анализ легаси с нуля и сравнивает свой результат с картой: пропущенные флоу и сценарии, битые доказательства, неверные статусы. Каждая находка возвращает работу <b>назад в разведку</b> — карта исправляется и дополняется, затем контроль повторяется. Стадия закрыта только <b>сухим проходом</b> — без единой новой находки (обычно 2–3 итерации, каждая — свежим агентом).</p>
@@ -313,11 +517,9 @@
         </div>
       </section>
 
-    </div><!-- /loop-scope mini -->
+      <div class="down"></div>
 
-    <div class="down"></div>
-
-    <section class="phase">
+      <section class="phase" id="ph3">
       <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="14" rx="2"/><path d="M6.5 8.5l3 2.5-3 2.5"/><path d="M12 13.5h5"/><path d="M9 21h6"/></svg></div>
       <h3>3 · Живой прогон легаси <small>развернуть и пройти все сценарии руками</small></h3>
       <p class="d">Карта из кода — это гипотеза. Легаси разворачивается и проходится вживую, как его проходит реальный пользователь: веб — <b>прокликать каждую страницу и форму</b>, зелёный экран — <b>пройти каждую транзакцию в терминале</b>, API — вызвать каждый маршрут, батч — прогнать джоб. К технологии не привязываемся — важно пройти <b>все возможные сценарии</b> и сверить каждый с картой. Поведение без строки — строка добавляется; что развернуть или наблюдать нельзя — остаётся в карте непроверенным, а не «предположительно работает».</p>
@@ -327,18 +529,11 @@
         <span class="chip">Сверка с картой</span><span class="sep">→</span>
         <span class="chip key">Карта дополнена и подтверждена</span>
       </div>
-      <div class="outcome"><b>Если живой прогон невозможен или несоразмерно сложен:</b> агент останавливается и спрашивает владельца — построить минимальные моки/эмуляцию или явно пропустить прогон и принять риск. Симуляция помогает продолжить проектирование, но не считается доказательством поведения реального легаси; непроверенный объём остаётся отмеченным в карте.</div>
-      <div class="steps">
-        <span class="chip">Live недоступен</span><span class="sep">→</span>
-        <span class="chip owner">Решение владельца</span><span class="sep">→</span>
-        <span class="chip">Моки / эмуляция</span><span class="sep">или</span>
-        <span class="chip">Пропуск с принятым риском</span>
-      </div>
     </section>
 
-    <div class="down"></div>
+      <div class="down"></div>
 
-    <section class="phase">
+      <section class="phase" id="ph4">
       <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M17 4l4 4-4 4"/><path d="M21 8H8"/><path d="M7 12l-4 4 4 4"/><path d="M3 16h13"/></svg></div>
       <h3>4 · Ревизия требований <small>consistency check — вместе с бизнесом</small></h3>
       <p class="d">Перед проектированием агент проверяет саму карту как набор требований — <b>прицельно ищет противоречия</b>, а не просто перечитывает: несостыковки между флоу и каналами (пример: логин есть в одном канале и отсутствует в другом), <b>устаревшие требования</b> — со сверкой по документации легаси, <b>странные и необоснованные</b> (unreasonable/strange) требования. Каждая находка разбирается <b>вместе с бизнесом и девелопером</b>: оставить как есть / изменить / не переносить — решение фиксируется в карте до начала SDD.</p>
@@ -350,16 +545,13 @@
         <span class="chip key">Решения зафиксированы в карте</span>
       </div>
     </section>
-
-    </div><!-- /loop-scope recon -->
+    </section>
 
     <div class="down"></div>
 
-    <div class="loop-scope">
-      <div class="loop-line" aria-hidden="true"></div>
-      <div class="loop-tag">находки возвращаются в цикл · ↻ до сухого прохода</div>
-
-      <section class="phase">
+    <section class="dgroup" id="dg-arch">
+      <div class="dgtitle">Архитектура</div>
+      <section class="phase" id="ph5">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4"/><path d="M10 12h6M10 16h6"/></svg></div>
         <h3>5 · Проектирование — SDD <small>карта → спецификации: spec / plan / tasks</small></h3>
         <p class="d">Здесь пишется <b>SDD (Spec-Driven Development)</b> — спецификации, от которых дальше ведётся вся разработка. Точка входа всегда воркбук: <b>сначала актуализируются сами строки</b> (формулировки, SDD-колонки: что покрывается, что откладывается — с причиной), и только затем каждый флоу превращается в SDD-артефакты: spec → plan → tasks. Карта и SDD связаны колонками покрытия и расходиться не могут. Ни строчки кода до утверждения SDD владельцем.</p>
@@ -374,7 +566,7 @@
 
       <div class="down"></div>
 
-      <section class="phase">
+      <section class="phase" id="ph6">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg></div>
         <h3>6 · Перепроверка проектирования <small>всё ли учтено — чужими глазами</small></h3>
         <p class="d">До начала сборки <b>другой агент</b> сверяет результат стадий 1–5: все ли легаси-флоу учтены картой (ничего не потеряно ни при разведке, ни при живом прогоне), учтены ли решения ревизии требований и все ли строки карты покрыты SDD-спецификациями или отложены с причиной. Проверка не бумажная: по колонкам <b>source code evidence</b> агент <b>точечно возвращается в исходники легаси</b> — открывает указанные файлы и строки и сверяет, что требование и спека действительно соответствуют коду, вылавливая недоработки и недосказанности. Расхождения возвращаются в стадию 5 — реализация не стартует, пока перепроверка не чистая.</p>
@@ -386,10 +578,13 @@
           <span class="chip gate">0 расхождений — допуск к сборке</span>
         </div>
       </section>
+    </section>
 
-      <div class="down"></div>
+    <div class="down"></div>
 
-      <section class="phase">
+    <section class="dgroup" id="dg-code">
+      <div class="dgtitle">Кодинг</div>
+      <section class="phase" id="ph7">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3v6a3 3 0 0 0 3 3h6a3 3 0 0 1 3 3v6"/><circle cx="6" cy="3" r="2"/><circle cx="18" cy="21" r="2"/><circle cx="18" cy="9" r="2"/><path d="M18 11v4"/></svg></div>
         <h3>7 · Сборка <small>код, тесты и документы — одним PR</small></h3>
         <p class="d">Ветка → реализация на целевом стеке → <b>автотесты как жёсткий гейт</b>: PR не выпускается на красных. В том же PR вместе с кодом синхронизируются спецификации и воркбук (зеленение строк с доказательствами). Мерж — только владелец.</p>
@@ -401,23 +596,30 @@
           <span class="chip owner">Мерж — владелец</span>
         </div>
       </section>
+    </section>
 
-      <div class="down"></div>
+    <div class="down"></div>
 
-      <section class="phase">
+    <section class="dgroup" id="dg-dep">
+      <div class="dgtitle">Deployment</div>
+      <section class="phase" id="ph8">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c4 3 5 7 5 10l3 4h-5a3 3 0 0 1-6 0H4l3-4c0-3 1-7 5-10z"/><circle cx="12" cy="10" r="2"/></svg></div>
         <h3>8 · Поставка <small>деплой одной командой</small></h3>
-        <p class="d">Деплой одной командой → демо-стенд, где <b>легаси и новая система живут бок о бок</b>: один и тот же флоу показывается в двух мирах. Смоук-тест закрывает поставку.</p>
+        <p class="d">Деплой одной командой → демо-стенд, где <b>легаси и новая система живут бок о бок</b>: один и тот же флоу показывается в двух мирах. Ритм у систем разный: <b>легаси разворачивается на стенд один раз</b> и дальше просто живёт там как эталон для сравнения; <b>новая система передеплоивается после каждой поставленной фичи</b>. Смоук-тест закрывает каждую поставку.</p>
         <div class="steps">
-          <span class="chip">Деплой</span><span class="sep">→</span>
+          <span class="chip">Легаси на стенд — один раз</span><span class="sep">→</span>
+          <span class="chip">Новое — деплой с каждой фичей</span><span class="sep">→</span>
           <span class="chip key">Демо-стенд: легаси + новое</span><span class="sep">→</span>
           <span class="chip gate">Смоук</span>
         </div>
       </section>
+    </section>
 
-      <div class="down"></div>
+    <div class="down"></div>
 
-      <section class="phase">
+    <section class="dgroup" id="dg-qa">
+      <div class="dgtitle">QA</div>
+      <section class="phase" id="ph9">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h13v10H8l-4 4z"/><path d="M13 14l2 6 2-3 3 1-2-6"/></svg></div>
         <h3>9 · Живая ревизия <small>карта против живых систем — по всем каналам</small></h3>
         <p class="d">Агент проходит <b>обе системы как реальный пользователь — по всем каналам, какие есть</b>: страницы и формы в вебе, экраны и транзакции в терминале, вызовы API, джобы — и сверяет увиденное с картой. Каждая находка в момент фиксации меняет и карту, и спецификации.</p>
@@ -436,7 +638,7 @@
 
       <div class="down"></div>
 
-      <section class="phase">
+      <section class="phase" id="ph10">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M8.5 12l2.5 2.5 4.5-4.5"/></svg></div>
         <h3>10 · Финальная приёмка <small>чужими руками</small></h3>
         <p class="d">Остаётся <b>один консолидированный бэклог</b> всего открытого; автоматический аудит доказывает полноту — открытая строка вне бэклога невозможна. Финальный прогон чеклиста по всем каналам и аудита отдаётся <b>агентам других вендоров</b> (Google Antigravity, OpenAI Codex или аналог): агент, писавший код, не подтверждает сам себя. Сторонний агент получает только инструкцию, воркбук и URL стенда; совпали результаты с картой — приёмка подписана, при расхождениях цикл повторяется — тоже до сухого прохода.</p>
@@ -447,8 +649,7 @@
           <span class="chip owner">Приёмка подписана</span>
         </div>
       </section>
-
-    </div><!-- /loop-scope -->
+    </section>
   </div>
 
   <p class="outcome"><b>Петли:</b> дыры в карте, найденные контрольной разведкой (стадия 2), живым прогоном (стадия 3) и ревизией требований (стадия 4), возвращаются в стадию 1 — разведку; находки стадий 6, 9 и 10 возвращаются в стадию 5 (карта → SDD) и далее в сборку — циклы повторяются до сухого прохода на каждой петле и чистой приёмки в конце.&nbsp;&nbsp;<b>Выход:</b> карта без красного и серого + независимая приёмка = <b>перенос доказан, а не заявлен</b>.</p>
