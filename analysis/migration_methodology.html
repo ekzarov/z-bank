@@ -240,6 +240,13 @@
         <span class="chip">Сверка с картой</span><span class="sep">→</span>
         <span class="chip key">Карта дополнена и подтверждена</span>
       </div>
+      <div class="outcome"><b>Если живой прогон невозможен или несоразмерно сложен:</b> агент останавливается и спрашивает владельца — построить минимальные моки/эмуляцию или явно пропустить прогон и принять риск. Симуляция помогает продолжить проектирование, но не считается доказательством поведения реального легаси; непроверенный объём остаётся отмеченным в карте.</div>
+      <div class="steps">
+        <span class="chip">Live недоступен</span><span class="sep">→</span>
+        <span class="chip owner">Решение владельца</span><span class="sep">→</span>
+        <span class="chip">Моки / эмуляция</span><span class="sep">или</span>
+        <span class="chip">Пропуск с принятым риском</span>
+      </div>
     </section>
 
     <div class="down"></div>
@@ -378,7 +385,7 @@
         <div class="bubble" style="background:var(--s3)"><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="14" rx="2"/><path d="M6.5 8.5l3 2.5-3 2.5"/><path d="M12 13.5h5"/><path d="M9 21h6"/></svg></div>
         <div class="gnum" style="color:var(--s3)">03</div>
         <div class="gname">Живой прогон</div>
-        <div class="gcap">пройти легаси вживую целиком</div>
+        <div class="gcap">live; если нельзя — mock/skip по решению владельца</div>
       </div>
       <div class="gstep">
         <div class="bubble" style="background:var(--s4)"><svg viewBox="0 0 24 24"><path d="M17 4l4 4-4 4"/><path d="M21 8H8"/><path d="M7 12l-4 4 4 4"/><path d="M3 16h13"/></svg></div>

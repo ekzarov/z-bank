@@ -1,9 +1,8 @@
 <!--
 Sync Impact Report
-0.3.0: Made independent reviews auditable through per-pass eligibility checks,
-immutable reports, and status history; added explicit owner-waiver control for
-blocked stages; and required deterministic session handoffs. The ten-stage
-manager-facing process and visual diagram are unchanged.
+0.4.0: Added a stack-agnostic Stage 3 fallback decision. When a real legacy
+walkthrough is unavailable, the owner chooses traceable simulation or an
+explicit waiver; neither is misrepresented as live legacy verification.
 
 Follow-up before Stage 5 artifacts are final:
 - project owner ratifies this constitution;
@@ -133,9 +132,13 @@ an immutable report under
 [`analysis/reviews/`](../../analysis/reviews/README.md) and an entry in
 [`analysis/migration_status.yaml`](../../analysis/migration_status.yaml); chat
 history is not evidence of completion.
-A blocked stage remains incomplete. Progress beyond it requires an explicit
-owner waiver recording approver, date, rationale, and permitted next stage,
-while affected workbook rows remain unverified.
+A blocked Stage 3 remains incomplete. If a complete live walkthrough cannot be
+performed, the agent MUST ask the owner to choose traceable simulation or an
+explicit waiver. The decision records approver, date, rationale, scope,
+residual risk, and permitted next stage. Mock or emulator evidence MUST be
+labeled simulated and MUST cite its legacy evidence basis. Neither simulation
+nor waiver verifies the real legacy runtime; affected workbook rows remain
+unverified until a real walkthrough confirms them.
 
 ## Repository Layout and Decisions
 
@@ -184,8 +187,9 @@ the status without erasing history, and names the next gate. Stages 2, 6, and
 - A feature is not complete until code, tests, SDD, tasks, and workbook agree.
 - Every independent gate has an eligible-agent declaration, immutable report,
   status-history entry, and stage-specific clean result.
-- Every transition past a blocked stage has an explicit owner waiver; no waiver
-  converts blocked or unverified behavior into completed behavior.
+- Every transition past a blocked Stage 3 has an explicit owner fallback
+  decision; neither simulation nor waiver converts unobserved real behavior
+  into completed or live-verified behavior.
 
 ## Governance
 
@@ -194,4 +198,4 @@ redefinition, MINOR for a new enforceable principle/section, PATCH for wording
 clarification. Amendments state rationale and impact. Ratification and owner
 approval cannot be inferred from an agent action or from merge alone.
 
-**Version**: 0.3.0 (Draft) | **Ratified**: Pending owner approval | **Last Amended**: 2026-07-21
+**Version**: 0.4.0 (Draft) | **Ratified**: Pending owner approval | **Last Amended**: 2026-07-21

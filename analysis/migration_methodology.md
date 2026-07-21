@@ -98,9 +98,28 @@ is always cheaper than one found at acceptance.
 - Compare everything observed against the map. Behavior with no row → add the
   row (**loop back to Stage 1**). A row that cannot be observed or deployed
   stays explicitly *unverified* in the map — never "assumed working".
-- If required infrastructure is unavailable, Stage 3 remains blocked. Work may
-  proceed to Stage 4 only through a recorded owner waiver; affected rows remain
-  unverified and Stage 3 must be resumed when the blocker is removed.
+- If a complete live walkthrough is unavailable, too costly, or impractical,
+  the agent MUST stop and ask the owner to choose one of two fallback modes. It
+  must not select a mode or build mocks on its own:
+  - **simulate** — build the smallest useful emulator, stub, contract harness,
+    or mock from traceable legacy code/contracts, then execute the observable
+    flows against it;
+  - **waive** — perform no substitute run and continue based on static evidence
+    after the owner explicitly accepts the additional migration risk.
+- Record one of three outcomes in the status and workbook evidence:
+  - `live-verified` — real legacy behavior was observed for the declared scope;
+  - `partial-simulated` — some behavior was exercised through mocks or
+    emulation; simulated evidence is labeled and real runtime behavior remains
+    unverified;
+  - `blocked-waived` — the owner authorized progression without a run; the
+    skipped scope remains blocked and unverified.
+- A simulation proves the consistency of the team's interpretation, not the
+  behavior of the real legacy runtime. Its fixtures and responses must cite the
+  code, contracts, traces, or owner decisions from which they were derived.
+- `partial-simulated` and `blocked-waived` allow progression to Stage 4 only
+  through the recorded owner decision. Stage 3 remains incomplete for the
+  unobserved real scope and must be resumed if access later becomes available;
+  any difference found then loops back to Stage 1.
 
 ### Stage 4 — Requirements revision (consistency check, with the business)
 

@@ -359,6 +359,15 @@ queued, inventory updated, report refreshed.
 routes, descriptors, database tables, queues/topics, or config keys. Use enough
 detail that another agent can find the evidence without chat history.
 
+`Runtime evidence label`
+: When Stage 3 affects the row, append one controlled label to the source
+evidence: `Runtime: live-observed`, `Runtime: simulated`,
+`Runtime: static-only`, or `Runtime: waived`. A simulated label also cites the
+mock/emulator fixture and the legacy code, contract, trace, or owner decision
+from which it was derived. Simulated, static-only, and waived evidence must not
+be described as real legacy verification; runtime-dependent uncertainty remains
+`Inferred`, `Partial`, or explicitly unverified.
+
 ### Destination / Target Implementation
 
 `Destination implemented?`
@@ -417,7 +426,11 @@ space. A populated detail row must not use white as a lifecycle state.
 - Preserve legacy vocabulary where it matters, but explain it in modern
 business language.
 - If the legacy behavior is unclear, write `Inferred` or `Partial` and explain
-the uncertainty.
+  the uncertainty.
+- If a live legacy walkthrough is unavailable, record the owner's Stage 3
+  `simulate` or `waive` decision and use the runtime evidence labels above.
+  Mocks may support design and tests but do not close a real-runtime
+  verification gap.
 - If SDD intentionally changes behavior, mark the destination as implemented
 only when the target implements the approved SDD behavior, and document the
 legacy difference in notes.

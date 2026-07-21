@@ -83,6 +83,13 @@ no Bank of Z evidence; the filled workbook is the governed project record.
   documentation may guide discovery but is not parity evidence.
 - Record uncertainty as inferred, partial, or unverified; never promote it to a
   proven requirement without evidence or an owner decision.
+- If a complete Stage 3 live walkthrough cannot be performed, stop and ask the
+  owner to choose `simulate` or `waive`. Do not choose silently and do not build
+  mocks before that decision. Record the mode, rationale, approver, date, scope,
+  and residual risk in `analysis/migration_status.yaml`.
+- Label mock/emulator results as simulated evidence. They may unblock design but
+  never prove real legacy runtime behavior; affected workbook rows remain
+  unverified until a real walkthrough confirms them.
 - A primary agent does not sign off its own control, design, or final review.
   Independent stages require a different agent with fresh context for every
   pass. If the agent's current context includes creating or editing an artifact

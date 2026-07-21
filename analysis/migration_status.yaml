@@ -41,11 +41,17 @@ review_passes: []
 owner_gates:
   constitution_ratification: pending
   implementation_approval: not-applicable-before-stage-5
-  stage_3_waiver:
-    status: not-granted
+  stage_3_fallback_decision:
+    status: pending-if-live-walkthrough-unavailable
+    allowed_modes:
+      - simulate
+      - waive
+    selected_mode: null
     approved_by: null
     approved_on: null
     rationale: null
+    scope: null
+    residual_risk: null
     permitted_next_stage: null
 
 known_blockers:
@@ -59,10 +65,19 @@ known_blockers:
 
 stage_transition_policy:
   blocked_stage: >-
-    A blocked stage remains incomplete. Advancing beyond it requires an
-    explicit owner waiver recorded under owner_gates, including approver,
-    date, rationale, and permitted next stage. Affected workbook rows remain
-    unverified until the blocker is removed and the stage is completed.
+    A blocked Stage 3 remains incomplete. If a full live walkthrough is not
+    possible, the agent asks the owner to select simulate or waive and records
+    approver, date, rationale, scope, residual risk, and permitted next stage.
+    Simulated or skipped behavior remains unverified until the blocker is
+    removed and a real walkthrough is completed.
+  stage_3_outcomes:
+    live-verified: Real legacy behavior was observed for the declared scope.
+    partial-simulated: >-
+      Behavior was exercised through traceable mocks or emulation, but the real
+      legacy runtime remains unverified.
+    blocked-waived: >-
+      The owner accepted progression without a substitute run; skipped behavior
+      remains blocked and unverified.
   approval_inference: >-
     A merge, successful check, or agent statement never implies owner approval.
 
