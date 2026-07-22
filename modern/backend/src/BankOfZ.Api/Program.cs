@@ -13,6 +13,8 @@ using BankOfZ.Infrastructure.Common;
 using BankOfZ.Infrastructure.Accounts;
 using BankOfZ.Infrastructure.Customers;
 using BankOfZ.Infrastructure.Persistence;
+using BankOfZ.Application.Transactions;
+using BankOfZ.Infrastructure.Transactions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
@@ -97,6 +99,8 @@ builder.Services.AddSingleton(builder.Configuration.GetSection(AccountOptions.Se
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountAuditWriter, AccountAuditWriter>();
 builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<ICashTransactionRepository, CashTransactionRepository>();
+builder.Services.AddScoped<CashTransactionService>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICustomerAuditWriter, CustomerAuditWriter>();
 builder.Services.AddScoped<ICustomerAccountStatusReader, CustomerAccountStatusReader>();
@@ -106,6 +110,7 @@ builder.Services.AddScoped<ISecurityAudit, SecurityAudit>();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<CustomerExceptionHandler>();
 builder.Services.AddExceptionHandler<AccountExceptionHandler>();
+builder.Services.AddExceptionHandler<CashTransactionExceptionHandler>();
 builder.Services.AddHealthChecks();
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {

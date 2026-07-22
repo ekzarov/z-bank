@@ -14,9 +14,10 @@
 - [ ] T005 Add nginx same-origin routing, SPA fallback, security headers, and
   HTTPS-forwarding configuration.
 - [ ] T006 Add secret scan, dependency/build/test/image/Compose validation gates.
-- [ ] T007 Add deployment, migration, import, backup, rollback, and troubleshooting
-  runbooks that preserve the IBM-runtime residual-risk statement and explicitly
-  dispose unused helpers, fixed-account diagnostics, and broken TOC tooling.
+- [ ] T007 Add deployment, migration, import, backup, rollback, troubleshooting,
+  and secret-safe demo-persona handoff runbooks that preserve the IBM-runtime
+  residual-risk statement and explicitly dispose unused helpers, fixed-account
+  diagnostics, and broken TOC tooling.
 - [ ] T008 Add tagged Playwright deployed-system smoke and restart/persistence
   verification.
 - [ ] T009 Run slice Stage 9/10 evidence, then run the final consolidated Stage

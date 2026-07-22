@@ -61,6 +61,10 @@ failures through health checks and structured logs without exposing secrets.
 - **FR-014** Unhandled infrastructure failures during financial commands SHALL
   roll back domain and audit writes atomically and emit correlated diagnostics
   without sensitive data (D-006).
+- **FR-015** Demo operations documentation SHALL name the provisioned customer,
+  operator, and administrator personas, identify the secret source and rotation
+  procedure, and provide a role-verification smoke without storing a usable
+  password in the repository.
 
 ## Success Criteria
 
@@ -70,3 +74,6 @@ failures through health checks and structured logs without exposing secrets.
   without migration, secret injection, network exposure, request limits,
   security headers, least privilege, resource bounds, and graceful shutdown.
 - Playwright runs the consolidated critical happy path against deployed services.
+- A new operator can identify each demo persona, obtain its password through the
+  approved secret channel, and complete the role-verification smoke without
+  guessing credentials.

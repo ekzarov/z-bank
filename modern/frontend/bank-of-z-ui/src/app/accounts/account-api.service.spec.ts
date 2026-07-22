@@ -31,4 +31,15 @@ describe('AccountApiService', () => {
     expect(create.request.body.metadata.currency).toBe('GBP');
     create.flush({});
   });
+
+  it('books a withdrawal with csrf and an idempotency key', () => {
+    const reference = '0123456789abcdef0123456789abcdef';
+    service.bookCash('10000001', 'withdrawal', 25.5).subscribe(result => expect(result.reference).toBe(reference));
+    http.expectOne('api/session/csrf').flush({ token: 'token' });
+    const request = http.expectOne('api/accounts/10000001/withdrawals');
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({ amount: 25.5 });
+    expect(request.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/);
+    request.flush({ reference });
+  });
 });

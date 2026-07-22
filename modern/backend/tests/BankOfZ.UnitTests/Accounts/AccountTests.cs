@@ -1,5 +1,6 @@
 using BankOfZ.Domain.Accounts;
 using BankOfZ.Domain.Customers;
+using BankOfZ.Domain.Transactions;
 
 namespace BankOfZ.UnitTests.Accounts;
 
@@ -87,6 +88,63 @@ public sealed class AccountTests
             "123", "1000000001", "100000",
             new AccountMetadata(AccountType.Current, 0, -1, "GBP"),
             SourceSystem.Modern, null, null, Now));
+    }
+
+    [Fact]
+    public void Deposit_Uses_Explicit_Direction_And_Updates_Both_Balances()
+    {
+        var account = Create();
+
+        account.ApplyCash(CashTransactionDirection.Deposit, 125.25m, new string('a', 32), Now.AddMinutes(1));
+
+        Assert.Equal(125.25m, account.ActualBalance);
+        Assert.Equal(125.25m, account.AvailableBalance);
+        Assert.Equal(new string('a', 32), account.LastTransactionReference);
+    }
+
+    [Fact]
+    public void Withdrawal_Uses_Available_Funds_Plus_Overdraft()
+    {
+        var account = Create();
+
+        account.ApplyCash(CashTransactionDirection.Withdrawal, 500m, new string('b', 32), Now.AddMinutes(1));
+
+        Assert.Equal(-500m, account.ActualBalance);
+        Assert.Throws<CashTransactionValidationException>(() =>
+            account.ApplyCash(CashTransactionDirection.Withdrawal, 0.01m, new string('c', 32), Now.AddMinutes(2)));
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    [InlineData(1.001)]
+    public void Cash_Rejects_Zero_Negative_And_Over_Precise_Amounts(decimal amount)
+    {
+        var account = Create();
+
+        Assert.Throws<CashTransactionValidationException>(() =>
+            account.ApplyCash(CashTransactionDirection.Deposit, amount, new string('d', 32), Now.AddMinutes(1)));
+    }
+
+    [Theory]
+    [InlineData(AccountType.Loan)]
+    [InlineData(AccountType.Mortgage)]
+    public void Cash_Rejects_Lending_Products(AccountType type)
+    {
+        var account = Create(type, 1);
+
+        Assert.Throws<CashTransactionValidationException>(() =>
+            account.ApplyCash(CashTransactionDirection.Deposit, 1, new string('e', 32), Now.AddMinutes(1)));
+    }
+
+    [Fact]
+    public void Cash_Rejects_Closed_Accounts()
+    {
+        var account = Create();
+        account.Close(Now.AddMinutes(1));
+
+        Assert.Throws<CashTransactionValidationException>(() =>
+            account.ApplyCash(CashTransactionDirection.Deposit, 1, new string('f', 32), Now.AddMinutes(2)));
     }
 
     private static Account Create(AccountType type = AccountType.Current, decimal interestRate = 0) => Account.Create(

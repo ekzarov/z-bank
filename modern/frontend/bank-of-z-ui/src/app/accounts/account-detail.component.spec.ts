@@ -8,7 +8,7 @@ import { AccountDetailComponent } from './account-detail.component';
 
 describe('AccountDetailComponent', () => {
   const parameters = new BehaviorSubject(convertToParamMap({ id: '10000001' }));
-  const api = { find: vi.fn(), update: vi.fn(), close: vi.fn() };
+  const api = { find: vi.fn(), update: vi.fn(), close: vi.fn(), bookCash: vi.fn() };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -43,6 +43,24 @@ describe('AccountDetailComponent', () => {
 
     expect(api.find).not.toHaveBeenCalled();
     expect(fixture.nativeElement.querySelector('[role="alert"]').textContent).toContain('invalid');
+  });
+
+  it('books cash and reloads the account with the resulting balance', () => {
+    api.bookCash.mockReturnValue(of({ reference: '0123456789abcdef0123456789abcdef', availableBalance: 125, currency: 'GBP' }));
+    const fixture = TestBed.createComponent(AccountDetailComponent);
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelector('select[formControlName="direction"]').value = 'deposit';
+    fixture.nativeElement.querySelector('select[formControlName="direction"]').dispatchEvent(new Event('change'));
+    const amount = fixture.nativeElement.querySelector('input[formControlName="amount"]');
+    amount.value = '125';
+    amount.dispatchEvent(new Event('input'));
+    fixture.nativeElement.querySelector('.cash-panel form').dispatchEvent(new Event('submit'));
+    fixture.detectChanges();
+
+    expect(api.bookCash).toHaveBeenCalledWith('10000001', 'deposit', 125);
+    expect(api.find).toHaveBeenCalledTimes(2);
+    expect(fixture.nativeElement.querySelector('[role="status"]').textContent).toContain('0123456789abcdef0123456789abcdef');
   });
 });
 
