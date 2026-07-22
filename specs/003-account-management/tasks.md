@@ -21,5 +21,5 @@
 - [x] T006 Implement authorized account endpoints and typed DTOs.
 - [x] T007 Add Vitest tests and implement account list/details/forms/closure UI.
 - [x] T008 Add tagged Playwright browse/create/update/close happy paths.
-- [ ] T009 Run gates, update SDD/tasks/workbook, deploy this slice, and prepare
+- [x] T009 Run gates, update SDD/tasks/workbook, deploy this slice, and prepare
   Stage 9/10 evidence before Feature 004 starts.

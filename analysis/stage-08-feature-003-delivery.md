@@ -4,7 +4,7 @@
 
 - Feature: `003-account-management`
 - Date: 2026-07-22
-- Delivered revision: `d23d75f`
+- Delivered revision: `d19bf21`
 - Target stand: `https://legacy-transformation-demo.olsys.dev/`
 - Legacy path: `/z-bank/`
 - Modern path: `/z-bank-new/`
@@ -40,3 +40,9 @@ created account `10000000` for the existing demo customer.
 - Public HTTPS Playwright: 7 passed, 0 failed.
 
 Normal API startup still performs neither migration nor demo provisioning.
+
+After Stage 10 Pass 005, correction revision `d19bf21` made account product
+type explicitly required at the JSON boundary and added a SQL-backed negative
+test. No schema change was required, so the correction deployment rebuilt only
+API/UI and deliberately did not run migration or provisioning commands. The
+public seven-scenario Playwright suite passed again after deployment.

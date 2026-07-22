@@ -53,10 +53,15 @@ the SDD.
 ## Gates
 
 - Unit tests: 45 passed.
-- Real SQL Server integration tests: 35 passed.
+- Real SQL Server integration tests: 36 passed.
 - Angular tests: 30 passed.
 - Public HTTPS Playwright: 7 passed.
 - Workbook audit: passed, 60 closed and 75 open rows.
 - SDD audit: passed, 135 rows and 27 artifacts.
 - Legacy evidence audit: passed, 512 references.
 - Excel collapsed, expanded-detail, and revision-sheet visual render: passed.
+
+Stage 10 Pass 005 returned the slice for task synchronization, explicit
+active-account wording, and missing product-type validation. The corrections
+were deployed at `d19bf21`; all deterministic and public gates above were
+rerun, and no workbook status changed.

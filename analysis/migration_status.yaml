@@ -3,8 +3,8 @@ project: Bank of Z modernization
 updated: 2026-07-22
 
 progress:
-  current_stage_percent: 30
-  overall_percent_estimate: 89
+  current_stage_percent: 0
+  overall_percent_estimate: 92
   estimate_only: true
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
@@ -16,27 +16,26 @@ progress:
     active_sessions: 0
     blocked_or_invalid_sessions: 20
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T20:59:38+02:00
+  updated_at: 2026-07-22T21:09:14+02:00
 
 methodology_stage:
-  number: 5
-  name: SDD correction loop - Feature 003 account management
-  status: stage-10-findings-being-corrected
+  number: 10
+  name: Independent acceptance - Feature 003 account management
+  status: corrections-complete-pending-independent-review
   last_completed_stage: 9
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: OpenAI Codex orchestrator
+  actor: Claude Code CLI fresh external reviewer, orchestrated by OpenAI Codex
   feature: 003-account-management
-  stage: 5
+  stage: 10
   instruction: >-
-    Correct accepted Stage 10 Pass 005 findings, rerun affected and deterministic
-    gates, redeploy the corrected slice, then request a fresh Stage 10 pass.
+    Verify the immutable Feature 003 correction and delivery evidence, including
+    all Pass 005 corrections, without editing the worktree.
   completion_gate: >-
-    All accepted findings are corrected and independently re-verified before
-    Feature 004 starts.
+    A clean independent report is recorded before Feature 004 starts.
 
 stage_3_fallback_result:
   mode: simulate
