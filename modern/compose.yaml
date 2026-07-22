@@ -1,0 +1,57 @@
+name: bank-of-z
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${BANKOFZ_SA_PASSWORD:?Set BANKOFZ_SA_PASSWORD}"
+    volumes:
+      - bankofz-sql:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P '$${MSSQL_SA_PASSWORD}' -C -Q 'SELECT 1' || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__BankOfZ: "Server=db,1433;Database=BankOfZ;User Id=sa;Password=${BANKOFZ_SA_PASSWORD:?Set BANKOFZ_SA_PASSWORD};Encrypt=False"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/health >/dev/null || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  ui:
+    build:
+      context: frontend/bank-of-z-ui
+    ports:
+      - "127.0.0.1:8088:80"
+    depends_on:
+      api:
+        condition: service_healthy
+
+  setup:
+    profiles: ["tools"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: setup
+    environment:
+      ConnectionStrings__BankOfZ: "Server=db,1433;Database=BankOfZ;User Id=sa;Password=${BANKOFZ_SA_PASSWORD:?Set BANKOFZ_SA_PASSWORD};Encrypt=False"
+      BANKOFZ_DEMO_PASSWORD: "${BANKOFZ_DEMO_PASSWORD:-}"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  bankofz-sql:

@@ -1,0 +1,15 @@
+<header class="topbar">
+  <a class="brand" routerLink="/">Bank of Z</a>
+  @if (sessionService.session(); as session) {
+    <nav aria-label="Primary navigation">
+      @for (item of navigation(); track item.path) {
+        <a [routerLink]="item.path">{{ item.label }}</a>
+      }
+    </nav>
+    <div class="identity">
+      <span>{{ session.userName }}</span>
+      <button type="button" (click)="logout()">Sign out</button>
+    </div>
+  }
+</header>
+<main><router-outlet /></main>

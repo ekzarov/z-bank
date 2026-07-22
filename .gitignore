@@ -9,9 +9,11 @@ modern/**/bin/
 modern/**/obj/
 modern/**/dist/
 modern/**/.angular/
+modern/**/test-results/
 
 # IDE and OS files
 .vs/
 .idea/
 .DS_Store
 Thumbs.db
+.env
