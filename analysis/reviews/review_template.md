@@ -6,6 +6,7 @@
 - Stage: NN
 - Pass: NNN
 - Agent/tool: identify the product and session/task, without credentials
+- Orchestration packet/revision: identifier and digest, or `direct`
 - Result: `clean` | `findings` | `blocked`
 
 ## Independence Declaration
@@ -29,6 +30,10 @@ Describe the complete sweep performed. Do not write only "reviewed" or
 "looks good". State how completeness, evidence references, and contradictions
 were checked.
 
+For an orchestrated external review, list every deterministic batch, its scope,
+checkpoint, context reset, raw-response digest/reference, and final
+acknowledgement. State whether `git status --short` was clean before and after.
+
 ## Findings
 
 Use one subsection per finding with severity, affected workbook rows or SDD
@@ -44,4 +49,3 @@ the filled map changed.
 
 State why the result is clean, has findings, or is blocked; where the process
 loops next; and the exact owner decision or independent pass required.
-

@@ -1,7 +1,7 @@
 <!--
 Sync Impact Report
-0.4.2: Recorded the owner-approved target stack and verification tools required
-before Stage 5 can close. No principle was added, removed, or weakened.
+0.5.0: Added owner-approved direct cross-agent orchestration, read-only external
+review, deterministic context checkpoints, and fail-closed context handling.
 -->
 
 # Bank of Z Modernization Constitution
@@ -132,6 +132,19 @@ an immutable report under
 [`analysis/reviews/`](../../analysis/reviews/README.md) and an entry in
 [`analysis/migration_status.yaml`](../../analysis/migration_status.yaml); chat
 history is not evidence of completion.
+The primary agent MAY orchestrate an eligible external agent through its CLI
+without owner message relay, but MUST follow
+[`analysis/agent_orchestration.md`](../../analysis/agent_orchestration.md).
+The reviewer is read-only and owns its conclusion; the primary agent validates
+findings but MUST NOT rewrite `findings` or `blocked` as `clean`. Large reviews
+MUST use deterministic batches and checkpoints. Context overflow, timeout,
+missing scope acknowledgement, repository mutation, or an incomplete batch
+MUST fail closed as `blocked`. Agreement between agents never replaces tests,
+legacy evidence, or an owner gate.
+The same context checkpoint rule applies when the primary orchestrator compacts
+or restarts. Review packets MUST NOT transmit credentials, personal data,
+regulated data, or repository content to a service that the owner has not
+authorized for that classification.
 A blocked Stage 3 remains incomplete. If a complete live walkthrough cannot be
 performed, the agent MUST ask the owner to choose traceable simulation or an
 explicit waiver. The decision records approver, date, rationale, scope,
@@ -200,6 +213,10 @@ the status without erasing history, and names the next gate. Stages 2, 6, and
 - Database mutation never occurs as a side effect of normal startup.
 - Security deviations from legacy are explicit and tested.
 - A feature is not complete until code, tests, SDD, tasks, and workbook agree.
+- Each implementation slice receives a fresh read-only external peer review
+  after tests pass. Findings are independently validated by the primary agent;
+  no more than two discussion rounds are allowed, and unresolved material
+  findings block delivery.
 - A delivery slice is not complete until it has passed Stages 7-10; the next
   slice does not start before that acceptance is recorded.
 - Every independent gate has an eligible-agent declaration, immutable report,
@@ -215,4 +232,4 @@ redefinition, MINOR for a new enforceable principle/section, PATCH for wording
 clarification. Amendments state rationale and impact. Ratification and owner
 approval cannot be inferred from an agent action or from merge alone.
 
-**Version**: 0.4.2 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-21
+**Version**: 0.5.0 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-21

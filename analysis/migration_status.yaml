@@ -5,7 +5,7 @@ updated: 2026-07-21
 methodology_stage:
   number: 6
   name: Design re-verification
-  status: clean-pending-owner-approval
+  status: blocked-pending-independent-review
   last_completed_stage: 5
   incomplete_stages:
     - 3
@@ -13,17 +13,21 @@ methodology_stage:
 
 next_action:
   actor: fresh-independent-agent
-  pass_number: 3
-  report: analysis/reviews/stage-06-pass-003.md
+  pass_number: 4
+  report: analysis/reviews/stage-06-pass-004.md
   instruction: >-
     Execute the owner-requested additional Stage 6 independent design
-    re-verification (Pass 003) from scratch and without sampling. The agent
+    re-verification (Pass 004) from scratch and without sampling, using the
+    batched external-agent orchestration protocol. The agent
     must pass the eligibility self-check: no prior work on the parity map,
     the SDD artifacts, the methodology documents, or Stage 6 passes 001-002
     (both the primary Codex sessions and the Claude session blocked in Pass
-    002 are ineligible). Do not modify the reviewed workbook, specs, or code.
+    002 are ineligible; the Claude sessions used by blocked Pass 003 are also
+    ineligible). Do not modify the reviewed workbook, specs, or code. Every
+    batch and context reset must be checkpointed and a fresh consolidator must
+    confirm complete coverage.
   completion_gate: >-
-    A recorded Stage 6 Pass 003 report by an eligible fresh agent; on
+    A recorded Stage 6 Pass 004 report by an eligible fresh agent; on
     result=clean, implementation approval still requires an explicit owner
     decision; on result=findings, return to Stage 5.
 
@@ -107,13 +111,19 @@ review_passes:
     agent: Claude (Fable 5) owner-session agent, self-disqualified
     result: blocked
     report: analysis/reviews/stage-06-pass-002.md
+  - stage: 6
+    pass: 3
+    date: 2026-07-21
+    agent: Claude Code CLI fresh external reviewer, orchestrated by OpenAI Codex
+    result: blocked
+    report: analysis/reviews/stage-06-pass-003.md
 
 owner_gates:
   constitution_ratification:
     status: approved
     approved_by: project owner
     approved_on: 2026-07-21
-    version: 0.4.2
+    version: 0.5.0
   requirements_revision:
     status: approved
     approved_by: project owner

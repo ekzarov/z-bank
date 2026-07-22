@@ -68,6 +68,7 @@ conflict to the owner.
 | [Visual methodology](analysis/migration_methodology.html) | Human presentation of the methodology | It must remain synchronized with the Markdown methodology |
 | [Migration status](analysis/migration_status.yaml) | Machine-readable checkpoint and next action | At every stage transition or gate decision |
 | [Review protocol and records](analysis/reviews/README.md) | Auditable evidence for independent and control passes | Every Stage 2, 6, or 10 pass, including clean and blocked passes |
+| [Cross-agent orchestration](analysis/agent_orchestration.md) | Direct read-only review through an external agent CLI, including context checkpoints | Whenever agents review or challenge one another without owner message relay |
 | [Legacy reconnaissance](analysis/legacy_reconnaissance.md) | Stage 1 handoff and evidence boundary | New legacy evidence changes the handoff |
 | [Legacy deployment overview](analysis/cobol_deployment_overview.md) | What can and cannot run without IBM infrastructure | Runtime prerequisites or deployment knowledge changes |
 | [Constitution](.specify/memory/constitution.md) | Project governance and non-negotiable constraints | Through an explicit, documented amendment |
@@ -98,6 +99,14 @@ no Bank of Z evidence; the filled workbook is the governed project record.
 - Every Stage 2, 6, or 10 pass writes an immutable report under
   `analysis/reviews/`, even when its result is clean or blocked. Chat history is
   not sufficient evidence that a pass occurred.
+- The primary agent MAY communicate directly with an external agent CLI under
+  the [cross-agent orchestration protocol](analysis/agent_orchestration.md).
+  The external reviewer remains read-only; the primary agent verifies every
+  finding, and no model consensus replaces evidence or an owner gate.
+- Large external reviews MUST use deterministic batches and context
+  checkpoints. Context overflow, a lost scope acknowledgement, a timeout, or a
+  missing batch makes the review `blocked`; it can never be interpreted as a
+  partial `clean` result.
 - Keep code, tests, SDD, tasks, and the filled workbook synchronized in the
   same implementation PR.
 - Starting at Stage 7, deliver iteratively. Select one approved feature or a
