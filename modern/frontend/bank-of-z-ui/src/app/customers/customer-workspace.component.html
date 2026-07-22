@@ -1,0 +1,55 @@
+<section class="page workspace">
+  <header class="page-heading">
+    <div><p class="eyebrow">Customer operations</p><h1>Customer workspace</h1></div>
+    <button type="button" class="primary" (click)="startCreate()">New customer</button>
+  </header>
+
+  <form class="search" (submit)="$event.preventDefault(); search()">
+    <label for="customer-search">Customer ID or name</label>
+    <div><input id="customer-search" [value]="query()" (input)="query.set($any($event.target).value)" autocomplete="off"><button type="submit" [disabled]="loading()">Search</button></div>
+  </form>
+
+  @if (message()) { <p class="notice" role="status">{{ message() }}</p> }
+  @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
+
+  <div class="workspace-grid">
+    <aside aria-label="Search results">
+      <h2>Results</h2>
+      @for (customer of results(); track customer.id) {
+        <button type="button" class="result" [class.active]="selected()?.id === customer.id" (click)="select(customer)">
+          <strong>{{ customer.details.firstName }} {{ customer.details.lastName }}</strong><span>{{ customer.id }}</span>
+        </button>
+      } @empty { <p class="muted">Search for a customer or create a new one.</p> }
+    </aside>
+
+    <form class="editor" [formGroup]="form" (ngSubmit)="save()">
+      <div class="editor-heading">
+        <div><p class="eyebrow">{{ creating() ? 'New customer' : selected() ? selected()!.id : 'No selection' }}</p><h2>Customer details</h2></div>
+        @if (selected(); as customer) { <span class="status">{{ customer.status }}</span> }
+      </div>
+      <fieldset [disabled]="!creating() && !selected() || saving()">
+        <div class="fields">
+          <label>Title<select formControlName="title"><option>Mr</option><option>Mrs</option><option>Ms</option><option>Miss</option><option>Dr</option></select></label>
+          <label>First name<input formControlName="firstName"></label>
+          <label>Last name<input formControlName="lastName"></label>
+          <label>Date of birth<input type="date" formControlName="dateOfBirth"></label>
+          <label class="wide">Address<input formControlName="addressLine1"></label>
+          <label class="wide">Address line 2<input formControlName="addressLine2"></label>
+          <label>City<input formControlName="city"></label>
+          <label>Region<input formControlName="region"></label>
+          <label>Postal code<input formControlName="postalCode"></label>
+          <label>Country code<input formControlName="countryCode" maxlength="2"></label>
+          <label>Email<input type="email" formControlName="email"></label>
+          <label>Phone<input formControlName="phone"></label>
+        </div>
+      </fieldset>
+      <div class="actions">
+        <button type="submit" class="primary" [disabled]="(!creating() && !selected()) || saving()">Save</button>
+        <button type="button" class="danger" [disabled]="!selected() || selected()?.status !== 'active' || saving()" (click)="retire()">Retire</button>
+      </div>
+      @if (selected(); as customer) {
+        <dl><div><dt>Sort code</dt><dd>{{ customer.sortCode }}</dd></div><div><dt>Credit score</dt><dd>{{ customer.creditScore }}</dd></div><div><dt>Review date</dt><dd>{{ customer.creditReviewDate }}</dd></div><div><dt>Source</dt><dd>{{ customer.sourceSystem }}</dd></div></dl>
+      }
+    </form>
+  </div>
+</section>

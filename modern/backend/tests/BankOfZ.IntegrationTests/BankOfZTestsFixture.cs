@@ -1,4 +1,5 @@
 using System.Text.Json;
+using BankOfZ.Domain.Customers;
 using BankOfZ.Domain.Security;
 using BankOfZ.Infrastructure.Identity;
 using BankOfZ.Infrastructure.Persistence;
@@ -34,6 +35,8 @@ public sealed class BankOfZTestsFixture : IAsyncLifetime
         await using var context = new BankOfZIdentityContext(options);
         await context.Database.EnsureDeletedAsync();
         await context.Database.MigrateAsync();
+        context.Customers.Add(CreateTestCustomer());
+        await context.SaveChangesAsync();
         await ProvisionTestIdentitiesAsync();
     }
 
@@ -80,6 +83,28 @@ public sealed class BankOfZTestsFixture : IAsyncLifetime
             throw new InvalidOperationException(string.Join("; ", result.Errors.Select(error => error.Description)));
         }
     }
+
+    private static Customer CreateTestCustomer() => Customer.Create(
+        "1000000001",
+        "100000",
+        new CustomerDetails(
+            "Ms",
+            "Jamie",
+            "Customer",
+            new DateOnly(1990, 5, 12),
+            "1 Test Street",
+            null,
+            "London",
+            null,
+            "EC1A 1AA",
+            "GB",
+            "customer@example.test",
+            "+44 20 0000 0000"),
+        720,
+        new DateOnly(2026, 8, 12),
+        SourceSystem.Modern,
+        "test-fixture",
+        new DateTimeOffset(2026, 7, 22, 0, 0, 0, TimeSpan.Zero));
 
     private static string ReadConnectionString()
     {

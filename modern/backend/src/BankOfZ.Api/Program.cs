@@ -1,8 +1,15 @@
 using System.Net;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using BankOfZ.Api.Security;
+using BankOfZ.Api.ErrorHandling;
+using BankOfZ.Application.Common;
+using BankOfZ.Application.Customers;
 using BankOfZ.Application.Security;
 using BankOfZ.Domain.Security;
 using BankOfZ.Infrastructure.Identity;
+using BankOfZ.Infrastructure.Common;
+using BankOfZ.Infrastructure.Customers;
 using BankOfZ.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -76,8 +83,22 @@ builder.Services.AddAuthorizationBuilder()
 
 builder.Services.AddSingleton<CustomerAccessEvaluator>();
 builder.Services.AddSingleton<InvalidCredentialWorkFactor>();
+var customerOptions = builder.Configuration.GetSection(CustomerOptions.SectionName).Get<CustomerOptions>()
+    ?? new CustomerOptions();
+if (customerOptions.CreditProviders.Length == 0)
+{
+    customerOptions.CreditProviders = CustomerOptions.DefaultCreditProviders.ToArray();
+}
+builder.Services.AddSingleton(customerOptions);
+builder.Services.AddSingleton<IClock, SystemClock>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerAuditWriter, CustomerAuditWriter>();
+builder.Services.AddScoped<ICustomerAccountStatusReader, NoCustomerAccountsReader>();
+builder.Services.AddScoped<ICreditAssessmentProvider, DeterministicCreditAssessmentProvider>();
+builder.Services.AddScoped<CustomerService>();
 builder.Services.AddScoped<ISecurityAudit, SecurityAudit>();
 builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<CustomerExceptionHandler>();
 builder.Services.AddHealthChecks();
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
@@ -86,7 +107,8 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.KnownIPNetworks.Add(System.Net.IPNetwork.Parse("172.16.0.0/12"));
 });
 builder.Services.AddControllersWithViews(options =>
-    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
+    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)));
 
 var app = builder.Build();
 

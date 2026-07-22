@@ -5,8 +5,9 @@ using System.Text.Json;
 namespace BankOfZ.IntegrationTests;
 
 [Trait("Category", DatabaseIntegrationTestCategory.Name)]
+[Collection(DatabaseTestCollection.Name)]
 public sealed class SessionApiTests(BankOfZTestsFixture fixture)
-    : DatabaseIntegrationTestBase(fixture), IClassFixture<BankOfZTestsFixture>
+    : DatabaseIntegrationTestBase(fixture)
 {
     [Fact]
     public async Task Anonymous_Request_Returns_Problem_Details()

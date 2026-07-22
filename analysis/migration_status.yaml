@@ -3,25 +3,25 @@ project: Bank of Z modernization
 updated: 2026-07-22
 
 progress:
-  current_stage_percent: 0
-  overall_percent_estimate: 60
+  current_stage_percent: 95
+  overall_percent_estimate: 66
   estimate_only: true
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 33
-    claude_usable_reports: 23
+    claude_sessions_started: 35
+    claude_usable_reports: 25
     codex_sessions_started: 35
     codex_usable_reports: 28
     deterministic_batches_covered: 17
     active_sessions: 0
     blocked_or_invalid_sessions: 19
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T18:51:00+02:00
+  updated_at: 2026-07-22T19:39:00+02:00
 
 methodology_stage:
   number: 7
   name: Implementation - Feature 002 customer management
-  status: ready-to-implement
+  status: implementation-peer-review-clean
   last_completed_stage: 10
   incomplete_stages:
     - 3
@@ -32,9 +32,8 @@ next_action:
   feature: 002-customer-management
   stage: 7
   instruction: >-
-    Implement Feature 002 customer management as the next isolated delivery
-    slice, including tests, explicit migration, UI, and peer review, then run
-    Stages 8 through 10 before Feature 003 starts.
+    Deliver Feature 002, run credentialed public smoke and update the parity
+    workbook in Stage 8, then execute Stages 9 and 10 before Feature 003 starts.
   completion_gate: >-
     Feature 002 implementation and peer review pass all gates before delivery.
 

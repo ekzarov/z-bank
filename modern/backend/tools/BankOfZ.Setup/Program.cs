@@ -1,4 +1,5 @@
 using BankOfZ.Domain.Security;
+using BankOfZ.Domain.Customers;
 using BankOfZ.Infrastructure.Identity;
 using BankOfZ.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
@@ -38,6 +39,9 @@ var password = Environment.GetEnvironmentVariable("BANKOFZ_DEMO_PASSWORD")
     ?? throw new InvalidOperationException("BANKOFZ_DEMO_PASSWORD is required for demo provisioning.");
 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+var database = scope.ServiceProvider.GetRequiredService<BankOfZIdentityContext>();
+
+await EnsureDemoCustomerAsync(database);
 
 foreach (var role in BankRoles.All)
 {
@@ -60,8 +64,13 @@ static async Task EnsureUserAsync(
     string? customerId,
     string password)
 {
-    if (await users.FindByNameAsync(userName) is not null)
+    if (await users.FindByNameAsync(userName) is { } existing)
     {
+        if (existing.CustomerId != customerId)
+        {
+            existing.CustomerId = customerId;
+            EnsureSucceeded(await users.UpdateAsync(existing));
+        }
         return;
     }
 
@@ -75,6 +84,37 @@ static async Task EnsureUserAsync(
     };
     EnsureSucceeded(await users.CreateAsync(user, password));
     EnsureSucceeded(await users.AddToRoleAsync(user, role));
+}
+
+static async Task EnsureDemoCustomerAsync(BankOfZIdentityContext context)
+{
+    if (await context.Customers.AnyAsync(customer => customer.Id == "1000000001"))
+    {
+        return;
+    }
+
+    context.Customers.Add(Customer.Create(
+        "1000000001",
+        "100000",
+        new CustomerDetails(
+            "Ms",
+            "Jamie",
+            "Customer",
+            new DateOnly(1990, 5, 12),
+            "1 Demo Street",
+            null,
+            "London",
+            null,
+            "EC1A 1AA",
+            "GB",
+            "customer@bankofz.demo",
+            "+44 20 0000 0000"),
+        720,
+        new DateOnly(2026, 8, 12),
+        SourceSystem.Modern,
+        "demo-provisioning",
+        DateTimeOffset.UtcNow));
+    await context.SaveChangesAsync();
 }
 
 static void EnsureSucceeded(IdentityResult result)
