@@ -47,11 +47,15 @@ async function repair(file) {
   if (!main) throw new Error(`${file}: User Flows sheet not found`);
   main.properties.outlineLevelRow = 1;
   main.properties.outlineProperties = { summaryBelow: false, summaryRight: true };
+  main.pageSetup.printTitlesRow = '1:6';
   for (let rowNumber = 7; rowNumber <= main.rowCount; rowNumber++) {
     const row = main.getRow(rowNumber);
     const id = String(row.getCell(1).value || '');
     row.outlineLevel = /^UF-\d+$/.test(id) ? 0 : 1;
     row.hidden = !/^UF-\d+$/.test(id);
+  }
+  for (const worksheet of workbook.worksheets) {
+    if (/^Rev \d+$/.test(worksheet.name)) worksheet.pageSetup.printTitlesRow = '1:1';
   }
   await workbook.xlsx.writeFile(file);
   console.log(`repaired and outlined ${file}`);

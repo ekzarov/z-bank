@@ -11,6 +11,8 @@ export const authGuard: CanActivateFn = () => {
   }
 
   return sessions.load().pipe(
-    map(session => session ? true : router.createUrlTree(['/sign-in']))
+    map(session => session
+      ? true
+      : router.createUrlTree([sessions.unavailable() ? '/unavailable' : '/sign-in']))
   );
 };
