@@ -26,6 +26,11 @@ any action and overrides convenience.
 
 - `analysis/migration_status.yaml` is the only current-stage checkpoint. Update
   it whenever a stage, gate, blocker, or owner decision changes.
+- Its `progress` block is an estimate for orientation, not a gate. Update it at
+  durable checkpoints (completed batch, correction, slice, deployment, or
+  acceptance), not on polling noise. External-review counters distinguish
+  started sessions, usable reports, historical failures, active sessions, and
+  unresolved blocked scope.
 - A stage starts only when its prerequisites and actor requirements are met.
 - Automated checks prove technical invariants but never imply owner approval.
 - Owner approval is recorded explicitly; it cannot be inferred from a merge,
@@ -241,6 +246,12 @@ or environment.
   require a Stage 5 correction and another eligible fresh-agent pass. The gate
   to build opens only after a clean report, recorded pass history, a successful
   workbook audit, and explicit owner approval of the relevant SDD.
+- A blocked or invalid session remains immutable history. Its exact unchecked
+  scope MUST be assigned to later eligible fresh sessions and covered in full.
+  The pass cannot close until `unresolved_blocked_scopes` is zero and a fresh
+  consolidator verifies the closure mapping. The final report records each
+  external finding, the primary agent's accepted/rejected disposition, the
+  correction, and the repeat-review outcome.
 
 ### Stage 7 — Build (code, tests, and documents in one PR)
 

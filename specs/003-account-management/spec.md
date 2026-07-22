@@ -3,7 +3,7 @@
 ## Traceability
 
 - Workbook rows: 41-58, 88, 110-112
-- Owner decisions: D-007, D-009, D-011
+- Owner decisions: D-007, D-009, D-011, D-016, D-017
 - Depends on: Features 001-002
 
 ## Goal
@@ -42,17 +42,21 @@ ineligible accounts remain unchanged with a clear result.
 - **FR-005** Customer authorization SHALL be relationship-based and enforced in
   API queries; foreign accounts SHALL not be disclosed.
 - **FR-006** Create/update SHALL validate product type, dates, rate, overdraft,
-  currency, and identifier formats and use optimistic concurrency.
+  currency, and identifier formats and use optimistic concurrency. Creation
+  SHALL reject an eleventh account for the same customer. Statement dates are
+  system-managed and SHALL NOT be editable account metadata (D-016).
 - **FR-007** Every creation/update/closure SHALL be audited atomically.
 - **FR-008** Closure SHALL require zero settled/available balance and no pending
-  work; history SHALL remain and status SHALL become closed.
+  work; history SHALL remain and status SHALL become closed. The target SHALL
+  NOT reproduce the legacy unconditional hard delete (D-017).
 - **FR-009** The dormant IMS old-account zero-balance rule SHALL NOT be ported.
 - **FR-010** Legacy web `Feature Not Implemented` account operations SHALL be
   replaced by the supported target lifecycle workflows.
 
 ## Success Criteria
 
-- Unit tests cover type mapping and lifecycle/product rules.
+- Unit tests cover type mapping, the ten-account limit, statement-date
+  ownership, and lifecycle/product rules.
 - SQL Server tests cover ownership FK, typed constraints, precision, optimistic
   concurrency, closure eligibility, and audit atomicity.
 - UI/API and Playwright tests cover list, details, create, edit, close, empty,

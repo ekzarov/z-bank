@@ -1,0 +1,259 @@
+{
+  "packet": "STAGE6-PASS004",
+  "revision": "aaf050b",
+  "createdAt": "2026-07-22T10:26:15.010Z",
+  "batches": [
+    {
+      "id": "B000",
+      "kind": "global",
+      "slice": null,
+      "rows": []
+    },
+    {
+      "id": "B001",
+      "kind": "slice",
+      "slice": "001-secure-access-shell",
+      "rows": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        109,
+        113,
+        114,
+        115,
+        116,
+        117
+      ]
+    },
+    {
+      "id": "B002",
+      "kind": "slice",
+      "slice": "002-customer-management",
+      "rows": [
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        87,
+        90,
+        97
+      ]
+    },
+    {
+      "id": "B003A",
+      "kind": "slice",
+      "slice": "003-account-management",
+      "rows": [
+        41,
+        42,
+        43,
+        44
+      ]
+    },
+    {
+      "id": "B003B",
+      "kind": "slice",
+      "slice": "003-account-management",
+      "rows": [
+        45,
+        46,
+        47,
+        48
+      ]
+    },
+    {
+      "id": "B003C",
+      "kind": "slice",
+      "slice": "003-account-management",
+      "rows": [
+        50,
+        51,
+        52,
+        53
+      ]
+    },
+    {
+      "id": "B003D",
+      "kind": "slice",
+      "slice": "003-account-management",
+      "rows": [
+        54,
+        55,
+        56,
+        57
+      ]
+    },
+    {
+      "id": "B003E",
+      "kind": "slice",
+      "slice": "003-account-management",
+      "rows": [
+        58,
+        88,
+        110,
+        111
+      ]
+    },
+    {
+      "id": "B003F",
+      "kind": "slice",
+      "slice": "003-account-management",
+      "rows": [
+        112
+      ]
+    },
+    {
+      "id": "B004",
+      "kind": "slice",
+      "slice": "004-cash-transactions",
+      "rows": [
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        89
+      ]
+    },
+    {
+      "id": "B005",
+      "kind": "slice",
+      "slice": "005-funds-transfers",
+      "rows": [
+        80,
+        81,
+        82,
+        83,
+        84,
+        85
+      ]
+    },
+    {
+      "id": "B006",
+      "kind": "slice",
+      "slice": "006-transaction-history",
+      "rows": [
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        98
+      ]
+    },
+    {
+      "id": "B007",
+      "kind": "slice",
+      "slice": "007-monthly-statements",
+      "rows": [
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107
+      ]
+    },
+    {
+      "id": "B008",
+      "kind": "slice",
+      "slice": "008-data-initialization",
+      "rows": [
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126
+      ]
+    },
+    {
+      "id": "B009A",
+      "kind": "slice",
+      "slice": "009-delivery-operations",
+      "rows": [
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140
+      ]
+    },
+    {
+      "id": "B009B",
+      "kind": "slice",
+      "slice": "009-delivery-operations",
+      "rows": [
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153
+      ]
+    },
+    {
+      "id": "B010",
+      "kind": "quality",
+      "slice": null,
+      "rows": []
+    }
+  ]
+}

@@ -61,3 +61,11 @@ For formal passes, the reviewed state is a committed immutable ref in a clean
 isolated worktree. The reviewer independently regenerates the diff and scope
 from declared revisions. For pre-commit peer review, record the expected dirty
 status and diff digest before invocation and require the exact same state after.
+
+Every blocked attempt records its exact unreviewed scope. That scope must be
+fully reassigned to later eligible fresh sessions; the pass cannot close until
+`unresolved_blocked_scopes` is zero and a fresh consolidator verifies the
+mapping. Reports also include a concise interaction log for management:
+external finding, evidence, primary-agent disposition, correction, and
+repeat-review result. Raw transcripts remain evidence, not the manager-facing
+summary.

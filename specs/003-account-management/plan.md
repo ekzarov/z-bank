@@ -9,8 +9,10 @@ table names, lengths, precision, and discriminator values use centralized
 constants.
 
 Lifecycle commands run through application services and a transaction boundary.
-Queries project DTOs without exposing persistence entities. Closure preserves
-accounts/history and changes status.
+Account creation enforces the ten-account-per-customer limit. Statement dates
+are system-managed rather than editable metadata. Queries project DTOs without
+exposing persistence entities. Closure preserves accounts/history and changes
+status instead of reproducing the unconditional legacy hard delete.
 
 ## API and UI
 

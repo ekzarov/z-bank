@@ -1,11 +1,13 @@
 # Tasks: Account Management and Balances
 
 - [ ] T001 Add unit tests for account type normalization, validation, balance
-  representation, and lifecycle eligibility.
+  representation, the ten-account customer limit, system-managed statement
+  dates, and lifecycle eligibility.
 - [ ] T002 Add categorized SQL Server tests for ownership, indexes, precision,
   concurrency, closure, and audit constraints.
 - [ ] T003 Add API tests for customer/operator access, list/detail, CRUD,
-  empty/not-found, validation, and standard failures.
+  empty/not-found, validation, eleventh-account rejection, statement-date
+  protection, safe closure, and standard failures.
 - [ ] T004 Implement account domain, application use cases, repository queries,
   and explicit legacy type mapping.
 - [ ] T005 Add separate EF configurations/constants and a versioned Account

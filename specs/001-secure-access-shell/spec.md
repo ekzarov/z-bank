@@ -56,7 +56,8 @@ for bad routes and API outages.
 - **FR-008** The Angular shell SHALL expose role-filtered navigation and a clear
   authenticated identity indicator.
 - **FR-009** The target SHALL use normal routes and commands; CICS PF keys, IMS
-  message commands, and the CICS/IMS web selector SHALL NOT be reproduced.
+  message commands, C/IMS-prefixed customer identifiers, and the CICS/IMS web
+  selector SHALL NOT be reproduced.
 - **FR-010** Unknown UI routes SHALL render a not-found view; unavailable API
   calls SHALL render a recoverable error without exposing stack traces.
 - **FR-011** The production web entry point SHALL serve Angular and proxy `/api`
@@ -72,6 +73,8 @@ for bad routes and API outages.
 
 - Terminal menu numbers, PF3/PF12 behavior, and unsupported-key messages are
   replaced by standard web navigation (D-001).
+- Channel-prefixed customer identifiers and channel-routing validation are
+  replaced by channel-neutral customer IDs (D-001).
 - IMS duplicate-login and logout replacement quirks are not preserved (D-002).
 - The unauthenticated control panel and placeholder OAuth URLs are not ported
   (D-002).

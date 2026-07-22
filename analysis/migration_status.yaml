@@ -1,11 +1,24 @@
 schema_version: 1
 project: Bank of Z modernization
-updated: 2026-07-21
+updated: 2026-07-22
+
+progress:
+  current_stage_percent: 90
+  overall_percent_estimate: 25
+  estimate_only: true
+  external_review:
+    agent: Claude Code CLI
+    sessions_started: 25
+    usable_reports: 16
+    active_sessions: 0
+    historical_blocked_or_invalid_sessions: 9
+    unresolved_blocked_scopes: 1
+  updated_at: 2026-07-22T14:05:00+02:00
 
 methodology_stage:
-  number: 6
-  name: Design re-verification
-  status: blocked-pending-independent-review
+  number: 5
+  name: SDD correction after design re-verification
+  status: corrections-complete-pending-stage-06-pass-005
   last_completed_stage: 5
   incomplete_stages:
     - 3
@@ -13,23 +26,16 @@ methodology_stage:
 
 next_action:
   actor: fresh-independent-agent
-  pass_number: 4
-  report: analysis/reviews/stage-06-pass-004.md
+  pass_number: 5
+  report: analysis/reviews/stage-06-pass-005.md
   instruction: >-
-    Execute the owner-requested additional Stage 6 independent design
-    re-verification (Pass 004) from scratch and without sampling, using the
-    batched external-agent orchestration protocol. The agent
-    must pass the eligibility self-check: no prior work on the parity map,
-    the SDD artifacts, the methodology documents, or Stage 6 passes 001-002
-    (both the primary Codex sessions and the Claude session blocked in Pass
-    002 are ineligible; the Claude sessions used by blocked Pass 003 are also
-    ineligible). Do not modify the reviewed workbook, specs, or code. Every
-    batch and context reset must be checkpointed and a fresh consolidator must
-    confirm complete coverage.
+    Execute Stage 6 Pass 005 from scratch through eligible fresh read-only
+    sessions against the committed Pass 004 correction set. Pass 005 must cover all
+    135 rows and 27 SDD artifacts, complete workbook visual inspection, verify
+    every Pass 004 correction, and use a fresh consolidator.
   completion_gate: >-
-    A recorded Stage 6 Pass 004 report by an eligible fresh agent; on
-    result=clean, implementation approval still requires an explicit owner
-    decision; on result=findings, return to Stage 5.
+    A clean Stage 6 Pass 005 with all automated gates passing,
+    unresolved_blocked_scopes=0, and an explicit implementation approval.
 
 stage_3_fallback_result:
   mode: simulate
@@ -117,13 +123,19 @@ review_passes:
     agent: Claude Code CLI fresh external reviewer, orchestrated by OpenAI Codex
     result: blocked
     report: analysis/reviews/stage-06-pass-003.md
+  - stage: 6
+    pass: 4
+    date: 2026-07-22
+    agent: Claude Code CLI fresh external reviewer sessions, orchestrated by OpenAI Codex
+    result: blocked
+    report: analysis/reviews/stage-06-pass-004.md
 
 owner_gates:
   constitution_ratification:
     status: approved
     approved_by: project owner
     approved_on: 2026-07-21
-    version: 0.5.0
+    version: 0.6.0
   requirements_revision:
     status: approved
     approved_by: project owner
@@ -142,8 +154,9 @@ owner_gates:
     frontend: angular-22
     delivery: docker-compose-explicit-migrations
   stage_5_sdd:
-    status: independently-verified
+    status: corrected-pending-pass-005
     completed_on: 2026-07-21
+    corrected_on: 2026-07-22
     report: analysis/stage-05-sdd-report.md
     slices: 9
     workbook_rows_covered: 135
@@ -170,6 +183,15 @@ owner_gates:
     permitted_next_stage: 4
 
 known_blockers:
+  - id: stage-06-pass-004-unresolved-visual-and-consolidation
+    affects_stage: 6
+    status: open-retry-in-pass-005
+    detail: >-
+      B010 completed all automated and structural checks but could not launch
+      Excel COM from the external reviewer harness. A visual-only retry then
+      hit the Claude account session quota before review. Pass 005 must perform
+      visual review from fresh Excel renders and complete fresh consolidation.
+    evidence: analysis/reviews/stage-06-pass-004.md
   - id: stage-02-pass-006-findings
     affects_stage: 2
     status: resolved-verified-by-pass-007

@@ -1,0 +1,13 @@
+{
+  "packet": "STAGE6-PASS004-B009A",
+  "revision": "aaf050b",
+  "session": "aa7e09b7-5f14-4718-b4ae-530ccc21bd09",
+  "exitCode": 0,
+  "timedOut": false,
+  "repositoryClean": true,
+  "repositoryStateBefore": "",
+  "repositoryStateAfter": "",
+  "declaredResultPresent": true,
+  "responseSha256": "8ff8fd751d425384eaaa6b62fb6e5afa54819b3ab62f95dd04d72396f560d25f",
+  "completedAt": "2026-07-22T11:28:04.563Z"
+}

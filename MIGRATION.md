@@ -107,6 +107,11 @@ no Bank of Z evidence; the filled workbook is the governed project record.
   checkpoints. Context overflow, a lost scope acknowledgement, a timeout, or a
   missing batch makes the review `blocked`; it can never be interpreted as a
   partial `clean` result.
+- Every blocked attempt remains in history and its exact scope MUST be covered
+  by later eligible fresh sessions. A formal pass cannot close while
+  `unresolved_blocked_scopes` is non-zero. The immutable report summarizes each
+  external finding, the primary agent's accepted/rejected disposition, the
+  correction, and the repeat-review outcome.
 - Keep code, tests, SDD, tasks, and the filled workbook synchronized in the
   same implementation PR.
 - Starting at Stage 7, deliver iteratively. Select one approved feature or a
@@ -131,7 +136,8 @@ Before ending any working session:
    must produce its review report.
 2. Run the applicable automated gates and record their exact results.
 3. Update `analysis/migration_status.yaml` with the pass history, current gate,
-   blocker or waiver, and next action. Do not erase prior history.
+   blocker or waiver, durable progress estimate, external-review counters,
+   unresolved blocked scopes, and next action. Do not erase prior history.
 4. Confirm that no uncommitted claim of completion exists only in chat.
 5. Tell the owner what changed, what remains open, which gate stopped progress,
    and the exact action or approval needed next.

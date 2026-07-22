@@ -1,5 +1,7 @@
 <!--
 Sync Impact Report
+0.6.0: Added durable progress reporting, mandatory blocked-scope closure, and
+manager-facing cross-agent finding/disposition logs.
 0.5.0: Added owner-approved direct cross-agent orchestration, read-only external
 review, deterministic context checkpoints, and fail-closed context handling.
 -->
@@ -141,6 +143,11 @@ MUST use deterministic batches and checkpoints. Context overflow, timeout,
 missing scope acknowledgement, repository mutation, or an incomplete batch
 MUST fail closed as `blocked`. Agreement between agents never replaces tests,
 legacy evidence, or an owner gate.
+Every blocked attempt remains immutable and records its exact lost scope. That
+scope MUST be fully covered by later eligible fresh sessions, and a formal pass
+MUST NOT close while `unresolved_blocked_scopes` is non-zero. The durable report
+summarizes each external finding, the primary agent's evidence-based
+accepted/rejected disposition, the correction, and the repeat-review result.
 The same context checkpoint rule applies when the primary orchestrator compacts
 or restarts. Review packets MUST NOT transmit credentials, personal data,
 regulated data, or repository content to a service that the owner has not
@@ -194,7 +201,9 @@ Workbook-specific mechanics are governed by
 
 Agents MUST read `analysis/migration_status.yaml`, perform only work allowed by
 the active stage, and update that checkpoint when a stage, gate, blocker, or
-owner decision changes. An agent MUST NOT mark its own work independently
+owner decision changes. Its progress estimates and external-review counters
+are updated only at durable checkpoints and never substitute for gates. An
+agent MUST NOT mark its own work independently
 verified. Before stopping, it records the required artifact and checks, updates
 the status without erasing history, and names the next gate. Stages 2, 6, and
 10 follow the
@@ -232,4 +241,4 @@ redefinition, MINOR for a new enforceable principle/section, PATCH for wording
 clarification. Amendments state rationale and impact. Ratification and owner
 approval cannot be inferred from an agent action or from merge alone.
 
-**Version**: 0.5.0 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-21
+**Version**: 0.6.0 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-22

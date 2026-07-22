@@ -8,8 +8,7 @@ target requirement or approved deviation. Source confidence (`Yes`, `Partial`,
 | Workbook rows | SDD requirements / decision |
 |---|---|
 | 8-11 | Feature 001 FR-008 through FR-010; D-001 |
-| 12-13 | Feature 001 FR-003, FR-008, FR-009; D-001 |
-| 14 | Feature 001 FR-010 |
+| 12-14 | Feature 001 FR-003, FR-008, FR-009; D-001 |
 | 15-17 | Feature 001 FR-001, FR-005, FR-006 |
 | 18-20 | Feature 001 FR-007; D-002 |
 | 22-27 | Feature 002 FR-001 through FR-003 |
@@ -17,7 +16,7 @@ target requirement or approved deviation. Source confidence (`Yes`, `Partial`,
 | 35-37 | Feature 002 FR-004, FR-006, FR-008 through FR-010 |
 | 38-39 | Feature 002 FR-007 through FR-010; D-009 |
 | 41-48 | Feature 003 FR-001 through FR-005, FR-009 |
-| 50-58 | Feature 003 FR-006 through FR-010; D-009 |
+| 50-58 | Feature 003 FR-006 through FR-010; D-009, D-016, D-017 |
 | 60-62 | Feature 004 FR-001, FR-002, FR-004, FR-005, FR-007, FR-008 |
 | 63 | Feature 004 FR-006; D-006 |
 | 64-66 | Feature 004 FR-001, FR-002, FR-004, FR-005, FR-007, FR-008 |

@@ -25,7 +25,7 @@
 ## Frontend Tests First
 
 - [ ] T010 Add Vitest tests for session state, route guards, role-filtered
-  navigation, not-found, and unavailable states.
+  navigation, channel-neutral customer IDs, not-found, and unavailable states.
 - [ ] T011 Add Playwright sign-in/protected-route/sign-out happy path tagged
   `@e2e`.
 

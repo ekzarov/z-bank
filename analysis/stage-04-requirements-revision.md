@@ -38,6 +38,8 @@ traceable simulation:
 | D-013 | CICS/IMS loaders and DB2 setup create useful data, but their utilities and data layouts are IBM-specific. | Use versioned EF migrations plus an explicit idempotent import/demo-data command. Normal application startup remains read/write only and never migrates or seeds. |
 | D-014 | IBM deployment, Wazi/DBB, 3270, Zowe, debug tooling, trust-all TLS, and unsecured management are operational legacy mechanics. | Replace them with Docker Compose, health checks, structured logging, HTTPS-ready same-origin routing, and secure configuration. Do not port IBM-only tooling or insecure settings. |
 | D-015 | Full real-runtime behavior remains blocked without authorized IBM infrastructure. | Continue with the recorded `partial-simulated` evidence. Keep all runtime-dependent claims explicitly unverified and return to Stage 1 if a later real walkthrough contradicts the map. |
+| D-016 | The CICS update screen accepts and validates statement dates, but `UPDACC` silently discards those edits. | Treat statement dates as system-managed lifecycle data. Do not expose them as editable account metadata in the target. |
+| D-017 | Legacy account deletion is an unconditional hard delete, while the approved SDD already requires retained history and zero-balance eligibility. | Replace hard delete with an eligibility-gated close transition that retains the account and history for audit. |
 
 ## Delivery Slices
 

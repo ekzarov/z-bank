@@ -115,6 +115,34 @@ const DATA_START = 7;
     });
   }
 
+  // G: canonical typography and the light A:C detail spine are stable.
+  for (const e of epics) {
+    for (const r of e.children) {
+      const row = main.getRow(r);
+      for (let c = 1; c <= 14; c++) {
+        const font = row.getCell(c).font || {};
+        if (font.name !== 'Carlito' || font.size !== 10) {
+          errors.push(`G User Flows r${r} c${c}: font ${font.name}/${font.size}, expected Carlito/10`);
+        }
+      }
+      for (let c = 1; c <= 3; c++) {
+        const fill = fillArgb(row.getCell(c));
+        if (fill !== 'FFF8FAFC') errors.push(`G User Flows r${r} c${c}: spine fill ${fill}, expected FFF8FAFC`);
+      }
+    }
+  }
+  for (const ws of revSheets) {
+    ws.eachRow((row, r) => {
+      for (let c = 1; c <= 9; c++) {
+        const font = row.getCell(c).font || {};
+        const expectedSize = r === 1 ? 11 : 10;
+        if (font.name !== 'Carlito' || font.size !== expectedSize) {
+          errors.push(`G ${ws.name} r${r} c${c}: font ${font.name}/${font.size}, expected Carlito/${expectedSize}`);
+        }
+      }
+    });
+  }
+
   // E: only canonical finding types on Rev sheets (unverified suspicions ⇒ red gap)
   for (const ws of wb.worksheets) {
     if (!/^Rev \d+$/.test(ws.name)) continue;

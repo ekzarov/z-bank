@@ -121,6 +121,12 @@ consolidation may return `clean` only when every planned batch is present and
 the consolidating fresh reviewer confirms full-scope coverage and repository
 cleanliness.
 
+Blocked attempts are never deleted or relabeled. Record their reason and exact
+lost scope, then assign that scope to later eligible fresh sessions. A pass may
+close only when `unresolved_blocked_scopes` is zero and the consolidator checks
+the closure mapping. Account quotas and tool denials are blockers just like
+timeouts; they are not evidence about the reviewed artifacts.
+
 ## Discussion and Completion
 
 1. The reviewer returns structured findings with severity, file/row evidence,
@@ -132,7 +138,9 @@ cleanliness.
    rounds are permitted.
 6. A material final diff is reviewed again by a fresh external session.
 7. The primary agent reports accepted, rejected, and unresolved findings plus
-   exact test results. Commit, push, merge, and owner-gate actions follow the
+   exact test results. The durable report uses a compact interaction log:
+   reviewer finding, evidence, primary-agent disposition, correction, and
+   repeat-review outcome. Commit, push, merge, and owner-gate actions follow the
    owner's current explicit instructions; the external reviewer performs none
    of them.
 
