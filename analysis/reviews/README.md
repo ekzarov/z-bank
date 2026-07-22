@@ -40,3 +40,24 @@ declaration in the report. If its current context contains creation or editing
 of any artifact in scope, it is disqualified and must stop without performing
 the review.
 
+## Orchestrated External Review
+
+The primary agent may invoke the independent reviewer directly through an
+external CLI under [`../agent_orchestration.md`](../agent_orchestration.md).
+Transporting prompts and evidence does not make the primary agent the reviewer.
+The external session must still be fresh, eligible, read-only, and isolated
+from authoring context.
+
+For an orchestrated pass, durably retain the review packet, checkpoints, and raw
+structured responses under `analysis/reviews/evidence/<packet-id>/` after the
+reviewer returns them, and record their digests in the immutable report. Record
+every reviewer or orchestrator context reset. A missing batch,
+lost scope acknowledgement, context overflow, timeout, repository mutation, or
+incomplete raw response makes the pass `blocked`. The orchestrator may challenge
+a factual finding with evidence, but the reviewer owns the final result and the
+orchestrator cannot convert it to `clean`.
+
+For formal passes, the reviewed state is a committed immutable ref in a clean
+isolated worktree. The reviewer independently regenerates the diff and scope
+from declared revisions. For pre-commit peer review, record the expected dirty
+status and diff digest before invocation and require the exact same state after.

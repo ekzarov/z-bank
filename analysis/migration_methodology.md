@@ -52,6 +52,10 @@ any action and overrides convenience.
   eligibility: if its current context contains creation or editing of an
   artifact in scope, it self-disqualifies and requests a fresh agent. Every
   iteration uses an eligible fresh agent.
+- **Orchestrator** — the primary agent transporting deterministic review
+  packets and challenge responses to an external agent CLI. Orchestration
+  removes owner message relay but does not transfer the independent reviewer's
+  conclusion to the primary agent and does not grant approval authority.
 - **Automated gate** — a check that must pass before the flow may continue
   (tests, workbook audit script, smoke test).
 
@@ -89,7 +93,9 @@ one approved feature or a small, tightly related group as a **delivery slice**
 and repeat this loop:
 
 1. **Stage 7 — Build:** implement and test only the selected slice; synchronize
-   its SDD, tasks, and workbook rows in the same PR.
+   its SDD, tasks, and workbook rows in the same PR. After tests pass, run a
+   read-only external-agent peer review of the requirements and diff; verify
+   every finding and use at most two evidence-based discussion rounds.
 2. **Stage 8 — Delivery:** deploy that slice and close its smoke test.
 3. **Stage 9 — Live revision:** compare that slice with the legacy baseline and
    map through every affected channel.
@@ -101,6 +107,28 @@ and repeat this loop:
 The whole approved backlog MUST NOT be implemented before this feedback is
 collected. When every slice is accepted, Stage 10 runs once more as the final
 consolidated acceptance of the complete migrated system.
+
+## Cross-agent execution and context safety
+
+The primary agent invokes Claude Code, Antigravity, Codex, or an equivalent
+approved external CLI directly for the mandatory slice peer review, so the
+owner does not relay review messages. Every such
+invocation follows
+[`agent_orchestration.md`](agent_orchestration.md): deterministic review packet,
+new session, read-only isolated revision, structured findings, independent
+validation by the primary agent, and no more than two discussion rounds.
+
+Large scopes are divided into explicit batches with persisted checkpoints.
+After `/compact` or a fresh-session continuation, the reviewer must acknowledge
+the packet identifier, revision, completed scope, and remaining scope before
+continuing. Context overflow, timeout, lost acknowledgement, repository
+mutation, or incomplete batch coverage makes the review `blocked`. A formal
+Stage 2, 6, or 10 conclusion still belongs to the eligible external reviewer;
+model agreement never replaces automated evidence or owner approval.
+No packet may send credentials, personal data, regulated data, or repository
+content not approved for the selected service. If complete safe evidence cannot
+be sent, the review is blocked until the owner selects an authorized reviewer
+or environment.
 
 ## Stages
 
@@ -220,6 +248,10 @@ consolidated acceptance of the complete migrated system.
   pull the entire approved backlog into one implementation batch.
 - Branch first (`main` stays stable) → implement on the target stack.
 - **Automated tests are a hard gate**: no PR ships on red.
+- After tests pass, the primary agent sends the slice requirements and diff to
+  a fresh read-only external reviewer. It validates every response rather than
+  accepting it automatically. Confirmed findings are fixed and tests rerun;
+  material unresolved disagreement blocks the slice and goes to the owner.
 - The same PR synchronizes code, SDD artifacts, and the workbook (rows greened
   with target evidence). A code-only PR that leaves SDD or the workbook stale
   is incomplete.
