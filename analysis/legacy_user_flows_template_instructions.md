@@ -305,15 +305,17 @@ produces the same look:
     red/Missed banner; use `FF1F2937` (dark slate) on orange/green/neutral
     banners.
   - Flow-name cell (column B, first scenario row of a flow): **bold, size 10**,
-    color `FF1F2937`.
-  - All other detail cells: regular, **size 10**, color `FF1F2937`.
+    color `FF000000`.
+  - All other detail cells: regular, **size 10**, color `FF000000`.
 - **Fills (solid):**
-  - Whole banner row (A–N) = the status color: red `FFEA9999`, orange
+  - Whole banner row (A–N) = the status color: red `FFFFC7CE`, orange
     `FFFCE4D6`, green `FFE2F0D9`, or neutral white `FFFFFFFF`.
   - Detail rows: columns A, B and the `Scenario` cell (C) use the light spine
     `FFF8FAFC`; columns D–N use the epic's status color.
-- **Borders:** thin `FFBFBFBF` on all four sides of every data cell.
-- **Alignment:** `wrap_text = true`, vertical `top`, horizontal `left`.
+- **Borders:** thin `FFE7C8BD` on all four sides of every data cell.
+- **Alignment:** `wrap_text = true`, vertical `top`; horizontal may be omitted
+  so Excel uses its default left alignment for text, or explicitly set to
+  `left`. Other horizontal alignments are not allowed.
 - **Row height:** leave automatic (do not hard-set), so wrapped text is not
   clipped.
 - **Outline:** banner rows `outlineLevel 0`, detail rows `outlineLevel 1`,

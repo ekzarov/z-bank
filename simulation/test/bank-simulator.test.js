@@ -128,6 +128,14 @@ test('IMS signed amount can reverse the requested transaction direction', () => 
     assert.equal(simulator.findAccount('IMS', '101').actualBalance, before + 10);
 });
 
+test('IMS accepts uppercase transaction actions', () => {
+    const simulator = new LegacyBankSimulator();
+    const before = simulator.findAccount('IMS', '101').actualBalance;
+    simulator.imsTransaction('000000001', '101', 'D', 10);
+    simulator.imsTransaction('000000001', '101', 'W', 5);
+    assert.equal(simulator.findAccount('IMS', '101').actualBalance, before + 5);
+});
+
 test('IMS direct message preserves the account ownership gap', () => {
     const simulator = new LegacyBankSimulator();
     const result = simulator.imsTransaction('000000001', '201', 'w', 50);
@@ -183,10 +191,27 @@ test('monthly statement reports period transactions and reconciles the opening b
     assert.equal(statement.summary.availableBalance, 1250);
     assert.equal(statement.customer.customerId, '0000000001');
     assert.equal(statement.account.accountId, '10000001');
+    assert.equal(statement.account.interestRate, 1.25);
+    assert.equal(statement.account.overdraftLimit, 250);
+    assert.equal(statement.sortCode, '987654');
     assert.equal(statement.transactions[0].currency, statement.account.currency);
     assert.ok(statement.transactions.every(transaction => transaction.transactionId
         && transaction.bookingDateTime && transaction.creditDebitIndicator));
     assert.equal(statement.footer, 'END OF STATEMENT');
+});
+
+test('monthly statement validates sort code and reconciles from available balance', () => {
+    const simulator = new LegacyBankSimulator();
+    const account = simulator.findAccount('CICS', '10000001');
+    account.availableBalance = 1200;
+    account.actualBalance = 1250;
+    const statement = simulator.monthlyStatement({ accountId: '10000001', reportingMonth: '202607' });
+    assert.equal(statement.summary.closingBalance, 1200);
+    assert.equal(statement.summary.openingBalance, 990);
+    assert.throws(
+        () => simulator.monthlyStatement({ accountId: '10000001', reportingMonth: '202607', sortCode: '123456' }),
+        error => error.code === 'ACCOUNT_NOT_FOUND'
+    );
 });
 
 test('monthly statement emits the legacy empty-history message', () => {

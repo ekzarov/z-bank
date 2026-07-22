@@ -8,10 +8,10 @@
 
 ## Inputs
 
-- Ratified constitution 0.4.2.
+- Ratified constitution 0.6.1.
 - Filled parity map with 135 scenario rows.
 - Stage 3 `partial-simulated` walkthrough and residual IBM-runtime blocker.
-- Fifteen owner-approved Stage 4 requirements decisions.
+- Twenty-three owner-approved Stage 4 requirements decisions.
 - Owner-selected stack: Angular, ASP.NET Core Web API, EF Core, and SQL Server.
 
 ## Target Architecture
@@ -45,7 +45,7 @@ authorize implementation and no target code was created.
   not hidden deferrals.
 - Destination implementation remains empty for every row.
 - `Rev 1` contains nine open implementation gaps covering 135/135 rows and
-  fifteen closed owner-decision records.
+  twenty-three closed owner-decision records.
 - Decision notes identify corrected security/data-integrity behavior and
   intentionally unported IBM-only or dead technical surfaces.
 

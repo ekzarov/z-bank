@@ -103,6 +103,23 @@ function appendRuntimeLabel(value, label) {
       row.getCell(8).value = appendRuntimeLabel(current, 'static-only');
     }
     if (staticOnlyRows.has(n)) row.getCell(8).value = appendRuntimeLabel(row.getCell(8).value, 'static-only');
+    for (let column = 1; column <= 14; column += 1) {
+      const cell = row.getCell(column);
+      cell.font = {
+        ...(cell.font || {}),
+        name: 'Carlito',
+        size: 10,
+        color: { argb: 'FF000000' }
+      };
+      const border = { style: 'thin', color: { argb: 'FFE7C8BD' } };
+      cell.border = { left: border, right: border, top: border, bottom: border };
+      cell.alignment = {
+        ...(cell.alignment || {}),
+        wrapText: true,
+        vertical: 'top',
+        horizontal: 'left'
+      };
+    }
     row.height = undefined;
   }
 

@@ -126,9 +126,23 @@ const DATA_START = 7;
     for (const r of e.children) {
       const row = main.getRow(r);
       for (let c = 1; c <= 14; c++) {
-        const font = row.getCell(c).font || {};
-        if (font.name !== 'Carlito' || font.size !== 10) {
-          errors.push(`G User Flows r${r} c${c}: font ${font.name}/${font.size}, expected Carlito/10`);
+        const cell = row.getCell(c);
+        const font = cell.font || {};
+        const fontColor = font.color && font.color.argb ? font.color.argb.toUpperCase() : null;
+        if (font.name !== 'Carlito' || font.size !== 10 || fontColor !== 'FF000000') {
+          errors.push(`G User Flows r${r} c${c}: font ${font.name}/${font.size}/${fontColor}, expected Carlito/10/FF000000`);
+        }
+        for (const side of ['left', 'right', 'top', 'bottom']) {
+          const border = (cell.border || {})[side] || {};
+          const borderColor = border.color && border.color.argb ? border.color.argb.toUpperCase() : null;
+          if (border.style !== 'thin' || borderColor !== 'FFE7C8BD') {
+            errors.push(`G User Flows r${r} c${c}: ${side} border ${border.style}/${borderColor}, expected thin/FFE7C8BD`);
+          }
+        }
+        const alignment = cell.alignment || {};
+        if (alignment.wrapText !== true || alignment.vertical !== 'top'
+          || ![undefined, 'left'].includes(alignment.horizontal)) {
+          errors.push(`G User Flows r${r} c${c}: invalid alignment ${JSON.stringify(alignment)}`);
         }
       }
       for (let c = 1; c <= 3; c++) {

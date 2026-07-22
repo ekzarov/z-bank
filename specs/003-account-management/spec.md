@@ -64,8 +64,9 @@ ineligible accounts remain unchanged with a clear result.
 - **FR-011** Missing generated legacy error mappings SHALL be replaced by
   documented target Problem Details, including account list/detail/balance.
 - **FR-012** This slice owns authorized complete account portfolio, account
-  detail, and actual/available balance read models. Feature 004 owns balance
-  mutation; metadata commands in this slice SHALL never mutate balances.
+  detail, and actual/available balance read models. Features 004 and 005 own
+  their cash/transfer balance-mutation commands; metadata commands in this
+  slice SHALL never mutate balances.
 - **FR-013** Account identifier allocation, account persistence, and audit
   persistence SHALL commit atomically. Failure SHALL leave no partial account
   or audit record; consumed identifier gaps are allowed (D-023).

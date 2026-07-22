@@ -254,7 +254,8 @@ class LegacyBankSimulator {
     }
 
     imsTransaction(customerId, accountId, action, rawAmount, description = '') {
-        if (!['d', 'w'].includes(action)) {
+        const normalizedAction = String(action).toLowerCase();
+        if (!['d', 'w'].includes(normalizedAction)) {
             throw new LegacySimulationError(400, 'INVALID_ACTION', "INVALID ACCOUNT ACTION. MUST BE 'w' OR 'd'.");
         }
         const account = this.findAccount('IMS', accountId);
@@ -262,11 +263,11 @@ class LegacyBankSimulator {
         if (!hasMoneyPrecision(rawAmount)) {
             throw new LegacySimulationError(400, 'INVALID_AMOUNT', 'Amount must be numeric with at most two decimals');
         }
-        const signedAmount = action === 'w' ? -amount : amount;
+        const signedAmount = normalizedAction === 'w' ? -amount : amount;
         account.availableBalance = money(account.availableBalance + signedAmount);
         account.actualBalance = money(account.actualBalance + signedAmount);
         account.lastTransactionId += 1;
-        const transaction = this.recordTransaction('IMS', account, signedAmount, description || `IMS ${action}`);
+        const transaction = this.recordTransaction('IMS', account, signedAmount, description || `IMS ${normalizedAction}`);
         try {
             this.findCustomer('IMS', customerId);
         } catch (error) {
@@ -360,8 +361,12 @@ class LegacyBankSimulator {
         return { action: choices[normalized], message: 'TRANSACTION DISPATCHED' };
     }
 
-    monthlyStatement({ accountId, reportingMonth = '202607', sortCode = '123456' }) {
+    monthlyStatement({ accountId, reportingMonth = '202607', sortCode }) {
         const account = this.findAccount('CICS', accountId);
+        const requestedSortCode = String(sortCode || this.state.metadata.sortCode);
+        if (requestedSortCode !== String(this.state.metadata.sortCode)) {
+            throw new LegacySimulationError(404, 'ACCOUNT_NOT_FOUND', 'Account not found for sort code');
+        }
         const customer = this.findCustomer('CICS', account.customerId);
         const year = reportingMonth.slice(0, 4);
         const month = reportingMonth.slice(4, 6);
@@ -377,17 +382,21 @@ class LegacyBankSimulator {
             statementDate: `${year}-${month}-${String(days).padStart(2, '0')}`,
             periodFrom: `${year}${month}01`,
             periodTo: `${year}${month}${String(days).padStart(2, '0')}`,
-            sortCode,
+            sortCode: requestedSortCode,
             customer: { customerId: customer.customerId, firstName: customer.firstName, lastName: customer.lastName, address: clone(customer.address), phoneNumber: customer.phoneNumber },
-            account: this.publicAccount(account),
+            account: {
+                ...this.publicAccount(account),
+                interestRate: account.interestRate,
+                overdraftLimit: account.overdraftLimit
+            },
             transactions: rows.map(clone),
             emptyHistoryMessage: rows.length ? null : 'NO TRANSACTIONS FOR THIS PERIOD',
             summary: {
                 transactionCount: rows.length,
                 totalCredits: credits,
                 totalDebits: debits,
-                closingBalance: account.actualBalance,
-                openingBalance: money(account.actualBalance - credits + debits),
+                closingBalance: account.availableBalance,
+                openingBalance: money(account.availableBalance - credits + debits),
                 availableBalance: account.availableBalance
             },
             footer: 'END OF STATEMENT'

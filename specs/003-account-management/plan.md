@@ -20,7 +20,7 @@ Portfolio queries use bounded pagination and remove channel-specific six/ten/
 twenty display caps. Account number, configured bank sort code, opening date,
 and zero opening balances are assigned inside the transaction. Metadata update
 DTOs contain no balance fields. This slice owns balance read models while
-Feature 004 exclusively owns balance mutation.
+Features 004 and 005 own their respective cash and transfer mutation commands.
 
 ## API and UI
 

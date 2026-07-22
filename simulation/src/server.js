@@ -154,7 +154,7 @@ function createSimulationServer(simulator = new LegacyBankSimulator()) {
                 return json(response, 200, simulator.monthlyStatement({
                     accountId: params.accountId,
                     reportingMonth: url.searchParams.get('month') || '202607',
-                    sortCode: url.searchParams.get('sortCode') || '123456'
+                    sortCode: url.searchParams.get('sortCode') || undefined
                 }), simulator.evidence('monthly-statement'));
             }
 
