@@ -16,11 +16,13 @@
 //     automatic height, and continuation pages repeat their headers.
 'use strict';
 
+const fs = require('fs');
 const path = require('path');
 const ExcelJS = require('exceljs');
 const { COLORS, cellText, fillArgb, parseRefs } = require('./lib');
 
 const FILE = path.join(__dirname, '..', 'legacy_user_flows.xlsx');
+const TRACEABILITY_FILE = path.join(__dirname, '..', '..', 'specs', 'traceability.md');
 const DATA_START = 7;
 
 (async () => {
@@ -161,6 +163,24 @@ const DATA_START = 7;
     if (missingFromRevision.length) errors.push(`C2 ${decisionId}: Rev sheet omits note rows ${missingFromRevision.join(',')}`);
     if (missingFromNotes.length) errors.push(`C2 ${decisionId}: Rev sheet over-attributes rows ${missingFromNotes.join(',')}`);
   }
+  const traceDecisionRows = new Map();
+  const traceability = fs.readFileSync(TRACEABILITY_FILE, 'utf8');
+  for (const match of traceability.matchAll(/^\|\s*([^|]+)\|\s*([^|]+)\|/gm)) {
+    const rowRefs = parseRefs(match[1]);
+    if (!rowRefs.length) continue;
+    for (const decision of match[2].matchAll(/D-\d{3}/g)) {
+      if (!traceDecisionRows.has(decision[0])) traceDecisionRows.set(decision[0], new Set());
+      rowRefs.forEach((row) => traceDecisionRows.get(decision[0]).add(row));
+    }
+  }
+  for (const decisionId of new Set([...noteDecisionRows.keys(), ...traceDecisionRows.keys()])) {
+    const notes = noteDecisionRows.get(decisionId) || new Set();
+    const trace = traceDecisionRows.get(decisionId) || new Set();
+    const missingFromTrace = [...notes].filter((row) => !trace.has(row));
+    const missingFromNotes = [...trace].filter((row) => !notes.has(row));
+    if (missingFromTrace.length) errors.push(`C2 ${decisionId}: traceability omits note rows ${missingFromTrace.join(',')}`);
+    if (missingFromNotes.length) errors.push(`C2 ${decisionId}: traceability over-attributes rows ${missingFromNotes.join(',')}`);
+  }
 
   // D: closed findings on Rev sheets carry Implemented? = Yes
   for (const ws of wb.worksheets) {
@@ -227,10 +247,15 @@ const DATA_START = 7;
     }
   }
   if (main.pageSetup.printTitlesRow !== '1:6') errors.push(`H User Flows: printTitlesRow=${main.pageSetup.printTitlesRow}, expected 1:6`);
+  if (main.getRow(4).height !== 36) errors.push(`H User Flows r4: height=${main.getRow(4).height}, expected 36`);
+  for (const epic of epics) {
+    if (main.getRow(epic.headerRow).height !== 40) errors.push(`H User Flows r${epic.headerRow}: epic height=${main.getRow(epic.headerRow).height}, expected 40`);
+  }
   for (const ws of revSheets) {
     if (ws.pageSetup.printTitlesRow !== '1:1') errors.push(`H ${ws.name}: printTitlesRow=${ws.pageSetup.printTitlesRow}, expected 1:1`);
     ws.eachRow((row) => {
-      if (row.height !== undefined) errors.push(`H ${ws.name} r${row.number}: fixed row height ${row.height} can clip wrapped text`);
+      if (row.number === 1 && row.height !== 30) errors.push(`H ${ws.name} r1: height=${row.height}, expected 30`);
+      if (row.number !== 1 && row.height !== undefined) errors.push(`H ${ws.name} r${row.number}: fixed row height ${row.height} can clip wrapped text`);
     });
   }
 
@@ -251,7 +276,7 @@ const DATA_START = 7;
 
   const openCount = openRows.length;
   const total = epics.reduce((s, e) => s + e.children.length, 0);
-  console.log(`scenario rows: ${total} (closed ${total - openCount}, open ${openCount}); epics: ${epics.length}; rev-covered open rows: ${openRows.filter((r) => covered.has(r)).length}/${openCount}`);
+  console.log(`scenario rows: ${total} (closed ${total - openCount}, open ${openCount}); epics: ${epics.length}; decisions: ${revDecisionRows.size}; rev-covered open rows: ${openRows.filter((r) => covered.has(r)).length}/${openCount}`);
   if (errors.length) {
     for (const e of errors) console.error('FAIL ' + e);
     console.error(`AUDIT FAILED: ${errors.length} violation(s)`);

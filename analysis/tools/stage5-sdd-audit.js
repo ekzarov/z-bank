@@ -27,19 +27,36 @@ const traceabilityFile = path.join(root, 'specs', 'traceability.md');
   const ownership = new Map();
   const errors = [];
   const traceability = fs.readFileSync(traceabilityFile, 'utf8');
+  const qualifiedRequirements = new Set();
+  let artifactCount = 0;
+  let requirementCount = 0;
+  for (const match of traceability.matchAll(/Feature\s+(\d{3})\s+([^;|\r\n]+)/g)) {
+    const featureId = match[1];
+    const references = match[2];
+    for (const requirement of references.matchAll(/FR-(\d+)([A-Z]?)/g)) {
+      qualifiedRequirements.add(`${featureId}:FR-${requirement[1]}${requirement[2]}`);
+    }
+    for (const range of references.matchAll(/FR-(\d+)\s+through\s+FR-(\d+)/g)) {
+      for (let n = Number(range[1]); n <= Number(range[2]); n += 1) {
+        qualifiedRequirements.add(`${featureId}:FR-${String(n).padStart(3, '0')}`);
+      }
+    }
+  }
   for (const slice of coverage.slices) {
     const directory = path.join(root, 'specs', `${slice.id}-${slice.slug}`);
     for (const artifact of ['spec.md', 'plan.md', 'tasks.md']) {
       const file = path.join(directory, artifact);
       if (!fs.existsSync(file)) errors.push(`Missing ${path.relative(root, file)}`);
+      else artifactCount += 1;
     }
 
     const specFile = path.join(directory, 'spec.md');
     if (fs.existsSync(specFile)) {
       const spec = fs.readFileSync(specFile, 'utf8');
       const requirementIds = [...spec.matchAll(/\*\*(FR-[0-9]+[A-Z]?)\*\*/g)].map((match) => match[1]);
+      requirementCount += requirementIds.length;
       for (const requirementId of requirementIds) {
-        if (!new RegExp(`\\b${requirementId}\\b`).test(traceability)) {
+        if (!qualifiedRequirements.has(`${slice.id}:${requirementId}`)) {
           errors.push(`${path.relative(root, specFile)} ${requirementId} has no reverse entry in specs/traceability.md`);
         }
       }
@@ -86,7 +103,7 @@ const traceabilityFile = path.join(root, 'specs', 'traceability.md');
     process.exit(1);
   }
 
-  console.log(`SDD AUDIT OK: ${expectedRows.length} rows, ${coverage.slices.length} slices, 27 artifacts`);
+  console.log(`SDD AUDIT OK: ${expectedRows.length} rows, ${coverage.slices.length} slices, ${artifactCount} artifacts, ${requirementCount} feature-qualified requirements`);
 })().catch((error) => {
   console.error(error.stack || error.message);
   process.exit(1);

@@ -66,6 +66,7 @@
     "69": "Deviation D-011: display the returned balance instead of legacy N/A.",
     "71,89": "Decision D-020: sort code is derived from account/bank configuration, not trusted client input.",
     "72-78": "Deviation D-004/D-005: one positive-amount, ownership, product, and sufficient-funds rule set.",
+    "81": "Decision D-005: generic transfers allow transactional products only; loan and mortgage movements use dedicated operations.",
     "84": "Deviation D-004: enforce available-funds/overdraft policy before transfer.",
     "85": "Deviation D-011: non-deployed bank-to-bank surface is not ported.",
     "91": "Deviation D-008: unbound all-account route is not recreated without a target business use case.",

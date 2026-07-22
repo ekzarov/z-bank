@@ -14,7 +14,8 @@ target requirement or approved deviation. Source confidence (`Yes`, `Partial`,
 | 22-23 | Feature 002 FR-001 through FR-003 |
 | 24-25 | Feature 002 FR-003, FR-013; Feature 003 FR-004, FR-012 |
 | 26-27 | Feature 002 FR-002, FR-003; D-018 |
-| 29-32 | Feature 002 FR-004, FR-005, FR-008 through FR-011; D-010 |
+| 29-30 | Feature 002 FR-004, FR-005, FR-008 through FR-011 |
+| 31-32 | Feature 002 FR-004, FR-005, FR-008 through FR-011; D-010 |
 | 33 | Feature 002 FR-012; D-023 |
 | 34 | Feature 002 FR-004, FR-011 |
 | 35-37 | Feature 002 FR-004, FR-006, FR-008 through FR-010 |
@@ -35,12 +36,14 @@ target requirement or approved deviation. Source confidence (`Yes`, `Partial`,
 | 64-66 | Feature 004 FR-001, FR-002, FR-004, FR-005, FR-007, FR-008 |
 | 67 | Feature 004 FR-003, FR-008; D-003 |
 | 68 | Feature 004 FR-006; D-006 |
-| 69-70 | Feature 004 FR-001, FR-007, FR-008, FR-010 |
+| 69 | Feature 004 FR-001, FR-007, FR-008, FR-010; D-011 |
+| 70 | Feature 004 FR-001, FR-007, FR-008, FR-010 |
 | 71 | Feature 004 FR-001, FR-008, FR-012; D-020 |
 | 72 | Feature 004 FR-005; D-004, D-005 |
-| 73-74 | Feature 004 FR-004, FR-005; D-005 |
-| 75-78 | Feature 004 FR-001, FR-002, FR-005, FR-008; D-004 |
-| 80-81 | Feature 005 FR-001 through FR-004, FR-009 through FR-011; D-020 |
+| 73-74 | Feature 004 FR-004, FR-005; D-004, D-005 |
+| 75-78 | Feature 004 FR-001, FR-002, FR-005, FR-008; D-004, D-005 |
+| 80 | Feature 005 FR-001 through FR-004, FR-009 through FR-011; D-020 |
+| 81 | Feature 005 FR-001 through FR-004, FR-009 through FR-011; D-005 |
 | 82-83 | Feature 005 FR-005 through FR-007, FR-011; D-006 |
 | 84 | Feature 005 FR-004, FR-011; D-004 |
 | 85 | Feature 005 FR-008; D-011 |
@@ -49,7 +52,7 @@ target requirement or approved deviation. Source confidence (`Yes`, `Partial`,
 | 88 | Feature 003 FR-001 through FR-005, FR-011; D-008 |
 | 89 | Feature 004 FR-001 through FR-012; D-020 |
 | 91 | Feature 006 FR-008; D-008 |
-| 92-94, 98 | Feature 006 FR-001 through FR-009; D-008 |
+| 92-94, 98 | Feature 006 FR-001 through FR-010; D-008 |
 | 95-96 | Feature 006 FR-007, FR-008; D-008 |
 | 100 | Feature 007 FR-001, FR-006, FR-007, FR-009; D-012 |
 | 101 | Feature 007 FR-001, FR-002, FR-009; D-012 |
@@ -61,9 +64,9 @@ target requirement or approved deviation. Source confidence (`Yes`, `Partial`,
 | 107 | Feature 007 FR-009; D-012 |
 | 109 | Feature 001 FR-012; D-002 |
 | 110-112 | Feature 003 FR-002, FR-003; D-007 |
-| 113-114 | Feature 001 FR-008, FR-011; D-001, D-014 |
-| 115-116 | Feature 001 FR-010, FR-011; D-014 |
-| 117 | Feature 001 FR-001 through FR-004, FR-012; D-002 |
+| 113-114 | Feature 001 FR-008, FR-011; D-001, D-002, D-014 |
+| 115-116 | Feature 001 FR-010, FR-011; D-001, D-002, D-014 |
+| 117 | Feature 001 FR-001 through FR-004, FR-012; D-001, D-002, D-014 |
 | 119 | Feature 008 FR-008, FR-011, FR-012; D-013, D-021 |
 | 120-123,125 | Feature 008 FR-003 through FR-009, FR-012; D-013, D-021 |
 | 124 | Feature 008 FR-003 through FR-009, FR-012; D-013, D-021 |
@@ -72,6 +75,16 @@ target requirement or approved deviation. Source confidence (`Yes`, `Partial`,
 | 133,136,150 | Feature 009 FR-013; D-022 |
 | 134 | Feature 009 FR-007, FR-014; D-006, D-014 |
 | 135,137-149,151-153 | Feature 009 FR-004 through FR-012; D-014, D-015 |
+
+## Target-Only Controls
+
+These requirements do not originate from one atomic legacy behavior row. They
+are explicit target safety controls and remain reverse-traceable here rather
+than being falsely attached to source evidence.
+
+| Target control | Basis |
+|---|---|
+| Feature 001 FR-013, FR-014 | No startup provisioning and security-event audit are target operational controls. |
 
 ## Coverage Summary
 

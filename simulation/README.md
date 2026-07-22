@@ -1,8 +1,9 @@
 # Bank of Z Stage 3 Legacy Simulator
 
 This is a traceable substitute walkthrough for the unavailable IBM runtime. It
-exercises source- and contract-derived observable behavior for CICS, IMS, DB2
-persistence transitions, REST mappings, the existing web UI, and the monthly
+exercises source- and contract-derived observable behavior for CICS, IMS,
+simulated in-memory persistence transitions derived from DB2/IMS code, REST
+mappings, the existing web UI, and the monthly
 statement batch. It does not execute COBOL/PL/I, CICS, IMS, DB2, 3270, Liberty,
 or z/OS Connect and therefore never counts as live legacy verification.
 

@@ -87,6 +87,7 @@ function appendRuntimeLabel(value, label) {
   set(flows.getRow(81), 4, 'Validate transfer input, then rely on the CICS unit of work while accounts are selected and updated in account-number order.');
   set(flows.getRow(81), 5, 'One account can be updated before a missing second account is discovered; rollback supplies atomic recovery.');
   set(flows.getRow(81), 6, 'Input errors are reported; transactional lookup/update failure rolls back the unit of work.');
+  set(flows.getRow(81), 10, 'Decision D-005: generic transfers allow transactional products only; loan and mortgage movements use dedicated operations.');
 
   const row96 = flows.getRow(96);
   set(row96, 8, 'legacy/src/api/src/main/operations/%2Faccounts%2F%7BaccountId%7D/get/response_mapping.yaml:7; legacy/src/api/src/main/operations/%2Faccounts%2F%7BaccountId%7D%2Fbalances/get/response_mapping.yaml:7; legacy/src/api/src/main/operations/%2Fcustomers%2F%7BcustomerId%7D%2Faccounts/get/response_mapping.yaml:7; legacy/src/api/src/main/operations/%2Fcustomers%2F%7BcustomerId%7D/put/response_mapping.yaml:8-10; legacy/src/api/src/main/operations/%2Faccounts/get/response_mapping.yaml:3; legacy/src/api/src/main/operations/%2Faccounts%2F%7BaccountId%7D%2Ftransactions/get/response_mapping.yaml:3; legacy/src/api/src/main/operations/%2Faccounts%2F%7BaccountId%7D%2Ftransactions%2F%7BtransactionId%7D/get/response_mapping.yaml:3; Runtime: static-only');
@@ -147,8 +148,11 @@ function appendRuntimeLabel(value, label) {
   }
 
   flows.pageSetup.printTitlesRow = '1:6';
+  flows.getRow(4).height = 36;
+  for (const rowNumber of epicRows) flows.getRow(rowNumber).height = 40;
   rev.pageSetup.printTitlesRow = '1:1';
   rev.eachRow({ includeEmpty: true }, (row) => { row.height = undefined; });
+  rev.getRow(1).height = 30;
 
   const decisions = [
     ['R1-D-018', null, '26-27', 'decision', 'Name search is unsupported and failed lookup can retain stale customer state.', 'Target normalized search is implemented; failed lookup clears stale state and disables mutation.', 'Yes', 'Yes', 'analysis/stage-04-requirements-revision.md#d-018'],
@@ -174,7 +178,7 @@ function appendRuntimeLabel(value, label) {
     if (id === 'R1-D-001') row.getCell(3).value = '8-14,113-117';
     if (id === 'R1-D-002') row.getCell(3).value = '15-20,109,113-117';
     if (id === 'R1-D-004') row.getCell(3).value = '72-78,84';
-    if (id === 'R1-D-005') row.getCell(3).value = '72-78';
+    if (id === 'R1-D-005') row.getCell(3).value = '72-78,81';
     if (id === 'R1-D-006') row.getCell(3).value = '63,68,82-83,134';
     if (id === 'R1-D-008') row.getCell(3).value = '87-88,90-98';
     if (id === 'R1-D-009') row.getCell(3).value = '38-39,53,56,58';

@@ -319,8 +319,9 @@ produces the same look:
 - **Alignment:** `wrap_text = true`, vertical `top`; horizontal may be omitted
   so Excel uses its default left alignment for text, or explicitly set to
   `left`. Other horizontal alignments are not allowed.
-- **Row height:** leave automatic (do not hard-set), so wrapped text is not
-  clipped.
+- **Row height:** leave detail rows automatic so wrapped text is not clipped.
+  Set the legend row to 36 points, epic banners to 40 points, and repeating
+  revision headers to 30 points so collapsed/printed views remain readable.
 - **Outline:** banner rows `outlineLevel 0`, detail rows `outlineLevel 1`,
   `summaryBelow = false`; ship with detail rows hidden / banners collapsed.
 
