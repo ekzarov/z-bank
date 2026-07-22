@@ -3,8 +3,8 @@ project: Bank of Z modernization
 updated: 2026-07-22
 
 progress:
-  current_stage_percent: 95
-  overall_percent_estimate: 82
+  current_stage_percent: 0
+  overall_percent_estimate: 89
   estimate_only: true
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
@@ -16,27 +16,26 @@ progress:
     active_sessions: 0
     blocked_or_invalid_sessions: 20
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T20:34:00+02:00
+  updated_at: 2026-07-22T20:49:26+02:00
 
 methodology_stage:
-  number: 7
-  name: Implementation - Feature 003 account management
-  status: peer-reviewed-ready-for-delivery
-  last_completed_stage: 10
+  number: 10
+  name: Independent acceptance - Feature 003 account management
+  status: pending-independent-review
+  last_completed_stage: 9
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: OpenAI Codex orchestrator
+  actor: Claude Code CLI fresh external reviewer, orchestrated by OpenAI Codex
   feature: 003-account-management
-  stage: 7
+  stage: 10
   instruction: >-
-    Commit and deliver the peer-reviewed Feature 003 account-management slice,
-    apply its explicit migration, run live smoke/E2E, reconcile the workbook,
-    then complete Stages 8 through 10.
+    Review the immutable Feature 003 delivery, Stage 8/9 evidence, SDD/task
+    synchronization, and workbook reconciliation without editing the worktree.
   completion_gate: >-
-    Feature 003 implementation and peer review pass all gates before delivery.
+    A clean independent report is recorded before Feature 004 starts.
 
 stage_3_fallback_result:
   mode: simulate
