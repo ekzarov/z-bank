@@ -4,40 +4,39 @@ updated: 2026-07-22
 
 progress:
   current_stage_percent: 0
-  overall_percent_estimate: 70
+  overall_percent_estimate: 72
   estimate_only: true
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 35
-    claude_usable_reports: 25
+    claude_sessions_started: 36
+    claude_usable_reports: 26
     codex_sessions_started: 35
     codex_usable_reports: 28
     deterministic_batches_covered: 17
     active_sessions: 0
     blocked_or_invalid_sessions: 19
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T19:55:00+02:00
+  updated_at: 2026-07-22T20:02:00+02:00
 
 methodology_stage:
-  number: 10
-  name: Independent acceptance - Feature 002 customer management
-  status: ready-for-independent-review
-  last_completed_stage: 9
+  number: 7
+  name: Implementation - Feature 003 account management
+  status: ready-to-implement
+  last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
   actor: fresh-independent-agent
-  feature: 002-customer-management
-  stage: 10
+  feature: 003-account-management
+  stage: 7
   instruction: >-
-    Independently verify the immutable delivered Feature 002 revision, all 20
-    workbook rows, R1-G02, SDD/task lockstep, implementation, tests, deployment,
-    and Stage 8/9 evidence without changing reviewed artifacts.
+    Implement Feature 003 account management as the next isolated delivery
+    slice, including its real customer-account relationship, tests, explicit
+    migration, UI, and peer review, then run Stages 8 through 10.
   completion_gate: >-
-    A clean Stage 10 pass with no unchecked declared scope is required before
-    Feature 003 starts.
+    Feature 003 implementation and peer review pass all gates before delivery.
 
 stage_3_fallback_result:
   mode: simulate
@@ -197,6 +196,12 @@ review_passes:
     agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
     result: clean
     report: analysis/reviews/stage-10-pass-003.md
+  - stage: 10
+    pass: 4
+    date: 2026-07-22
+    agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: clean
+    report: analysis/reviews/stage-10-pass-004.md
 
 accepted_slices:
   - feature: 001-secure-access-shell
@@ -204,6 +209,11 @@ accepted_slices:
     stage_10_pass: 3
     report: analysis/reviews/stage-10-pass-003.md
     workbook_rows: 19
+  - feature: 002-customer-management
+    accepted_on: 2026-07-22
+    stage_10_pass: 4
+    report: analysis/reviews/stage-10-pass-004.md
+    workbook_rows: 20
 
 owner_gates:
   constitution_ratification:
