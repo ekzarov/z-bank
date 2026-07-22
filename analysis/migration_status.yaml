@@ -3,8 +3,8 @@ project: Bank of Z modernization
 updated: 2026-07-22
 
 progress:
-  current_stage_percent: 90
-  overall_percent_estimate: 48
+  current_stage_percent: 0
+  overall_percent_estimate: 57
   estimate_only: true
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
@@ -16,28 +16,28 @@ progress:
     active_sessions: 0
     blocked_or_invalid_sessions: 18
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T17:55:00+02:00
+  updated_at: 2026-07-22T18:13:00+02:00
 
 methodology_stage:
-  number: 7
-  name: Iterative implementation - Feature 001 secure access shell
-  status: implementation-complete-pending-compose-and-deploy
-  last_completed_stage: 6
+  number: 10
+  name: Independent slice acceptance - Feature 001 secure access shell
+  status: pending-independent-acceptance
+  last_completed_stage: 9
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: orchestrator
+  actor: fresh-independent-agent
   feature: 001-secure-access-shell
-  stage: 7
+  stage: 10
   instruction: >-
-    Build and smoke the Feature 001 Compose topology, deploy it beside the
-    legacy application, update workbook destination evidence, then continue
-    the slice through Stages 8, 9, and 10 before starting Feature 002.
+    Independently accept Feature 001 against its workbook rows, SDD, code,
+    automated gates, and deployed legacy/modern URLs. Record Pass 001 without
+    modifying reviewed artifacts.
   completion_gate: >-
-    Feature 001 implementation and tests complete, deployed smoke passed, map
-    and tasks updated, and independent Stage 10 slice acceptance is clean.
+    Eligible Stage 10 Pass 001 is clean, all gates pass, and Feature 001 tasks
+    and workbook evidence are synchronized before Feature 002 begins.
 
 stage_3_fallback_result:
   mode: simulate
