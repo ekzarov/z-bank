@@ -4,6 +4,7 @@ import { of, throwError } from 'rxjs';
 import { CustomerApiService } from './customer-api.service';
 import { Customer } from './customer.model';
 import { CustomerWorkspaceComponent } from './customer-workspace.component';
+import { AccountApiService } from '../accounts/account-api.service';
 
 describe('CustomerWorkspaceComponent', () => {
   const api = {
@@ -14,7 +15,10 @@ describe('CustomerWorkspaceComponent', () => {
     vi.clearAllMocks();
     TestBed.configureTestingModule({
       imports: [CustomerWorkspaceComponent],
-      providers: [{ provide: CustomerApiService, useValue: api }]
+      providers: [
+        { provide: CustomerApiService, useValue: api },
+        { provide: AccountApiService, useValue: { list: () => of({ items: [], page: 1, pageSize: 20, total: 0 }) } }
+      ]
     });
   });
 

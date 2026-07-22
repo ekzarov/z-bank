@@ -2,12 +2,16 @@ import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { CustomerApiService } from './customer-api.service';
 import { CustomerProfileComponent } from './customer-profile.component';
+import { AccountApiService } from '../accounts/account-api.service';
 
 describe('CustomerProfileComponent', () => {
   it('shows the profile returned by the self endpoint', () => {
     TestBed.configureTestingModule({
       imports: [CustomerProfileComponent],
-      providers: [{ provide: CustomerApiService, useValue: { me: () => of(customer) } }]
+      providers: [
+        { provide: CustomerApiService, useValue: { me: () => of(customer) } },
+        { provide: AccountApiService, useValue: { list: () => of({ items: [], page: 1, pageSize: 20, total: 0 }) } }
+      ]
     });
     const fixture = TestBed.createComponent(CustomerProfileComponent);
     fixture.detectChanges();
@@ -19,7 +23,10 @@ describe('CustomerProfileComponent', () => {
   it('shows a safe unavailable state when self lookup fails', () => {
     TestBed.configureTestingModule({
       imports: [CustomerProfileComponent],
-      providers: [{ provide: CustomerApiService, useValue: { me: () => throwError(() => new Error('failed')) } }]
+      providers: [
+        { provide: CustomerApiService, useValue: { me: () => throwError(() => new Error('failed')) } },
+        { provide: AccountApiService, useValue: { list: () => of({ items: [], page: 1, pageSize: 20, total: 0 }) } }
+      ]
     });
     const fixture = TestBed.createComponent(CustomerProfileComponent);
     fixture.detectChanges();

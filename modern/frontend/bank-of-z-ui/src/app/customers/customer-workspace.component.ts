@@ -5,10 +5,11 @@ import { finalize, Observable } from 'rxjs';
 import { CustomerApiService } from './customer-api.service';
 import { createCustomerForm, formToDetails } from './customer-form';
 import { Customer } from './customer.model';
+import { AccountPortfolioComponent } from '../accounts/account-portfolio.component';
 
 @Component({
   selector: 'app-customer-workspace',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, AccountPortfolioComponent],
   templateUrl: './customer-workspace.component.html',
   styleUrl: './customer-workspace.component.scss'
 })

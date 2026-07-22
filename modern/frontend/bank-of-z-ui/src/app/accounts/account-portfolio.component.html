@@ -1,0 +1,38 @@
+<section class="portfolio">
+  <header>
+    <div><p class="eyebrow">Portfolio</p><h2>Accounts <span>{{ total() }}</span></h2></div>
+    @if (operator() && !creating()) { <button type="button" (click)="startCreate()">New account</button> }
+  </header>
+
+  @if (message()) { <p class="notice" role="status">{{ message() }}</p> }
+  @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
+
+  @if (creating()) {
+    <form [formGroup]="form" (ngSubmit)="create()" class="account-form">
+      <label>Product<select formControlName="type"><option value="current">Current</option><option value="saving">Saving</option><option value="isa">ISA</option><option value="loan">Loan</option><option value="mortgage">Mortgage</option></select></label>
+      <label>Interest rate<input type="number" min="0" max="9999.99" step="0.01" formControlName="interestRate"></label>
+      <label>Overdraft limit<input type="number" min="0" step="1" formControlName="overdraftLimit"></label>
+      <label>Currency<input maxlength="3" formControlName="currency"></label>
+      <div class="form-actions"><button class="primary" type="submit" [disabled]="loading()">Create</button><button type="button" (click)="cancelCreate()">Cancel</button></div>
+    </form>
+  }
+
+  <div class="account-list">
+    @for (account of accounts(); track account.id) {
+      <a [routerLink]="['/accounts', account.id]" class="account-row">
+        <div><strong>{{ account.type | titlecase }}</strong><span>{{ account.sortCode }} / {{ account.id }}</span></div>
+        <div class="balances"><strong>{{ account.actualBalance | currency:account.currency:'symbol':'1.2-2' }}</strong><span>{{ account.availableBalance | currency:account.currency:'symbol':'1.2-2' }} available</span></div>
+        <span class="status" [class.closed]="account.status === 'closed'">{{ account.status }}</span>
+      </a>
+    } @empty {
+      @if (!loading()) { <p class="empty">No accounts have been opened for this customer.</p> }
+    }
+  </div>
+  @if (total() > pageSize) {
+    <nav class="pagination" aria-label="Account pages">
+      <button type="button" (click)="previousPage()" [disabled]="page() === 1">Previous</button>
+      <span>Page {{ page() }} of {{ pageCount() }}</span>
+      <button type="button" (click)="nextPage()" [disabled]="page() * pageSize >= total()">Next</button>
+    </nav>
+  }
+</section>

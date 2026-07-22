@@ -49,6 +49,7 @@
       </div>
       @if (selected(); as customer) {
         <dl><div><dt>Sort code</dt><dd>{{ customer.sortCode }}</dd></div><div><dt>Credit score</dt><dd>{{ customer.creditScore }}</dd></div><div><dt>Review date</dt><dd>{{ customer.creditReviewDate }}</dd></div><div><dt>Source</dt><dd>{{ customer.sourceSystem }}</dd></div></dl>
+        <app-account-portfolio [customerId]="customer.id" [operator]="true" />
       }
     </form>
   </div>

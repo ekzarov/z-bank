@@ -1,5 +1,6 @@
 using BankOfZ.Domain.Security;
 using BankOfZ.Domain.Customers;
+using BankOfZ.Domain.Accounts;
 using BankOfZ.Infrastructure.Identity;
 using BankOfZ.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
@@ -42,6 +43,7 @@ var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Applicati
 var database = scope.ServiceProvider.GetRequiredService<BankOfZIdentityContext>();
 
 await EnsureDemoCustomerAsync(database);
+await EnsureDemoAccountAsync(database);
 
 foreach (var role in BankRoles.All)
 {
@@ -114,6 +116,37 @@ static async Task EnsureDemoCustomerAsync(BankOfZIdentityContext context)
         SourceSystem.Modern,
         "demo-provisioning",
         DateTimeOffset.UtcNow));
+    await context.SaveChangesAsync();
+}
+
+static async Task EnsureDemoAccountAsync(BankOfZIdentityContext context)
+{
+    const string accountId = "10000000";
+    if (await context.Accounts.AnyAsync(account => account.Id == accountId))
+    {
+        return;
+    }
+
+    var now = DateTimeOffset.UtcNow;
+    context.Accounts.Add(Account.Create(
+        accountId,
+        "1000000001",
+        "100000",
+        new AccountMetadata(AccountType.Current, 0.25m, 500, "GBP"),
+        SourceSystem.Modern,
+        "demo-provisioning",
+        "CURRENT",
+        now));
+    context.AccountAuditEntries.Add(new AccountAuditRecord
+    {
+        Actor = "setup",
+        Timestamp = now,
+        Action = "AccountCreated",
+        AccountId = accountId,
+        CustomerId = "1000000001",
+        Result = "Succeeded",
+        CorrelationId = "demo-provisioning"
+    });
     await context.SaveChangesAsync();
 }
 

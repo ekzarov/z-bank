@@ -4,11 +4,13 @@ using System.Text.Json.Serialization;
 using BankOfZ.Api.Security;
 using BankOfZ.Api.ErrorHandling;
 using BankOfZ.Application.Common;
+using BankOfZ.Application.Accounts;
 using BankOfZ.Application.Customers;
 using BankOfZ.Application.Security;
 using BankOfZ.Domain.Security;
 using BankOfZ.Infrastructure.Identity;
 using BankOfZ.Infrastructure.Common;
+using BankOfZ.Infrastructure.Accounts;
 using BankOfZ.Infrastructure.Customers;
 using BankOfZ.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
@@ -91,14 +93,19 @@ if (customerOptions.CreditProviders.Length == 0)
 }
 builder.Services.AddSingleton(customerOptions);
 builder.Services.AddSingleton<IClock, SystemClock>();
+builder.Services.AddSingleton(builder.Configuration.GetSection(AccountOptions.SectionName).Get<AccountOptions>() ?? new AccountOptions());
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IAccountAuditWriter, AccountAuditWriter>();
+builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICustomerAuditWriter, CustomerAuditWriter>();
-builder.Services.AddScoped<ICustomerAccountStatusReader, NoCustomerAccountsReader>();
+builder.Services.AddScoped<ICustomerAccountStatusReader, CustomerAccountStatusReader>();
 builder.Services.AddScoped<ICreditAssessmentProvider, DeterministicCreditAssessmentProvider>();
 builder.Services.AddScoped<CustomerService>();
 builder.Services.AddScoped<ISecurityAudit, SecurityAudit>();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<CustomerExceptionHandler>();
+builder.Services.AddExceptionHandler<AccountExceptionHandler>();
 builder.Services.AddHealthChecks();
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
