@@ -16,9 +16,10 @@ frontend client, and workbook rows listed in
 `simulation/fixtures/legacy-fixture.json`.
 
 This run did **not** execute z/OS, CICS, IMS, DB2, 3270, z/OS Connect, Liberty,
-compiled COBOL/PL/I, JCL, or IBM transaction/runtime services. All affected
-workbook evidence is labeled `Runtime: simulated`; no row becomes
-`live-observed` or real-runtime verified from this run.
+compiled COBOL/PL/I, JCL, or IBM transaction/runtime services. A workbook row
+is labeled `Runtime: simulated` only when a durable automated assertion covers
+its stated behavior; all other source-derived rows are `Runtime: static-only`.
+No row becomes `live-observed` or real-runtime verified from this run.
 
 ## Executed contours
 
@@ -26,7 +27,7 @@ workbook evidence is labeled `Runtime: simulated`; no row becomes
 |---|---|---|
 | CICS terminal model | Menu dispatch, cancel/exit, invalid menu and unsupported key branches | Passed in harness |
 | CICS cash model | Credit/debit, validation, payment-only insufficient-funds and loan restrictions, teller bypass, audit record | Passed in harness |
-| CICS transfer model | Positive amount, same-account rejection, two-account mutation, two audit records, no inferred overdraft rejection | Passed in harness |
+| CICS transfer model | Positive amount, same-account rejection, two-account mutation, one source-account history record with destination context, no inferred overdraft rejection | Passed in harness |
 | IMS message model | Login, duplicate/invalid login, logout false-success defect, deposit/withdraw, invalid/missing data, signed/zero amount behavior, ownership gap | Passed in harness |
 | REST/API model | CICS/IMS customer and account routes, deposits, standard errors, deliberately unbound account/transaction collection routes | Passed in HTTP contract tests |
 | Existing web UI | Original `legacy/src/frontend` served through its Node proxy; CICS `C0000000001` and IMS `I000000001` customer/account portfolios | Browser smoke passed |
@@ -40,7 +41,8 @@ cd simulation
 npm test
 ```
 
-Result: `21` tests passed, `0` failed after the final regression additions.
+Result: see the current `npm test` output; the committed suite is the durable
+source of the exact count after regression corrections.
 
 ```text
 npm run walkthrough

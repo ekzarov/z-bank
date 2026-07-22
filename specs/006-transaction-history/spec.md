@@ -29,7 +29,9 @@ provenance where applicable.
 - **FR-001** History SHALL be ordered by booking timestamp descending with a
   deterministic transaction-ID tie-breaker.
 - **FR-002** The default page size SHALL be 50 and SHALL have a documented
-  bounded maximum; pagination SHALL not skip/duplicate stable records.
+  maximum of 200; pagination SHALL use an opaque versioned keyset cursor and
+  SHALL not skip/duplicate stable records. Malformed or stale cursors SHALL
+  return `400` Problem Details with code `invalid_history_cursor`.
 - **FR-003** Customer ownership and staff policies SHALL be enforced on list
   and detail endpoints.
 - **FR-004** Missing or unauthorized records SHALL not disclose foreign data.
@@ -42,9 +44,13 @@ provenance where applicable.
   SHALL NOT recreate unbound operation mappings or missing generated YAML.
 - **FR-009** An account with no transactions SHALL return an empty page, not an
   error.
+- **FR-010** Optional `from` and `to` booking-time filters SHALL use UTC,
+  inclusive `from`, exclusive `to`, and reject inverted/invalid ranges with
+  `400` Problem Details.
 
 ## Success Criteria
 
 - SQL Server/API tests prove authorization, ordering, stable pagination,
   detail lookup, empty history, provenance, and immutability.
-- Angular/Playwright tests cover list-to-detail navigation and empty state.
+- Angular/Playwright tests cover customer and operator list-to-detail
+  navigation, authorized scope, denied scope, filters, and empty state.

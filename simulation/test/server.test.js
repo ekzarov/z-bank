@@ -100,7 +100,7 @@ test('simulation-only endpoints expose terminal and batch behavior with evidence
         const menu = await fetch(`${baseUrl}/simulation/cics/menu`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ choice: '6' })
+            body: JSON.stringify({ choice: '7' })
         });
         assert.equal((await menu.json()).action, 'TRANSFER');
         assert.match(menu.headers.get('x-legacy-evidence'), /BNKMENU\.cbl/);

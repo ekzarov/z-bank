@@ -76,6 +76,8 @@ for bad routes and API outages.
 - Channel-prefixed customer identifiers and channel-routing validation are
   replaced by channel-neutral customer IDs (D-001).
 - IMS duplicate-login and logout replacement quirks are not preserved (D-002).
+- Exact IMS terminal messages, login timestamps, and false-success behavior are
+  legacy evidence only; target authentication follows FR-001 through FR-007.
 - The unauthenticated control panel and placeholder OAuth URLs are not ported
   (D-002).
 - Static proxy implementation details are replaced by same-origin routing;

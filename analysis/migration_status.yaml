@@ -3,22 +3,25 @@ project: Bank of Z modernization
 updated: 2026-07-22
 
 progress:
-  current_stage_percent: 90
+  current_stage_percent: 92
   overall_percent_estimate: 25
   estimate_only: true
   external_review:
-    agent: Claude Code CLI
-    sessions_started: 25
-    usable_reports: 16
+    agents: Claude Code CLI and OpenAI Codex fresh reviewers
+    claude_sessions_started: 26
+    claude_usable_reports: 16
+    codex_sessions_started: 19
+    codex_usable_reports: 13
+    deterministic_batches_covered: 17
     active_sessions: 0
-    historical_blocked_or_invalid_sessions: 9
+    blocked_or_invalid_sessions: 16
     unresolved_blocked_scopes: 1
-  updated_at: 2026-07-22T14:05:00+02:00
+  updated_at: 2026-07-22T14:46:00+02:00
 
 methodology_stage:
   number: 5
   name: SDD correction after design re-verification
-  status: corrections-complete-pending-stage-06-pass-005
+  status: pass-005-findings-corrected-pending-stage-06-pass-006
   last_completed_stage: 5
   incomplete_stages:
     - 3
@@ -26,15 +29,15 @@ methodology_stage:
 
 next_action:
   actor: fresh-independent-agent
-  pass_number: 5
-  report: analysis/reviews/stage-06-pass-005.md
+  pass_number: 6
+  report: analysis/reviews/stage-06-pass-006.md
   instruction: >-
-    Execute Stage 6 Pass 005 from scratch through eligible fresh read-only
-    sessions against the committed Pass 004 correction set. Pass 005 must cover all
-    135 rows and 27 SDD artifacts, complete workbook visual inspection, verify
-    every Pass 004 correction, and use a fresh consolidator.
+    Execute Stage 6 Pass 006 through eligible fresh read-only sessions against
+    the committed Pass 005 correction set. Verify every Pass 005 correction,
+    rerun the full automated gates, close the remaining blocked scope, and use
+    a fresh consolidator to confirm full-scope coherence.
   completion_gate: >-
-    A clean Stage 6 Pass 005 with all automated gates passing,
+    A clean Stage 6 Pass 006 with all automated gates passing,
     unresolved_blocked_scopes=0, and an explicit implementation approval.
 
 stage_3_fallback_result:
@@ -129,13 +132,19 @@ review_passes:
     agent: Claude Code CLI fresh external reviewer sessions, orchestrated by OpenAI Codex
     result: blocked
     report: analysis/reviews/stage-06-pass-004.md
+  - stage: 6
+    pass: 5
+    date: 2026-07-22
+    agent: OpenAI Codex fresh read-only reviewer sessions, orchestrated by OpenAI Codex
+    result: findings
+    report: analysis/reviews/stage-06-pass-005.md
 
 owner_gates:
   constitution_ratification:
     status: approved
     approved_by: project owner
     approved_on: 2026-07-21
-    version: 0.6.0
+    version: 0.6.1
   requirements_revision:
     status: approved
     approved_by: project owner
@@ -154,7 +163,7 @@ owner_gates:
     frontend: angular-22
     delivery: docker-compose-explicit-migrations
   stage_5_sdd:
-    status: corrected-pending-pass-005
+    status: corrected-pending-pass-006
     completed_on: 2026-07-21
     corrected_on: 2026-07-22
     report: analysis/stage-05-sdd-report.md
@@ -183,9 +192,18 @@ owner_gates:
     permitted_next_stage: 4
 
 known_blockers:
+  - id: stage-06-pass-005-findings
+    affects_stage: 6
+    status: corrected-pending-pass-006
+    detail: >-
+      Pass 005 covered all 17 deterministic batches and found simulator,
+      contract, traceability, and workbook-rendering gaps. Corrections and
+      automated gates are complete; an eligible fresh repeat review and
+      consolidator must verify the corrected immutable revision.
+    evidence: analysis/reviews/stage-06-pass-005.md
   - id: stage-06-pass-004-unresolved-visual-and-consolidation
     affects_stage: 6
-    status: open-retry-in-pass-005
+    status: covered-by-pass-005-pending-pass-006-consolidation
     detail: >-
       B010 completed all automated and structural checks but could not launch
       Excel COM from the external reviewer harness. A visual-only retry then

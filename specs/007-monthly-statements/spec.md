@@ -28,11 +28,17 @@ period state.
 ## Functional Requirements
 
 - **FR-001** Statement generation SHALL require an explicit invocation and
-  validated account/scope and calendar month; it SHALL NOT run at startup.
+  validated account/scope and calendar month; it SHALL NOT run at startup. An
+  operator MAY request all accounts for the configured bank sort code. Bulk
+  results SHALL report per-account success/failure and support retry without
+  republishing successful immutable snapshots.
 - **FR-002** The period SHALL use one documented timezone and inclusive start,
   exclusive next-month boundaries.
 - **FR-003** Content SHALL include statement date, customer identity/address,
-  account identity/type/currency, ordered booked transactions, and summary.
+  phone, account identity/type/currency, interest rate, overdraft limit,
+  ordered booked transactions, and summary. Each transaction SHALL include
+  date/time, type/direction, reference, description, and amount; balances belong
+  to the summary, not individual legacy transaction lines.
 - **FR-004** Summary SHALL reconcile opening balance plus credits minus debits
   to closing balance and expose available balance and transaction count.
 - **FR-005** An empty period SHALL produce a valid statement with an explicit
@@ -50,7 +56,8 @@ period state.
 
 ## Success Criteria
 
-- Unit tests cover period boundaries and reconciliation.
+- Unit tests cover period boundaries, exact statement fields, and reconciliation.
 - SQL Server tests cover transaction selection, empty periods, snapshots,
   idempotency, authorization, and failure rollback.
-- Playwright covers generate/view/download for a populated and empty statement.
+- Playwright covers account and bulk generation, per-account bulk results,
+  retry, and view/download for populated and empty statements.

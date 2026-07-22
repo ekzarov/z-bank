@@ -69,3 +69,7 @@ mapping. Reports also include a concise interaction log for management:
 external finding, evidence, primary-agent disposition, correction, and
 repeat-review result. Raw transcripts remain evidence, not the manager-facing
 summary.
+
+Reviewer packets name their own runtime/dependency paths and explicitly allow
+required protocol files. A packet/environment defect is fixed before retrying
+only the uncovered scope; it is never treated as an artifact finding.

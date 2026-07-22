@@ -3,7 +3,7 @@
 ## Traceability
 
 - Workbook rows: 60-78, 89
-- Owner decisions: D-003, D-004, D-005, D-006, D-011
+- Owner decisions: D-003, D-004, D-005, D-006, D-011, D-020
 - Depends on: Features 001-003
 
 ## Goal
@@ -55,6 +55,9 @@ writing a booked transaction.
   SHALL NOT preserve the CICS `$N/A` rendering defect.
 - **FR-011** SourceSystem SHALL be recorded on imported historical activity;
   new activity uses `Modern` and never selects CICS/IMS processing branches.
+- **FR-012** Sort code SHALL be derived from the selected account/bank
+  configuration and validated as system-managed six-digit data; target clients
+  SHALL NOT submit it as an authority for the operation (D-020).
 
 ## Intentional Deviations
 
@@ -65,7 +68,8 @@ writing a booked transaction.
 
 ## Success Criteria
 
-- Unit tests cover amount, direction, product, funds, and idempotency rules.
+- Unit tests cover amount, direction, active/closed status, product, funds,
+  system-managed sort code, provenance, and idempotency rules.
 - Real SQL Server tests prove atomic balance/history/audit writes, rollback,
   concurrency, precision, and idempotency uniqueness.
 - Playwright covers customer deposit, withdrawal, updated balance, and a

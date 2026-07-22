@@ -3,7 +3,7 @@
 ## Traceability
 
 - Workbook rows: 128-153
-- Owner decisions: D-014, D-015
+- Owner decisions: D-006, D-014, D-015, D-022
 - Depends on: Features 001-008
 
 ## Goal
@@ -55,10 +55,18 @@ failures through health checks and structured logs without exposing secrets.
 - **FR-012** The unavailable authorized IBM runtime SHALL remain an open
   residual-risk item; target acceptance SHALL not relabel simulated rows as
   live-observed.
+- **FR-013** Bank display name and sort code SHALL come from validated target
+  configuration. Unused legacy helper programs, the fixed-account history
+  diagnostic, and the broken TOC generator SHALL NOT be ported (D-022).
+- **FR-014** Unhandled infrastructure failures during financial commands SHALL
+  roll back domain and audit writes atomically and emit correlated diagnostics
+  without sensitive data (D-006).
 
 ## Success Criteria
 
 - A clean environment can execute explicit migration/import, start Compose,
   pass health and smoke checks, and restart without data loss.
-- Secret scanning and container/configuration checks pass.
+- Secret scanning and automated container/configuration tests cover startup
+  without migration, secret injection, network exposure, request limits,
+  security headers, least privilege, resource bounds, and graceful shutdown.
 - Playwright runs the consolidated critical happy path against deployed services.

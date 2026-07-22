@@ -12,6 +12,8 @@
 //     "Rev N" sheet (column «Строка листа 1»).
 //  D. Revision sheets: a green (closed) finding must carry Implemented? = Yes.
 //  E. Rev-sheet rows use only the canonical types: gap / decision / deferred.
+//  H. Every detail row carries a controlled Runtime label, printable rows use
+//     automatic height, and continuation pages repeat their headers.
 'use strict';
 
 const path = require('path');
@@ -140,6 +142,23 @@ const DATA_START = 7;
           errors.push(`G ${ws.name} r${r} c${c}: font ${font.name}/${font.size}, expected Carlito/${expectedSize}`);
         }
       }
+    });
+  }
+
+  // H: runtime provenance and printable layout remain explicit and readable.
+  const runtimePattern = /Runtime:\s*(live-observed|simulated|static-only|waived)\b/i;
+  for (const e of epics) {
+    for (const r of e.children) {
+      const row = main.getRow(r);
+      if (!runtimePattern.test(cellText(row.getCell(8)))) errors.push(`H User Flows r${r}: missing controlled Runtime label`);
+      if (row.height !== undefined) errors.push(`H User Flows r${r}: fixed row height ${row.height} can clip wrapped text`);
+    }
+  }
+  if (main.pageSetup.printTitlesRow !== '1:6') errors.push(`H User Flows: printTitlesRow=${main.pageSetup.printTitlesRow}, expected 1:6`);
+  for (const ws of revSheets) {
+    if (ws.pageSetup.printTitlesRow !== '1:1') errors.push(`H ${ws.name}: printTitlesRow=${ws.pageSetup.printTitlesRow}, expected 1:1`);
+    ws.eachRow((row) => {
+      if (row.height !== undefined) errors.push(`H ${ws.name} r${row.number}: fixed row height ${row.height} can clip wrapped text`);
     });
   }
 

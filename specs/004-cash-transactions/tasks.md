@@ -1,11 +1,13 @@
 # Tasks: Deposits and Withdrawals
 
 - [ ] T001 Add unit tests for positive amounts, direction, account type,
-  ownership, funds/overdraft, currency precision, and idempotency.
+  active/closed status, ownership, funds/overdraft, currency precision,
+  system-managed sort code, Modern provenance, and idempotency.
 - [ ] T002 Add categorized SQL Server tests for atomic booking, rollback,
   audit/history, concurrency, precision, and idempotency constraints.
 - [ ] T003 Add API tests for customer/operator authorization, successful
-  balances, stable errors, foreign/missing accounts, and retries.
+  balances, stable errors, foreign/missing/inactive accounts, derived sort code,
+  Modern provenance, and retries.
 - [ ] T004 Implement transaction domain records, cash policies, application
   commands, and transaction boundary.
 - [ ] T005 Add separate EF configurations/constants and a versioned transaction

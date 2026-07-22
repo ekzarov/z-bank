@@ -1,7 +1,8 @@
 # Tasks: Funds Transfers
 
 - [ ] T001 Add unit tests for transfer validation, authorization, product,
-  currency, funds, and idempotency rules.
+  currency, two-decimal precision, system-managed sort codes, funds, and
+  idempotency rules.
 - [ ] T002 Add categorized SQL Server tests for atomic paired mutation/history,
   rollback, deterministic locking/concurrency, and retry behavior.
 - [ ] T003 Add API tests for customer/operator transfer permissions, results,

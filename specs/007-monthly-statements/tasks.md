@@ -1,11 +1,12 @@
 # Tasks: Monthly Statements
 
 - [ ] T001 Add unit tests for period calculation, ordering, reconciliation,
-  empty history, and deterministic snapshots.
+  exact customer/account/transaction fields, empty history, and deterministic snapshots.
 - [ ] T002 Add categorized SQL Server tests for selection boundaries,
   persistence, idempotency/versioning, authorization, and rollback.
 - [ ] T003 Add API tests for generation, retrieval, validation, access, and
-  diagnostics without partial publication.
+  diagnostics without partial publication, including multi-account bulk result,
+  per-account isolation, and retry.
 - [ ] T004 Implement statement domain/application generation and reconciliation.
 - [ ] T005 Add separate EF configurations/constants and a versioned statement
   migration without startup application.

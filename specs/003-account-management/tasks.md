@@ -2,12 +2,15 @@
 
 - [ ] T001 Add unit tests for account type normalization, validation, balance
   representation, the ten-account customer limit, system-managed statement
-  dates, and lifecycle eligibility.
+  dates, generated defaults, exact interest/overdraft boundaries, metadata
+  balance immutability, and lifecycle eligibility.
 - [ ] T002 Add categorized SQL Server tests for ownership, indexes, precision,
-  concurrency, closure, and audit constraints.
+  generated defaults, complete paged portfolios, concurrency, closure, and
+  audit constraints.
 - [ ] T003 Add API tests for customer/operator access, list/detail, CRUD,
   empty/not-found, validation, eleventh-account rejection, statement-date
-  protection, safe closure, and standard failures.
+  protection, Problem Details for list/detail/balance, safe closure, direct
+  deep links/invalid parameters, and standard failures.
 - [ ] T004 Implement account domain, application use cases, repository queries,
   and explicit legacy type mapping.
 - [ ] T005 Add separate EF configurations/constants and a versioned Account

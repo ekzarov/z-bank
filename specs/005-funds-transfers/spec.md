@@ -3,7 +3,7 @@
 ## Traceability
 
 - Workbook rows: 80-85
-- Owner decisions: D-004, D-006, D-011
+- Owner decisions: D-004, D-006, D-011, D-020
 - Depends on: Features 001-004
 
 ## Goal
@@ -27,7 +27,7 @@ insufficient-funds transfers leave both accounts and history unchanged.
 ## Functional Requirements
 
 - **FR-001** A transfer SHALL require distinct source and destination accounts
-  and a strictly positive decimal amount.
+  and a strictly positive decimal amount with at most two fractional digits.
 - **FR-002** Customer transfers SHALL require ownership of the source account;
   destination details SHALL be disclosed only as required for confirmation.
 - **FR-003** Both accounts SHALL be active and currency-compatible; supported
@@ -43,10 +43,13 @@ insufficient-funds transfers leave both accounts and history unchanged.
   SHALL NOT be represented as a supported external transfer capability.
 - **FR-009** Failure SHALL return stable Problem Details and SHALL never expose
   a partial balance change.
+- **FR-010** Source and destination sort codes SHALL be derived from account/
+  bank configuration and SHALL NOT be operator-entered authorities (D-020).
 
 ## Success Criteria
 
-- Unit tests cover validation, ownership, product/currency, and funds rules.
+- Unit tests cover validation including fractional precision, ownership,
+  product/currency, system-managed sort codes, and funds rules.
 - SQL Server tests prove two-account atomicity, rollback, concurrency, paired
   history/audit, and idempotency.
 - Playwright covers a successful owned-account transfer and rejected funds case.

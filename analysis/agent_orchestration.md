@@ -65,6 +65,13 @@ authorized environment. If a safe packet cannot be formed, external review is
 `blocked` and the owner chooses an approved reviewer/environment; redaction must
 not remove evidence required by the declared scope.
 
+The packet MUST also name every runtime and dependency path needed by its
+commands. Reviewers must not be expected to inherit the orchestrator's
+`PATH`, `NODE_PATH`, shell profile, globally installed packages, or writable
+tool cache. When a required protocol file lives beside excluded historical
+reports, allow that exact file explicitly instead of excluding its whole
+directory.
+
 The reviewer first echoes the packet identifier, revision, scope, and its
 eligibility. A mismatch blocks the review before substantive work begins.
 
@@ -126,6 +133,11 @@ lost scope, then assign that scope to later eligible fresh sessions. A pass may
 close only when `unresolved_blocked_scopes` is zero and the consolidator checks
 the closure mapping. Account quotas and tool denials are blockers just like
 timeouts; they are not evidence about the reviewed artifacts.
+
+An orchestration defect such as a missing dependency path or contradictory
+read restrictions is corrected before retry. The retry covers the exact scope
+lost by that attempt; already completed eligible batches need not be repeated
+unless their inputs changed or the consolidator requests it.
 
 ## Discussion and Completion
 

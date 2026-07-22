@@ -17,6 +17,10 @@ Use structured JSON logs with correlation IDs and redaction. Define liveness,
 readiness, graceful shutdown, resource expectations, persistent volume backup
 notes, rollback procedure, and image/version inventory. Secret detection runs
 in CI and local pre-commit guidance without downloading arbitrary editor tools.
+Bank identity is target configuration. Legacy fixed-account diagnostics,
+unused helper programs, and broken documentation tooling remain documented
+do-not-port evidence. Financial failure injection verifies transaction rollback
+and correlated diagnostics.
 
 ## Verification
 

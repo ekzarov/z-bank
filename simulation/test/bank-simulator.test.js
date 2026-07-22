@@ -4,15 +4,21 @@ const { LegacyBankSimulator, LegacySimulationError } = require('../src/bank-simu
 
 test('CICS menu dispatches known choices and redisplays invalid choices', () => {
     const simulator = new LegacyBankSimulator();
-    assert.equal(simulator.cicsMenu('5').action, 'CASH_TRANSACTION');
+    assert.equal(simulator.cicsMenu('1').action, 'DISPLAY_CUSTOMER');
+    assert.equal(simulator.cicsMenu('5').action, 'UPDATE_ACCOUNT');
+    assert.equal(simulator.cicsMenu('6').action, 'CASH_TRANSACTION');
+    assert.equal(simulator.cicsMenu('7').action, 'TRANSFER');
+    assert.equal(simulator.cicsMenu('A').action, 'CUSTOMER_ACCOUNTS');
     assert.deepEqual(simulator.cicsMenu('9'), {
         action: 'REDISPLAY',
         message: 'You must enter a valid value (1-7 or A).'
     });
     assert.deepEqual(simulator.cicsMenu('PF7'), {
         action: 'REDISPLAY',
-        message: 'Unsupported attention key.'
+        message: 'Invalid key pressed.'
     });
+    assert.deepEqual(simulator.cicsMenu('PF12'), { action: 'EXIT', message: 'SESSION ENDED' });
+    assert.deepEqual(simulator.cicsMenu('PA1'), { action: 'REDISPLAY', message: '' });
 });
 
 test('CICS payment rejects insufficient funds while teller permits the debit', () => {
@@ -33,13 +39,14 @@ test('CICS payment rejects cash activity for loan accounts', () => {
     );
 });
 
-test('CICS transfer mutates both accounts and writes two audit records', () => {
+test('CICS transfer mutates both accounts and writes one source history record', () => {
     const simulator = new LegacyBankSimulator();
     const countBefore = simulator.state.transactions.length;
     simulator.transfer('10000001', '10000002', 25);
     assert.equal(simulator.findAccount('CICS', '10000001').actualBalance, 1225);
     assert.equal(simulator.findAccount('CICS', '10000002').actualBalance, -4975);
-    assert.equal(simulator.state.transactions.length, countBefore + 2);
+    assert.equal(simulator.state.transactions.length, countBefore + 1);
+    assert.match(simulator.state.transactions.at(-1).transactionInformation, /10000002/);
 });
 
 test('CICS transfer preserves the observed absence of a pre-transfer funds rejection', () => {
@@ -64,7 +71,7 @@ test('IMS session rejects duplicate login and preserves observed logout false su
         error => error.code === 'ALREADY_LOGGED_IN'
     );
     const result = simulator.logoutIms('000000001', true);
-    assert.equal(result.message, 'LOGOUT SUCCESSFUL');
+    assert.equal(result.message, 'LOGOFF SUCCESSFUL');
     assert.equal(result.replacementApplied, false);
     assert.equal(simulator.findCustomer('IMS', '000000001').loggedIn, true);
 });
@@ -73,12 +80,18 @@ test('IMS session distinguishes invalid credentials and missing customers', () =
     const simulator = new LegacyBankSimulator();
     assert.throws(
         () => simulator.loginIms('000000001', 'wrong'),
-        error => error.code === 'INVALID_PASSWORD'
+        error => error.code === 'INVALID_PASSWORD' && error.message === 'PASSWORD INVALID'
     );
     assert.throws(
-        () => simulator.logoutIms('999999999'),
-        error => error.code === 'CUSTOMER_NOT_FOUND'
+        () => simulator.loginIms('999999999', 'password'),
+        error => error.code === 'CUSTOMER_DOES_NOT_EXIST' && error.message === 'CUSTOMER DOES NOT EXIST'
     );
+});
+
+test('IMS login records the observed login timestamp', () => {
+    const simulator = new LegacyBankSimulator();
+    simulator.loginIms('000000001', 'password');
+    assert.equal(simulator.findCustomer('IMS', '000000001').loginTimestamp, simulator.state.metadata.clock);
 });
 
 test('IMS zero transaction advances history without changing balance', () => {

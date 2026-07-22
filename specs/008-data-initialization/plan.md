@@ -6,12 +6,16 @@ Use EF Core migration bundles or `dotnet ef database update` as an explicit
 operator action. Provide a separate .NET command-line import tool under
 `modern/backend/tools` that references Application/Infrastructure but is not
 hosted by the API. Accept a versioned documented JSON/CSV interchange format;
-validate into a staging model before ordered upsert/booking.
+validate into a staging schema before one atomic promotion to trusted tables.
 
-Large imports use bounded batches with a run ledger and input fingerprint.
-Financial history avoids blind update: existing source keys must match immutable
-values or the run fails. Demo-data packages are separate from production import
-and require explicit invocation.
+Large-file parsing uses bounded batches only inside staging; trusted promotion
+is atomic. A run ledger and input fingerprint support diagnosis and resumable
+retry without exposing partially trusted domain rows. Financial history avoids
+blind update: existing source keys must match immutable values or the run fails.
+Demo-data packages are separate from production import and require explicit
+invocation. The destructive reset/generator preserves useful start/end/step/
+seed controls but requires confirmation, authorized environment policy, and a
+database role unavailable to normal API runtime.
 
 ## Verification
 

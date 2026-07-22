@@ -3,7 +3,7 @@
 ## Traceability
 
 - Workbook rows: 41-58, 88, 110-112
-- Owner decisions: D-007, D-009, D-011, D-016, D-017
+- Owner decisions: D-007, D-008, D-009, D-011, D-016, D-017, D-019, D-020, D-023
 - Depends on: Features 001-002
 
 ## Goal
@@ -39,12 +39,20 @@ ineligible accounts remain unchanged with a clear result.
   normalize to the target enum; raw values MAY remain provenance metadata.
 - **FR-004** Account details SHALL expose actual balance, available balance,
   currency, product terms, status, owner, and provenance consistently.
+- **FR-005A** Portfolio queries SHALL return every authorized account through
+  bounded pagination and SHALL NOT reproduce IMS six-entry or CICS ten/twenty
+  presentation caps (D-019).
 - **FR-005** Customer authorization SHALL be relationship-based and enforced in
   API queries; foreign accounts SHALL not be disclosed.
 - **FR-006** Create/update SHALL validate product type, dates, rate, overdraft,
-  currency, and identifier formats and use optimistic concurrency. Creation
-  SHALL reject an eleventh account for the same customer. Statement dates are
-  system-managed and SHALL NOT be editable account metadata (D-016).
+  currency, and identifier formats and use optimistic concurrency. Supported
+  types are ISA, CURRENT, LOAN, SAVING, and MORTGAGE. Interest is non-negative,
+  below `9999.99`, and has at most two decimals; loan/mortgage interest is
+  non-zero; overdraft is a non-negative integer. Creation SHALL reject an
+  eleventh account. The system generates account number/sort code/opening date,
+  initializes balances to zero, and manages statement dates (D-016/D-020).
+- **FR-006A** Metadata updates SHALL never accept or change actual/available
+  balances and SHALL enforce the same product/rate/overdraft boundaries.
 - **FR-007** Every creation/update/closure SHALL be audited atomically.
 - **FR-008** Closure SHALL require zero settled/available balance and no pending
   work; history SHALL remain and status SHALL become closed. The target SHALL
@@ -52,12 +60,15 @@ ineligible accounts remain unchanged with a clear result.
 - **FR-009** The dormant IMS old-account zero-balance rule SHALL NOT be ported.
 - **FR-010** Legacy web `Feature Not Implemented` account operations SHALL be
   replaced by the supported target lifecycle workflows.
+- **FR-011** Missing generated legacy error mappings SHALL be replaced by
+  documented target Problem Details, including account list/detail/balance.
 
 ## Success Criteria
 
-- Unit tests cover type mapping, the ten-account limit, statement-date
-  ownership, and lifecycle/product rules.
+- Unit tests cover type mapping, exact rate/overdraft/default rules, the
+  ten-account limit, statement-date ownership, and lifecycle/product rules.
 - SQL Server tests cover ownership FK, typed constraints, precision, optimistic
   concurrency, closure eligibility, and audit atomicity.
-- UI/API and Playwright tests cover list, details, create, edit, close, empty,
+- UI/API and Playwright tests cover pagination, list/detail/balance contracts,
+  direct deep links, invalid route parameters, create/edit/close, empty,
   unauthorized, not-found, and validation flows.

@@ -1,5 +1,7 @@
 <!--
 Sync Impact Report
+0.6.1: Clarified self-contained reviewer packets and scoped retries after
+orchestration-environment failures.
 0.6.0: Added durable progress reporting, mandatory blocked-scope closure, and
 manager-facing cross-agent finding/disposition logs.
 0.5.0: Added owner-approved direct cross-agent orchestration, read-only external
@@ -143,6 +145,11 @@ MUST use deterministic batches and checkpoints. Context overflow, timeout,
 missing scope acknowledgement, repository mutation, or an incomplete batch
 MUST fail closed as `blocked`. Agreement between agents never replaces tests,
 legacy evidence, or an owner gate.
+Review packets MUST explicitly provide required runtime and dependency paths;
+they cannot assume the reviewer inherits the orchestrator's shell environment.
+After an orchestration-environment defect is corrected, an eligible fresh
+session repeats the exact uncovered scope while immutable completed batches
+remain valid unless their inputs changed.
 Every blocked attempt remains immutable and records its exact lost scope. That
 scope MUST be fully covered by later eligible fresh sessions, and a formal pass
 MUST NOT close while `unresolved_blocked_scopes` is non-zero. The durable report
@@ -241,4 +248,4 @@ redefinition, MINOR for a new enforceable principle/section, PATCH for wording
 clarification. Amendments state rationale and impact. Ratification and owner
 approval cannot be inferred from an agent action or from merge alone.
 
-**Version**: 0.6.0 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-22
+**Version**: 0.6.1 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-22

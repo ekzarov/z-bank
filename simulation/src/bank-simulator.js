@@ -89,14 +89,23 @@ class LegacyBankSimulator {
     }
 
     loginIms(customerId, password) {
-        const customer = this.findCustomer('IMS', customerId);
+        let customer;
+        try {
+            customer = this.findCustomer('IMS', customerId);
+        } catch (error) {
+            if (error.code === 'CUSTOMER_NOT_FOUND') {
+                throw new LegacySimulationError(404, 'CUSTOMER_DOES_NOT_EXIST', 'CUSTOMER DOES NOT EXIST');
+            }
+            throw error;
+        }
         if (customer.password !== password) {
-            throw new LegacySimulationError(401, 'INVALID_PASSWORD', 'INVALID PASSWORD');
+            throw new LegacySimulationError(401, 'INVALID_PASSWORD', 'PASSWORD INVALID');
         }
         if (customer.loggedIn) {
             throw new LegacySimulationError(409, 'ALREADY_LOGGED_IN', 'CUSTOMER ALREADY LOGGED IN');
         }
         customer.loggedIn = true;
+        customer.loginTimestamp = this.state.metadata.clock;
         return { message: 'LOGIN SUCCESSFUL', customerId };
     }
 
@@ -104,7 +113,7 @@ class LegacyBankSimulator {
         const customer = this.findCustomer('IMS', customerId);
         if (!simulateReplacementFailure) customer.loggedIn = false;
         return {
-            message: 'LOGOUT SUCCESSFUL',
+            message: 'LOGOFF SUCCESSFUL',
             replacementApplied: !simulateReplacementFailure,
             observedFalseSuccess: simulateReplacementFailure
         };
@@ -270,9 +279,13 @@ class LegacyBankSimulator {
             from.actualBalance = money(from.actualBalance - Number(amount));
             to.availableBalance = money(to.availableBalance + Number(amount));
             to.actualBalance = money(to.actualBalance + Number(amount));
-            const debit = this.recordTransaction('CICS', from, -Number(amount), description);
-            const credit = this.recordTransaction('CICS', to, Number(amount), description);
-            return { debitReference: debit.transactionId, creditReference: credit.transactionId };
+            const transfer = this.recordTransaction(
+                'CICS',
+                from,
+                -Number(amount),
+                `${description}; destination ${to.sortCode || this.state.metadata.sortCode}/${to.accountId}`
+            );
+            return { transactionReference: transfer.transactionId };
         } catch (error) {
             Object.assign(from, before.from);
             Object.assign(to, before.to);
@@ -299,14 +312,15 @@ class LegacyBankSimulator {
     cicsMenu(input) {
         const normalized = String(input || '').toUpperCase();
         const choices = {
-            '1': 'CREATE_CUSTOMER', '2': 'VIEW_CUSTOMER', '3': 'CREATE_ACCOUNT',
-            '4': 'VIEW_ACCOUNT', '5': 'CASH_TRANSACTION', '6': 'TRANSFER',
-            '7': 'CUSTOMER_ACCOUNTS', 'A': 'ABOUT'
+            '1': 'DISPLAY_CUSTOMER', '2': 'DISPLAY_ACCOUNT', '3': 'CREATE_CUSTOMER',
+            '4': 'CREATE_ACCOUNT', '5': 'UPDATE_ACCOUNT', '6': 'CASH_TRANSACTION',
+            '7': 'TRANSFER', 'A': 'CUSTOMER_ACCOUNTS'
         };
         if (normalized === 'PF3') return { action: 'EXIT', message: 'SESSION ENDED' };
-        if (normalized === 'PF12') return { action: 'CANCEL', message: 'RETURNED TO MENU' };
+        if (normalized === 'PF12') return { action: 'EXIT', message: 'SESSION ENDED' };
+        if (/^PA[123]$/.test(normalized)) return { action: 'REDISPLAY', message: '' };
         if (/^(PF|PA)/.test(normalized)) {
-            return { action: 'REDISPLAY', message: 'Unsupported attention key.' };
+            return { action: 'REDISPLAY', message: 'Invalid key pressed.' };
         }
         if (!choices[normalized]) {
             return { action: 'REDISPLAY', message: 'You must enter a valid value (1-7 or A).' };
