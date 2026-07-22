@@ -1,3 +1,4 @@
+using BankOfZ.Domain.Accounts;
 using BankOfZ.Domain.Customers;
 using BankOfZ.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +12,8 @@ public sealed class BankOfZIdentityContext(DbContextOptions<BankOfZIdentityConte
 {
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<CustomerAuditRecord> CustomerAuditEntries => Set<CustomerAuditRecord>();
+    public DbSet<Account> Accounts => Set<Account>();
+    public DbSet<AccountAuditRecord> AccountAuditEntries => Set<AccountAuditRecord>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -29,6 +32,9 @@ public sealed class BankOfZIdentityContext(DbContextOptions<BankOfZIdentityConte
         builder.ApplyConfigurationsFromAssembly(typeof(BankOfZIdentityContext).Assembly);
         builder.HasSequence<long>(CatalogModelConstants.Sequences.CustomerNumber)
             .StartsAt(1000000002)
+            .IncrementsBy(1);
+        builder.HasSequence<long>(CatalogModelConstants.Sequences.AccountNumber)
+            .StartsAt(10000001)
             .IncrementsBy(1);
     }
 }

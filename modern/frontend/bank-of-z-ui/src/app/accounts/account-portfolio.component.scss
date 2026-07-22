@@ -1,0 +1,21 @@
+.portfolio { margin-top: 26px; padding-top: 24px; border-top: 1px solid #dce4e8; }
+header { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+h2 span { margin-left:6px; color:#637985; font-size:.9rem; font-weight:500; }
+button { min-height:38px; padding:7px 14px; border:1px solid #2b697d; border-radius:4px; color:#17455a; background:#fff; cursor:pointer; }
+.primary { color:#fff; background:#176b79; border-color:#176b79; }
+.account-form { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:14px 0; padding:16px; background:#f2f7f8; border:1px solid #cbd8de; }
+label { display:grid; gap:6px; font-size:.8rem; font-weight:650; }
+input, select { min-height:38px; padding:7px 9px; border:1px solid #aebfc8; border-radius:4px; font:inherit; }
+.form-actions { grid-column:1/-1; display:flex; gap:8px; }
+.account-list { border:1px solid #d7e1e5; border-bottom:0; }
+.account-row { display:grid; grid-template-columns:minmax(180px,1fr) minmax(180px,1fr) auto; align-items:center; gap:18px; padding:15px 16px; color:inherit; text-decoration:none; border-bottom:1px solid #d7e1e5; }
+.account-row:hover { background:#f2f8f9; }
+.account-row div span, .balances span { display:block; margin-top:3px; color:#637985; font-size:.78rem; }
+.balances { text-align:right; }
+.status { padding:4px 8px; color:#285c3c; background:#e2f2e7; border-radius:3px; text-transform:capitalize; }
+.status.closed { color:#5e6870; background:#e8ecee; }
+.empty { margin:0; padding:20px; color:#637985; }
+.notice,.error { padding:10px 12px; border-left:4px solid #2d7f91; background:#f7fbfc; }
+.error { border-color:#b54840; color:#862922; }
+.pagination { display:flex; align-items:center; justify-content:flex-end; gap:12px; margin-top:12px; color:#637985; font-size:.82rem; }
+@media(max-width:760px){.account-form{grid-template-columns:1fr 1fr}.account-row{grid-template-columns:1fr auto}.balances{grid-column:1/-1;text-align:left}}

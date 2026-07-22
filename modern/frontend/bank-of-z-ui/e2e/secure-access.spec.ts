@@ -93,3 +93,36 @@ test('operator can create find update and retire a customer @e2e', async ({ page
   await page.getByRole('button', { name: 'Retire' }).click();
   await expect(page.getByRole('status')).toContainText(`Customer ${customerId} retired`);
 });
+
+test('operator can browse create update and close an eligible account @e2e @account-management', async ({ page }) => {
+  const password = process.env['BANKOFZ_DEMO_PASSWORD'];
+  test.skip(!password, 'BANKOFZ_DEMO_PASSWORD is required.');
+
+  await page.goto('sign-in');
+  await page.getByLabel('User name').fill('operator');
+  await page.getByLabel('Password').fill(password!);
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.getByRole('link', { name: 'Customer operations' }).click();
+  await page.getByLabel('Customer ID or name').fill('1000000001');
+  await page.getByRole('button', { name: 'Search' }).click();
+
+  await page.getByRole('button', { name: 'New account' }).click();
+  await page.getByLabel('Product').selectOption('saving');
+  await page.getByLabel('Interest rate').fill('2.75');
+  await page.getByRole('button', { name: 'Create' }).click();
+  const status = page.getByRole('status');
+  await expect(status).toContainText(/Account \d{8} created/);
+  const accountId = (await status.textContent())!.match(/\d{8}/)![0];
+
+  await page.getByRole('link', { name: new RegExp(accountId) }).click();
+  await expect(page.getByRole('heading', { name: new RegExp(accountId) })).toBeVisible();
+  await page.getByRole('button', { name: 'Edit terms' }).click();
+  await page.getByLabel('Interest rate').fill('3.25');
+  await page.getByRole('button', { name: 'Save terms' }).click();
+  await expect(page.getByRole('status')).toContainText('Account terms updated');
+
+  page.once('dialog', dialog => dialog.accept());
+  await page.getByRole('button', { name: 'Close account' }).click();
+  await expect(page.getByRole('status')).toContainText('Account closed');
+  await expect(page.getByText('closed', { exact: true })).toBeVisible();
+});

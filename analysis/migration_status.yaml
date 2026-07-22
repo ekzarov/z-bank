@@ -3,38 +3,38 @@ project: Bank of Z modernization
 updated: 2026-07-22
 
 progress:
-  current_stage_percent: 0
-  overall_percent_estimate: 72
+  current_stage_percent: 95
+  overall_percent_estimate: 82
   estimate_only: true
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 36
-    claude_usable_reports: 26
+    claude_sessions_started: 39
+    claude_usable_reports: 28
     codex_sessions_started: 35
     codex_usable_reports: 28
     deterministic_batches_covered: 17
     active_sessions: 0
-    blocked_or_invalid_sessions: 19
+    blocked_or_invalid_sessions: 20
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T20:02:00+02:00
+  updated_at: 2026-07-22T20:34:00+02:00
 
 methodology_stage:
   number: 7
   name: Implementation - Feature 003 account management
-  status: ready-to-implement
+  status: peer-reviewed-ready-for-delivery
   last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: fresh-independent-agent
+  actor: OpenAI Codex orchestrator
   feature: 003-account-management
   stage: 7
   instruction: >-
-    Implement Feature 003 account management as the next isolated delivery
-    slice, including its real customer-account relationship, tests, explicit
-    migration, UI, and peer review, then run Stages 8 through 10.
+    Commit and deliver the peer-reviewed Feature 003 account-management slice,
+    apply its explicit migration, run live smoke/E2E, reconcile the workbook,
+    then complete Stages 8 through 10.
   completion_gate: >-
     Feature 003 implementation and peer review pass all gates before delivery.
 
