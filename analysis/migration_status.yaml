@@ -4,13 +4,13 @@ updated: 2026-07-22
 
 progress:
   current_stage_percent: 0
-  overall_percent_estimate: 59
+  overall_percent_estimate: 63
   estimate_only: true
   estimate_basis: >-
     Full migration estimate: shared Stages 1-6 are complete; three of nine
-    implementation/delivery/acceptance slices are accepted; final consolidated
-    acceptance remains. Earlier values near 90 reflected the current slice,
-    not the full nine-slice migration.
+    slices are accepted and Feature 004 has completed implementation, delivery,
+    live reconciliation, and deterministic gates pending Stage 10 acceptance.
+    Final consolidated acceptance remains.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
     claude_sessions_started: 43
@@ -21,24 +21,24 @@ progress:
     active_sessions: 0
     blocked_or_invalid_sessions: 20
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T21:49:00+02:00
+  updated_at: 2026-07-22T23:20:00+02:00
 
 methodology_stage:
-  number: 8
-  name: Delivery - Feature 004 cash transactions
-  status: pending-local-and-remote-smoke
+  number: 10
+  name: Independent acceptance - Feature 004 cash transactions
+  status: pending-fresh-read-only-review
   last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: OpenAI Codex orchestrator
+  actor: OpenAI Codex orchestrator, then fresh Claude Code CLI reviewer
   feature: 004-cash-transactions
-  stage: 7
+  stage: 10
   instruction: >-
-    Run the complete local delivery gates, apply the versioned migration by an
-    explicit setup command, deploy Feature 004, and complete the live smoke.
+    Run a fresh read-only Stage 10 acceptance against the committed Feature 004
+    candidate; findings return to Stage 5/7 and clean releases Feature 005.
   completion_gate: >-
     Feature 004 code, tests, SDD/tasks/workbook, deployment, and independent
     acceptance are clean before Feature 005 starts.

@@ -17,5 +17,5 @@
   resulting balances and accessible error states.
 - [x] T008 Add tagged Playwright cash-operation happy and insufficient-funds
   paths.
-- [ ] T009 Run gates, update SDD/tasks/workbook, deploy this slice, and prepare
+- [x] T009 Run gates, update SDD/tasks/workbook, deploy this slice, and prepare
   Stage 9/10 evidence before Feature 005 starts.
