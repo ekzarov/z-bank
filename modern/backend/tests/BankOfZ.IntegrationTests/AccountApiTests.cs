@@ -120,6 +120,25 @@ public sealed class AccountApiTests(BankOfZTestsFixture fixture)
     }
 
     [Fact]
+    public async Task Account_Create_Without_Type_Is_Rejected_Without_Persistence()
+    {
+        using var client = CreateClient();
+        await LoginAsync(client, "operator");
+
+        var response = await SendMutationAsync(client, HttpMethod.Post, "/api/customers/1000000001/accounts", new
+        {
+            metadata = new { interestRate = 0m, overdraftLimit = 500, currency = "GBP" },
+            sourceSystem = "modern"
+        });
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        await using var scope = Fixture.Factory.Services.CreateAsyncScope();
+        var context = scope.ServiceProvider.GetRequiredService<BankOfZIdentityContext>();
+        Assert.Empty(await context.Accounts.ToArrayAsync());
+        Assert.Empty(await context.AccountAuditEntries.ToArrayAsync());
+    }
+
+    [Fact]
     public async Task Metadata_Update_Preserves_Balances_And_Stale_Version_Conflicts()
     {
         using var client = CreateClient();

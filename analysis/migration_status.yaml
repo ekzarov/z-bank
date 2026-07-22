@@ -3,39 +3,40 @@ project: Bank of Z modernization
 updated: 2026-07-22
 
 progress:
-  current_stage_percent: 0
+  current_stage_percent: 30
   overall_percent_estimate: 89
   estimate_only: true
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 39
-    claude_usable_reports: 28
+    claude_sessions_started: 40
+    claude_usable_reports: 29
     codex_sessions_started: 35
     codex_usable_reports: 28
     deterministic_batches_covered: 17
     active_sessions: 0
     blocked_or_invalid_sessions: 20
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T20:49:26+02:00
+  updated_at: 2026-07-22T20:59:38+02:00
 
 methodology_stage:
-  number: 10
-  name: Independent acceptance - Feature 003 account management
-  status: pending-independent-review
+  number: 5
+  name: SDD correction loop - Feature 003 account management
+  status: stage-10-findings-being-corrected
   last_completed_stage: 9
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: Claude Code CLI fresh external reviewer, orchestrated by OpenAI Codex
+  actor: OpenAI Codex orchestrator
   feature: 003-account-management
-  stage: 10
+  stage: 5
   instruction: >-
-    Review the immutable Feature 003 delivery, Stage 8/9 evidence, SDD/task
-    synchronization, and workbook reconciliation without editing the worktree.
+    Correct accepted Stage 10 Pass 005 findings, rerun affected and deterministic
+    gates, redeploy the corrected slice, then request a fresh Stage 10 pass.
   completion_gate: >-
-    A clean independent report is recorded before Feature 004 starts.
+    All accepted findings are corrected and independently re-verified before
+    Feature 004 starts.
 
 stage_3_fallback_result:
   mode: simulate
@@ -201,6 +202,12 @@ review_passes:
     agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
     result: clean
     report: analysis/reviews/stage-10-pass-004.md
+  - stage: 10
+    pass: 5
+    date: 2026-07-22
+    agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: findings
+    report: analysis/reviews/stage-10-pass-005.md
 
 accepted_slices:
   - feature: 001-secure-access-shell

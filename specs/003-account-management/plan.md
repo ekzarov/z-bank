@@ -9,7 +9,8 @@ table names, lengths, precision, and discriminator values use centralized
 constants.
 
 Lifecycle commands run through application services and a transaction boundary.
-Account creation enforces the ten-account-per-customer limit. Identifier
+Account creation enforces the ten-active-account-per-customer limit; retained
+closed history does not consume the limit. Identifier
 allocation, account persistence, and audit persistence share one transaction;
 identifier gaps are allowed but partial entities are not. Statement dates are
 system-managed rather than editable metadata. Queries project DTOs without

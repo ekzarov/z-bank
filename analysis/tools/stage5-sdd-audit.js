@@ -11,17 +11,18 @@ const workbookFile = path.join(root, 'analysis', 'legacy_user_flows.xlsx');
 const traceabilityFile = path.join(root, 'specs', 'traceability.md');
 const migrationStatusFile = path.join(root, 'analysis', 'migration_status.yaml');
 
-function currentMethodologyStage() {
-  const status = fs.readFileSync(migrationStatusFile, 'utf8');
+function implementationHasStarted(status) {
   const section = status.match(/^methodology_stage:\s*\r?\n([\s\S]*?)(?=^\S|\Z)/m)?.[1] || '';
   const number = Number(section.match(/^\s+number:\s*(\d+)\s*$/m)?.[1]);
+  const lastCompleted = Number(section.match(/^\s+last_completed_stage:\s*(\d+)\s*$/m)?.[1]);
   if (!Number.isInteger(number)) throw new Error('Cannot read methodology_stage.number from migration_status.yaml');
-  return number;
+  if (!Number.isInteger(lastCompleted)) throw new Error('Cannot read methodology_stage.last_completed_stage from migration_status.yaml');
+  return number >= 7 || lastCompleted >= 7;
 }
 
-(async () => {
-  const methodologyStage = currentMethodologyStage();
-  const implementationStarted = methodologyStage >= 7;
+async function run() {
+  const status = fs.readFileSync(migrationStatusFile, 'utf8');
+  const implementationStarted = implementationHasStarted(status);
   const coverage = JSON.parse(fs.readFileSync(coverageFile, 'utf8'));
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(workbookFile);
@@ -131,7 +132,13 @@ function currentMethodologyStage() {
   }
 
   console.log(`SDD AUDIT OK: ${expectedRows.length} rows, ${coverage.slices.length} slices, ${artifactCount} artifacts, ${requirementCount} feature-qualified requirements`);
-})().catch((error) => {
-  console.error(error.stack || error.message);
-  process.exit(1);
-});
+}
+
+if (require.main === module) {
+  run().catch((error) => {
+    console.error(error.stack || error.message);
+    process.exit(1);
+  });
+}
+
+module.exports = { implementationHasStarted };
