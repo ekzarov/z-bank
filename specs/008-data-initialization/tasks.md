@@ -6,7 +6,10 @@
   supported schema states.
 - [ ] T003 Add categorized import tests for dependency order, integrity,
   precision, idempotency, staging/promotion atomicity, resumable retry,
-  transaction-run status, authorization, conflicts, rollback, and run audit.
+  transaction-run status, authorization, conflicts, rollback, and run audit;
+  add negative reset tests for missing confirmation, unauthorized/non-demo
+  environments, production-disabled defaults, deterministic parameters, and
+  denial to API-runtime credentials.
 - [ ] T004 Add a test proving normal API startup leaves an empty database empty.
 - [ ] T005 Implement the explicit import CLI, validators, run ledger, and
   staging/promotion boundary, versioned deterministic demo package, and guarded

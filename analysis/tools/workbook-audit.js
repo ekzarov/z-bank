@@ -88,6 +88,7 @@ const DATA_START = 7;
   // has no revision worklist yet; enforcement starts as soon as destination/SDD
   // lifecycle data or a Rev sheet exists.
   const covered = new Set();
+  const detailRows = new Set(epics.flatMap((epic) => epic.children));
   const revSheets = wb.worksheets.filter((ws) => /^Rev \d+$/.test(ws.name));
   const lifecycleStarted = epics.some((e) => e.children.some((r) => {
     const row = main.getRow(r);
@@ -97,7 +98,10 @@ const DATA_START = 7;
   for (const ws of revSheets) {
     ws.eachRow((row, r) => {
       if (r === 1) return;
-      parseRefs(cellText(row.getCell(3))).forEach((x) => covered.add(x));
+      parseRefs(cellText(row.getCell(3))).forEach((x) => {
+        if (!detailRows.has(x)) errors.push(`C ${ws.name} r${r}: reference ${x} is not a detail row`);
+        covered.add(x);
+      });
     });
   }
   if (lifecycleStarted || revSheets.length > 0) {

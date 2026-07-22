@@ -31,7 +31,9 @@ provenance where applicable.
 - **FR-002** The default page size SHALL be 50 and SHALL have a documented
   maximum of 200; pagination SHALL use an opaque versioned keyset cursor and
   SHALL not skip/duplicate stable records. Malformed or stale cursors SHALL
-  return `400` Problem Details with code `invalid_history_cursor`.
+  return `400` Problem Details with code `invalid_history_cursor`. The cursor
+  SHALL bind its account ID, normalized `from`/`to` filters, ordering version,
+  and keyset position; reuse with a different query context SHALL be invalid.
 - **FR-003** Customer ownership and staff policies SHALL be enforced on list
   and detail endpoints.
 - **FR-004** Missing or unauthorized records SHALL not disclose foreign data.

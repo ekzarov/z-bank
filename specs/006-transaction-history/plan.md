@@ -15,7 +15,8 @@ services: recent, newest-first account activity.
 
 ## Verification
 
-Unit-test malformed/stale cursor handling, date ranges, and mapping. Categorized SQL Server tests verify
+Unit-test malformed/stale cursor handling, cursor binding to account/filter/
+ordering context, date ranges, and mapping. Categorized SQL Server tests verify
 query ordering and pagination at equal timestamps. API tests verify security and
 errors. Vitest and tagged Playwright cover customer/operator browsing, details,
 authorized and denied scope, filters, and empty history.

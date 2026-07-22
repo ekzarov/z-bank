@@ -55,6 +55,18 @@ test('CICS transfer preserves the observed absence of a pre-transfer funds rejec
     assert.equal(simulator.findAccount('CICS', '10000001').actualBalance, -3750);
 });
 
+test('money operations reject values with more than two decimal places', () => {
+    const simulator = new LegacyBankSimulator();
+    for (const operation of [
+        () => simulator.cicsCash('10000001', 0.001),
+        () => simulator.depositCics('10000001', { amount: 0.001, sortCode: '987654' }),
+        () => simulator.depositIms('000000001', '101', { amount: 0.001, sortCode: '987654' }),
+        () => simulator.transfer('10000001', '10000002', 0.001)
+    ]) {
+        assert.throws(operation, error => ['INVALID_AMOUNT', 'INVALID_DEPOSIT'].includes(error.code));
+    }
+});
+
 test('CICS account list omits customerId so the legacy page does not misroute balances to IMS', () => {
     const simulator = new LegacyBankSimulator();
     const cicsAccount = simulator.listAccounts('CICS', '0000000001').accounts[0];
@@ -86,12 +98,16 @@ test('IMS session distinguishes invalid credentials and missing customers', () =
         () => simulator.loginIms('999999999', 'password'),
         error => error.code === 'CUSTOMER_DOES_NOT_EXIST' && error.message === 'CUSTOMER DOES NOT EXIST'
     );
+    assert.throws(
+        () => simulator.logoutIms('999999999'),
+        error => error.code === 'FAILED_LOGOFF_UPDATE' && error.message === 'FAILED UPDATE FOR LOGOFF'
+    );
 });
 
 test('IMS login records the observed login timestamp', () => {
     const simulator = new LegacyBankSimulator();
     simulator.loginIms('000000001', 'password');
-    assert.equal(simulator.findCustomer('IMS', '000000001').loginTimestamp, simulator.state.metadata.clock);
+    assert.equal(simulator.findCustomer('IMS', '000000001').loginTimestamp, '2026_07_21 12:00:00:000');
 });
 
 test('IMS zero transaction advances history without changing balance', () => {
@@ -133,6 +149,19 @@ test('IMS direct message distinguishes invalid action and missing account', () =
     );
 });
 
+test('IMS missing response customer is reported after account mutation', () => {
+    const simulator = new LegacyBankSimulator();
+    const account = simulator.findAccount('IMS', '101');
+    const balanceBefore = account.actualBalance;
+    const transactionCount = simulator.state.transactions.length;
+    assert.throws(
+        () => simulator.imsTransaction('999999999', '101', 'd', 10),
+        error => error.code === 'CUSTOMER_DOES_NOT_EXIST' && error.message === 'CUSTOMER DOES NOT EXIST'
+    );
+    assert.equal(account.actualBalance, balanceBefore + 10);
+    assert.equal(simulator.state.transactions.length, transactionCount + 1);
+});
+
 test('OpenBanking deposit validation blocks direct IMS signed amount quirks', () => {
     const simulator = new LegacyBankSimulator();
     assert.throws(
@@ -150,6 +179,13 @@ test('monthly statement reports period transactions and reconciles the opening b
     assert.equal(statement.summary.totalCredits, 250);
     assert.equal(statement.summary.totalDebits, 40);
     assert.equal(statement.summary.openingBalance, 1040);
+    assert.equal(statement.summary.closingBalance, 1250);
+    assert.equal(statement.summary.availableBalance, 1250);
+    assert.equal(statement.customer.customerId, '0000000001');
+    assert.equal(statement.account.accountId, '10000001');
+    assert.equal(statement.transactions[0].currency, statement.account.currency);
+    assert.ok(statement.transactions.every(transaction => transaction.transactionId
+        && transaction.bookingDateTime && transaction.creditDebitIndicator));
     assert.equal(statement.footer, 'END OF STATEMENT');
 });
 

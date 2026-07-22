@@ -45,11 +45,15 @@ insufficient-funds transfers leave both accounts and history unchanged.
   a partial balance change.
 - **FR-010** Source and destination sort codes SHALL be derived from account/
   bank configuration and SHALL NOT be operator-entered authorities (D-020).
+- **FR-011** Every new transfer ledger and audit record SHALL use
+  `SourceSystem=Modern`; imported CICS/IMS provenance remains unchanged.
 
 ## Success Criteria
 
 - Unit tests cover validation including fractional precision, ownership,
-  product/currency, system-managed sort codes, and funds rules.
-- SQL Server tests prove two-account atomicity, rollback, concurrency, paired
-  history/audit, and idempotency.
+  inactive/closed accounts, product/currency, system-managed sort codes, and
+  funds rules.
+- SQL Server tests prove active-account eligibility, two-account atomicity,
+  rollback, concurrency, paired history/audit, `Modern` provenance, and
+  idempotency.
 - Playwright covers a successful owned-account transfer and rejected funds case.

@@ -1,7 +1,8 @@
 # Tasks: Transaction History
 
-- [ ] T001 Add unit tests for versioned cursor validation, 50/200 page bounds,
-  UTC inclusive/exclusive date filters, DTO mapping, and provenance.
+- [ ] T001 Add unit tests for versioned cursor validation, binding to account,
+  normalized filters and ordering version, 50/200 page bounds, UTC
+  inclusive/exclusive date filters, DTO mapping, and provenance.
 - [ ] T002 Add categorized SQL Server tests for ordering, stable pagination,
   filters, empty history, ownership, and immutable records.
 - [ ] T003 Add API tests for list/detail authorization and Problem Details.

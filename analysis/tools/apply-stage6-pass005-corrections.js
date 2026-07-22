@@ -6,7 +6,8 @@ const ExcelJS = require('exceljs');
 const file = path.join(__dirname, '..', 'legacy_user_flows.xlsx');
 const epicRows = new Set([7, 21, 28, 40, 49, 59, 79, 86, 99, 108, 118, 127]);
 const staticOnlyRows = new Set([24, 25, 41, 42, 43, 44, 45, 46, 47, 48,
-  50, 51, 52, 53, 54, 55, 81, 82, 88, 98, 100, 101, 106, 107, 115, 116]);
+  50, 51, 52, 53, 54, 55, 81, 82, 88, 93, 95, 98, 100, 101, 102, 103,
+  105, 106, 107, 115, 116]);
 
 function set(row, column, value) {
   row.getCell(column).value = value;
@@ -65,6 +66,8 @@ function appendRuntimeLabel(value, label) {
 
   set(flows.getRow(80), 5, 'The operator supplies source/destination account numbers and amount; the program supplies the configured bank sort code internally.');
   set(flows.getRow(80), 10, 'Decision D-020: target derives sort codes from account/bank configuration.');
+  set(flows.getRow(71), 10, 'Decision D-020: target derives the sort code from account/bank configuration instead of trusting request input.');
+  set(flows.getRow(89), 10, 'Decision D-020: target derives the sort code from account/bank configuration instead of trusting request input.');
   set(flows.getRow(81), 4, 'Validate transfer input, then rely on the CICS unit of work while accounts are selected and updated in account-number order.');
   set(flows.getRow(81), 5, 'One account can be updated before a missing second account is discovered; rollback supplies atomic recovery.');
   set(flows.getRow(81), 6, 'Input errors are reported; transactional lookup/update failure rolls back the unit of work.');
@@ -124,6 +127,12 @@ function appendRuntimeLabel(value, label) {
     for (let c = 1; c <= 9; c += 1) row.getCell(c).style = JSON.parse(JSON.stringify(source.getCell(c).style || {}));
     row.height = undefined;
   }
+
+  rev.eachRow((row) => {
+    const id = String(row.getCell(1).value || '');
+    if (id === 'R1-G03') row.getCell(3).value = '41-48,50-58,88,110-112';
+    if (id === 'R1-D-020') row.getCell(3).value = '50,71,80,89';
+  });
 
   await workbook.xlsx.writeFile(file);
   console.log('Applied Stage 6 Pass 005 workbook corrections.');

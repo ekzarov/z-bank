@@ -35,12 +35,12 @@ target requirement or approved deviation. Source confidence (`Yes`, `Partial`,
 | 72 | Feature 004 FR-005; D-004, D-005 |
 | 73-74 | Feature 004 FR-004, FR-005; D-005 |
 | 75-78 | Feature 004 FR-001, FR-002, FR-005, FR-008; D-004 |
-| 80-81 | Feature 005 FR-001 through FR-004, FR-009, FR-010; D-020 |
-| 82-83 | Feature 005 FR-005 through FR-007; D-006 |
-| 84 | Feature 005 FR-004; D-004 |
+| 80-81 | Feature 005 FR-001 through FR-004, FR-009 through FR-011; D-020 |
+| 82-83 | Feature 005 FR-005 through FR-007, FR-011; D-006 |
+| 84 | Feature 005 FR-004, FR-011; D-004 |
 | 85 | Feature 005 FR-008; D-011 |
 | 87, 97 | Feature 002 FR-002 through FR-005, FR-009, FR-010; D-008 |
-| 90 | Feature 002 FR-003, FR-013; Feature 003 FR-004/FR-012; Feature 004 FR-001/FR-012; D-008, D-020 |
+| 90 | Feature 002 FR-003, FR-013; Feature 003 FR-004, FR-012; D-008 |
 | 88 | Feature 003 FR-001 through FR-005, FR-011; D-008 |
 | 89 | Feature 004 FR-001 through FR-012; D-020 |
 | 91 | Feature 006 FR-008; D-008 |

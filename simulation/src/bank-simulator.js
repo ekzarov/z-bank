@@ -17,6 +17,21 @@ function money(value) {
     return Math.round(Number(value) * 100) / 100;
 }
 
+function hasMoneyPrecision(value) {
+    const number = Number(value);
+    return Number.isFinite(number)
+        && Math.abs(number * 100 - Math.round(number * 100)) < 1e-9;
+}
+
+function imsTimestamp(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return String(value);
+    const pad = (part, size = 2) => String(part).padStart(size, '0');
+    return `${date.getUTCFullYear()}_${pad(date.getUTCMonth() + 1)}_${pad(date.getUTCDate())} `
+        + `${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())}`
+        + `:${pad(date.getUTCMilliseconds(), 3)}`;
+}
+
 class LegacyBankSimulator {
     constructor(seed = fixture) {
         this.seed = clone(seed);
@@ -105,12 +120,20 @@ class LegacyBankSimulator {
             throw new LegacySimulationError(409, 'ALREADY_LOGGED_IN', 'CUSTOMER ALREADY LOGGED IN');
         }
         customer.loggedIn = true;
-        customer.loginTimestamp = this.state.metadata.clock;
+        customer.loginTimestamp = imsTimestamp(this.state.metadata.clock);
         return { message: 'LOGIN SUCCESSFUL', customerId };
     }
 
     logoutIms(customerId, simulateReplacementFailure = false) {
-        const customer = this.findCustomer('IMS', customerId);
+        let customer;
+        try {
+            customer = this.findCustomer('IMS', customerId);
+        } catch (error) {
+            if (error.code === 'CUSTOMER_NOT_FOUND') {
+                throw new LegacySimulationError(404, 'FAILED_LOGOFF_UPDATE', 'FAILED UPDATE FOR LOGOFF');
+            }
+            throw error;
+        }
         if (!simulateReplacementFailure) customer.loggedIn = false;
         return {
             message: 'LOGOFF SUCCESSFUL',
@@ -198,8 +221,8 @@ class LegacyBankSimulator {
 
     cicsCash(accountId, signedAmount, { facilityType = 0, description = '' } = {}) {
         const amount = Number(signedAmount);
-        if (!Number.isFinite(amount) || amount === 0) {
-            throw new LegacySimulationError(400, 'INVALID_AMOUNT', 'Amount must be a non-zero number');
+        if (!hasMoneyPrecision(signedAmount) || amount === 0) {
+            throw new LegacySimulationError(400, 'INVALID_AMOUNT', 'Amount must be non-zero with at most two decimals');
         }
         const account = this.findAccount('CICS', accountId);
         if (facilityType === 496 && ['LOAN', 'MORTGAGE'].includes(account.accountType)) {
@@ -220,8 +243,9 @@ class LegacyBankSimulator {
     }
 
     depositCics(accountId, request) {
-        if (!(Number(request.amount) > 0) || !/^\d{6}$/.test(String(request.sortCode || ''))) {
-            throw new LegacySimulationError(400, 'INVALID_DEPOSIT', 'Amount must be positive and sort code must contain six digits');
+        if (!(Number(request.amount) > 0) || !hasMoneyPrecision(request.amount)
+            || !/^\d{6}$/.test(String(request.sortCode || ''))) {
+            throw new LegacySimulationError(400, 'INVALID_DEPOSIT', 'Amount must be positive with at most two decimals and sort code must contain six digits');
         }
         return this.cicsCash(accountId, Number(request.amount), {
             facilityType: 0,
@@ -233,17 +257,24 @@ class LegacyBankSimulator {
         if (!['d', 'w'].includes(action)) {
             throw new LegacySimulationError(400, 'INVALID_ACTION', "INVALID ACCOUNT ACTION. MUST BE 'w' OR 'd'.");
         }
-        this.findCustomer('IMS', customerId);
         const account = this.findAccount('IMS', accountId);
         const amount = Number(rawAmount);
-        if (!Number.isFinite(amount)) {
-            throw new LegacySimulationError(400, 'INVALID_AMOUNT', 'Amount must be numeric');
+        if (!hasMoneyPrecision(rawAmount)) {
+            throw new LegacySimulationError(400, 'INVALID_AMOUNT', 'Amount must be numeric with at most two decimals');
         }
         const signedAmount = action === 'w' ? -amount : amount;
         account.availableBalance = money(account.availableBalance + signedAmount);
         account.actualBalance = money(account.actualBalance + signedAmount);
         account.lastTransactionId += 1;
         const transaction = this.recordTransaction('IMS', account, signedAmount, description || `IMS ${action}`);
+        try {
+            this.findCustomer('IMS', customerId);
+        } catch (error) {
+            if (error.code === 'CUSTOMER_NOT_FOUND') {
+                throw new LegacySimulationError(404, 'CUSTOMER_DOES_NOT_EXIST', 'CUSTOMER DOES NOT EXIST');
+            }
+            throw error;
+        }
         const portfolio = this.state.accounts.filter(item =>
             item.system === 'IMS' && item.customerId === String(customerId));
         return {
@@ -257,16 +288,17 @@ class LegacyBankSimulator {
     }
 
     depositIms(customerId, accountId, request) {
-        if (!(Number(request.amount) > 0) || !/^\d{6}$/.test(String(request.sortCode || ''))) {
-            throw new LegacySimulationError(400, 'INVALID_DEPOSIT', 'Amount must be positive and sort code must contain six digits');
+        if (!(Number(request.amount) > 0) || !hasMoneyPrecision(request.amount)
+            || !/^\d{6}$/.test(String(request.sortCode || ''))) {
+            throw new LegacySimulationError(400, 'INVALID_DEPOSIT', 'Amount must be positive with at most two decimals and sort code must contain six digits');
         }
         return this.imsTransaction(customerId, accountId, 'd', Number(request.amount),
             request.description || 'Deposit via OpenBanking API');
     }
 
     transfer(fromAccountId, toAccountId, amount, description = 'CICS transfer') {
-        if (!(Number(amount) > 0)) {
-            throw new LegacySimulationError(400, 'INVALID_AMOUNT', 'Transfer amount must be positive');
+        if (!(Number(amount) > 0) || !hasMoneyPrecision(amount)) {
+            throw new LegacySimulationError(400, 'INVALID_AMOUNT', 'Transfer amount must be positive with at most two decimals');
         }
         if (String(fromAccountId) === String(toAccountId)) {
             throw new LegacySimulationError(409, 'SAME_ACCOUNT', 'Cannot transfer to the same account');

@@ -47,9 +47,10 @@ ineligible accounts remain unchanged with a clear result.
 - **FR-006** Create/update SHALL validate product type, dates, rate, overdraft,
   currency, and identifier formats and use optimistic concurrency. Supported
   types are ISA, CURRENT, LOAN, SAVING, and MORTGAGE. Interest is non-negative,
-  below `9999.99`, and has at most two decimals; loan/mortgage interest is
+  at most `9999.99`, and has at most two decimals; loan/mortgage interest is
   non-zero; overdraft is a non-negative integer. Creation SHALL reject an
-  eleventh account. The system generates account number/sort code/opening date,
+  eleventh account. The system generates the account number, derives the
+  validated sort code from bank configuration, assigns the opening date,
   initializes balances to zero, and manages statement dates (D-016/D-020).
 - **FR-006A** Metadata updates SHALL never accept or change actual/available
   balances and SHALL enforce the same product/rate/overdraft boundaries.
@@ -62,13 +63,20 @@ ineligible accounts remain unchanged with a clear result.
   replaced by the supported target lifecycle workflows.
 - **FR-011** Missing generated legacy error mappings SHALL be replaced by
   documented target Problem Details, including account list/detail/balance.
+- **FR-012** This slice owns authorized complete account portfolio, account
+  detail, and actual/available balance read models. Feature 004 owns balance
+  mutation; metadata commands in this slice SHALL never mutate balances.
+- **FR-013** Account identifier allocation, account persistence, and audit
+  persistence SHALL commit atomically. Failure SHALL leave no partial account
+  or audit record; consumed identifier gaps are allowed (D-023).
 
 ## Success Criteria
 
 - Unit tests cover type mapping, exact rate/overdraft/default rules, the
   ten-account limit, statement-date ownership, and lifecycle/product rules.
 - SQL Server tests cover ownership FK, typed constraints, precision, optimistic
-  concurrency, closure eligibility, and audit atomicity.
+  concurrency, closure eligibility, audit atomicity, and rollback of the full
+  identifier-allocation/account/audit creation transaction.
 - UI/API and Playwright tests cover pagination, list/detail/balance contracts,
   direct deep links, invalid route parameters, create/edit/close, empty,
   unauthorized, not-found, and validation flows.
