@@ -3,7 +3,7 @@
 ## Traceability
 
 - Workbook rows: 91-96, 98
-- Owner decisions: D-006, D-008
+- Owner decisions: D-008
 - Depends on: Features 001-005
 
 ## Goal

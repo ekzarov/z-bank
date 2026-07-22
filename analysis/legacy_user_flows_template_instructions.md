@@ -320,8 +320,8 @@ produces the same look:
   so Excel uses its default left alignment for text, or explicitly set to
   `left`. Other horizontal alignments are not allowed.
 - **Row height:** leave detail rows automatic so wrapped text is not clipped.
-  Set the legend row to 36 points, epic banners to 40 points, and repeating
-  revision headers to 30 points so collapsed/printed views remain readable.
+  Set the legend row to 54 points, epic banners to 40 points, and repeating
+  revision headers to 40 points so collapsed/printed views remain readable.
 - **Outline:** banner rows `outlineLevel 0`, detail rows `outlineLevel 1`,
   `summaryBelow = false`; ship with detail rows hidden / banners collapsed.
 

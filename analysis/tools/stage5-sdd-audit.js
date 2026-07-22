@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const ExcelJS = require('exceljs');
-const { cellText } = require('./lib');
+const { cellText, parseRefs } = require('./lib');
 
 const root = path.resolve(__dirname, '..', '..');
 const coverageFile = path.join(root, 'analysis', 'stage-05-sdd-coverage.json');
@@ -30,6 +30,13 @@ const traceabilityFile = path.join(root, 'specs', 'traceability.md');
   const qualifiedRequirements = new Set();
   let artifactCount = 0;
   let requirementCount = 0;
+  const decisionRows = new Map();
+  for (const [references, note] of Object.entries(coverage.decisionNotes || {})) {
+    for (const decision of note.matchAll(/D-\d{3}/g)) {
+      if (!decisionRows.has(decision[0])) decisionRows.set(decision[0], new Set());
+      parseRefs(references).forEach((row) => decisionRows.get(decision[0]).add(row));
+    }
+  }
   for (const match of traceability.matchAll(/Feature\s+(\d{3})\s+([^;|\r\n]+)/g)) {
     const featureId = match[1];
     const references = match[2];
@@ -60,6 +67,15 @@ const traceabilityFile = path.join(root, 'specs', 'traceability.md');
           errors.push(`${path.relative(root, specFile)} ${requirementId} has no reverse entry in specs/traceability.md`);
         }
       }
+      const declaredDecisions = new Set((spec.match(/Owner decisions?:\s*([^\r\n]+)/)?.[1] || '').match(/D-\d{3}/g) || []);
+      const sliceRows = new Set(slice.workbookRows);
+      const expectedDecisions = new Set([...decisionRows.entries()]
+        .filter(([, rows]) => [...rows].some((row) => sliceRows.has(row)))
+        .map(([decision]) => decision));
+      const missing = [...expectedDecisions].filter((decision) => !declaredDecisions.has(decision));
+      const extra = [...declaredDecisions].filter((decision) => !expectedDecisions.has(decision));
+      if (missing.length) errors.push(`${path.relative(root, specFile)} omits owner decisions ${missing.join(',')}`);
+      if (extra.length) errors.push(`${path.relative(root, specFile)} over-declares owner decisions ${extra.join(',')}`);
     }
 
     const tasksFile = path.join(directory, 'tasks.md');

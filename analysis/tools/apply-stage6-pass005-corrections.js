@@ -27,6 +27,8 @@ function appendRuntimeLabel(value, label) {
 
   set(flows.getRow(2), 1, 'Legacy evidence map with Stage 5 SDD coverage complete. Destination implementation remains open until each approved delivery slice is built and accepted.');
   set(flows.getRow(4), 5, 'Open: source is evidenced and SDD-covered, but destination implementation is not complete and is not deferred.');
+  set(flows.getRow(4), 8, 'Deferred: source is evidenced and SDD-covered; an explicit owner-approved deferral and reason are recorded.');
+  set(flows.getRow(4), 11, 'Neutral formatting only; it does not express lifecycle status.');
   for (const rowNumber of epicRows) {
     set(flows.getRow(rowNumber), 3, 'Not Passed - Open');
     set(flows.getRow(rowNumber), 4, 'Legacy behavior is evidenced and covered by SDD; target implementation has not started.');
@@ -148,11 +150,11 @@ function appendRuntimeLabel(value, label) {
   }
 
   flows.pageSetup.printTitlesRow = '1:6';
-  flows.getRow(4).height = 36;
+  flows.getRow(4).height = 54;
   for (const rowNumber of epicRows) flows.getRow(rowNumber).height = 40;
   rev.pageSetup.printTitlesRow = '1:1';
   rev.eachRow({ includeEmpty: true }, (row) => { row.height = undefined; });
-  rev.getRow(1).height = 30;
+  rev.getRow(1).height = 40;
 
   const decisions = [
     ['R1-D-018', null, '26-27', 'decision', 'Name search is unsupported and failed lookup can retain stale customer state.', 'Target normalized search is implemented; failed lookup clears stale state and disables mutation.', 'Yes', 'Yes', 'analysis/stage-04-requirements-revision.md#d-018'],

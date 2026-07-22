@@ -23,6 +23,7 @@ const { COLORS, cellText, fillArgb, parseRefs } = require('./lib');
 
 const FILE = path.join(__dirname, '..', 'legacy_user_flows.xlsx');
 const TRACEABILITY_FILE = path.join(__dirname, '..', '..', 'specs', 'traceability.md');
+const COVERAGE_FILE = path.join(__dirname, '..', 'stage-05-sdd-coverage.json');
 const DATA_START = 7;
 
 (async () => {
@@ -48,6 +49,14 @@ const DATA_START = 7;
   if (!openLegend.includes('SDD-covered')
     || !openLegend.includes('destination implementation is not complete')) {
     errors.push('B User Flows r4: red legend must describe SDD-covered but incomplete destination work');
+  }
+  const deferredLegend = cellText(main.getRow(4).getCell(8));
+  if (!deferredLegend.includes('explicit owner-approved deferral') || !deferredLegend.includes('reason')) {
+    errors.push('B User Flows r4: orange legend must require an explicit owner-approved deferral and reason');
+  }
+  const neutralLegend = cellText(main.getRow(4).getCell(11));
+  if (neutralLegend !== 'Neutral formatting only; it does not express lifecycle status.') {
+    errors.push('B User Flows r4: white legend must be lifecycle-neutral');
   }
 
   // A: colour = status on scenario rows, uniformly across D:N.
@@ -181,6 +190,22 @@ const DATA_START = 7;
     if (missingFromTrace.length) errors.push(`C2 ${decisionId}: traceability omits note rows ${missingFromTrace.join(',')}`);
     if (missingFromNotes.length) errors.push(`C2 ${decisionId}: traceability over-attributes rows ${missingFromNotes.join(',')}`);
   }
+  const coverageDecisionRows = new Map();
+  const coverage = JSON.parse(fs.readFileSync(COVERAGE_FILE, 'utf8'));
+  for (const [references, note] of Object.entries(coverage.decisionNotes || {})) {
+    for (const decision of note.matchAll(/D-\d{3}/g)) {
+      if (!coverageDecisionRows.has(decision[0])) coverageDecisionRows.set(decision[0], new Set());
+      parseRefs(references).forEach((row) => coverageDecisionRows.get(decision[0]).add(row));
+    }
+  }
+  for (const decisionId of new Set([...noteDecisionRows.keys(), ...coverageDecisionRows.keys()])) {
+    const notes = noteDecisionRows.get(decisionId) || new Set();
+    const coverageRows = coverageDecisionRows.get(decisionId) || new Set();
+    const missingFromCoverage = [...notes].filter((row) => !coverageRows.has(row));
+    const missingFromNotes = [...coverageRows].filter((row) => !notes.has(row));
+    if (missingFromCoverage.length) errors.push(`C2 ${decisionId}: coverage JSON omits note rows ${missingFromCoverage.join(',')}`);
+    if (missingFromNotes.length) errors.push(`C2 ${decisionId}: coverage JSON over-attributes rows ${missingFromNotes.join(',')}`);
+  }
 
   // D: closed findings on Rev sheets carry Implemented? = Yes
   for (const ws of wb.worksheets) {
@@ -247,14 +272,14 @@ const DATA_START = 7;
     }
   }
   if (main.pageSetup.printTitlesRow !== '1:6') errors.push(`H User Flows: printTitlesRow=${main.pageSetup.printTitlesRow}, expected 1:6`);
-  if (main.getRow(4).height !== 36) errors.push(`H User Flows r4: height=${main.getRow(4).height}, expected 36`);
+  if (main.getRow(4).height !== 54) errors.push(`H User Flows r4: height=${main.getRow(4).height}, expected 54`);
   for (const epic of epics) {
     if (main.getRow(epic.headerRow).height !== 40) errors.push(`H User Flows r${epic.headerRow}: epic height=${main.getRow(epic.headerRow).height}, expected 40`);
   }
   for (const ws of revSheets) {
     if (ws.pageSetup.printTitlesRow !== '1:1') errors.push(`H ${ws.name}: printTitlesRow=${ws.pageSetup.printTitlesRow}, expected 1:1`);
     ws.eachRow((row) => {
-      if (row.number === 1 && row.height !== 30) errors.push(`H ${ws.name} r1: height=${row.height}, expected 30`);
+      if (row.number === 1 && row.height !== 40) errors.push(`H ${ws.name} r1: height=${row.height}, expected 40`);
       if (row.number !== 1 && row.height !== undefined) errors.push(`H ${ws.name} r${row.number}: fixed row height ${row.height} can clip wrapped text`);
     });
   }
