@@ -2,7 +2,8 @@
 
 - [ ] T001 Add unit tests for transfer validation, authorization, inactive/
   closed source and destination accounts, product, currency, two-decimal
-  precision, system-managed sort codes, funds, and idempotency rules.
+  precision, explicit CURRENT/SAVING/ISA eligibility and LOAN/MORTGAGE
+  rejection, system-managed sort codes, funds, and idempotency rules.
 - [ ] T002 Add categorized SQL Server tests for active-account eligibility,
   atomic paired mutation/history, rollback, deterministic locking/concurrency,
   `SourceSystem=Modern`, and retry behavior.

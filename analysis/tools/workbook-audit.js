@@ -37,6 +37,17 @@ const DATA_START = 7;
     else if (epics.length) epics[epics.length - 1].children.push(r);
   });
 
+  const lifecycleNote = cellText(main.getRow(2).getCell(1));
+  if (!lifecycleNote.includes('SDD coverage complete')
+    || !lifecycleNote.includes('Destination implementation remains open')) {
+    errors.push('B User Flows r2: lifecycle note must distinguish complete SDD coverage from open destination implementation');
+  }
+  const openLegend = cellText(main.getRow(4).getCell(5));
+  if (!openLegend.includes('SDD-covered')
+    || !openLegend.includes('destination implementation is not complete')) {
+    errors.push('B User Flows r4: red legend must describe SDD-covered but incomplete destination work');
+  }
+
   // A: colour = status on scenario rows, uniformly across D:N.
   const openRows = [];
   for (const e of epics) {
@@ -69,6 +80,12 @@ const DATA_START = 7;
     const anyRed = e.children.some((r) => fillArgb(main.getRow(r).getCell(9)) === COLORS.RED);
     const fill = fillArgb(hdr.getCell(1));
     const expected = allYes ? COLORS.GREEN : anyRed ? COLORS.RED : COLORS.ORANGE;
+    const expectedStatus = allYes ? 'Passed' : anyRed ? 'Not Passed - Open' : 'Not Passed - Deferred';
+    const expectedDescription = allYes
+      ? 'Legacy behavior is evidenced, SDD-covered, implemented, and accepted.'
+      : anyRed
+        ? 'Legacy behavior is evidenced and covered by SDD; target implementation has not started.'
+        : 'Legacy behavior is evidenced and covered by SDD; deferred work has an approved reason.';
     if (fill !== expected) errors.push(`B ${uf} r${e.headerRow}: header fill ${fill}, expected ${expected}`);
     const expectedFontColor = expected === COLORS.RED ? 'FF7F0000' : 'FF1F2937';
     for (let c = 1; c <= 14; c++) {
@@ -81,7 +98,12 @@ const DATA_START = 7;
         errors.push(`B ${uf} r${e.headerRow} c${c}: font ${font.name}/${font.size}/bold=${font.bold}/color=${fontColor}, expected Carlito/11/bold=true/color=${expectedFontColor}`);
       }
     }
-    if (allYes && cellText(hdr.getCell(3)).trim() !== 'Passed') errors.push(`B ${uf}: fully green but Scenario column ≠ Passed`);
+    if (cellText(hdr.getCell(3)).trim() !== expectedStatus) {
+      errors.push(`B ${uf}: Scenario column is not ${expectedStatus}`);
+    }
+    if (cellText(hdr.getCell(4)).trim() !== expectedDescription) {
+      errors.push(`B ${uf}: lifecycle description is not canonical for ${expectedStatus}`);
+    }
   }
 
   // C: revision coverage of open rows. A code-only discovery map legitimately
@@ -108,6 +130,36 @@ const DATA_START = 7;
     for (const r of openRows) {
       if (!covered.has(r)) errors.push(`C r${r}: open row not referenced by any Rev sheet`);
     }
+  }
+
+  // C2: decision references are bidirectionally identical between destination
+  // notes and Rev sheets. This prevents a decision from silently claiming too
+  // many rows or omitting a row that depends on it.
+  const noteDecisionRows = new Map();
+  for (const rowNumber of detailRows) {
+    const notes = cellText(main.getRow(rowNumber).getCell(10));
+    for (const match of notes.matchAll(/D-\d{3}/g)) {
+      if (!noteDecisionRows.has(match[0])) noteDecisionRows.set(match[0], new Set());
+      noteDecisionRows.get(match[0]).add(rowNumber);
+    }
+  }
+  const revDecisionRows = new Map();
+  for (const ws of revSheets) {
+    ws.eachRow((row, r) => {
+      if (r === 1) return;
+      const decisionId = cellText(row.getCell(1)).match(/D-\d{3}/)?.[0];
+      if (!decisionId) return;
+      if (revDecisionRows.has(decisionId)) errors.push(`C2 ${decisionId}: appears more than once on Rev sheets`);
+      revDecisionRows.set(decisionId, new Set(parseRefs(cellText(row.getCell(3)))));
+    });
+  }
+  for (const decisionId of new Set([...noteDecisionRows.keys(), ...revDecisionRows.keys()])) {
+    const notes = noteDecisionRows.get(decisionId) || new Set();
+    const revision = revDecisionRows.get(decisionId) || new Set();
+    const missingFromRevision = [...notes].filter((row) => !revision.has(row));
+    const missingFromNotes = [...revision].filter((row) => !notes.has(row));
+    if (missingFromRevision.length) errors.push(`C2 ${decisionId}: Rev sheet omits note rows ${missingFromRevision.join(',')}`);
+    if (missingFromNotes.length) errors.push(`C2 ${decisionId}: Rev sheet over-attributes rows ${missingFromNotes.join(',')}`);
   }
 
   // D: closed findings on Rev sheets carry Implemented? = Yes

@@ -255,10 +255,10 @@ row types and a single Excel outline level:
   feature area that groups related flows (e.g. `Authentication & Login` groups
   valid/invalid login, remember-me, logout, login modules). Fill `Use Case ID`
   (A) with the epic id (`UF-001`...), the **epic name** in `Use Case` (B), the
-  epic **status** in the `Scenario` column (C: `Passed`, `Not Passed - Missed`,
+  epic **status** in the `Scenario` column (C: `Passed`, `Not Passed - Open`,
   or `Not Passed - Deferred`), and a short meaning of that status in
   column D. Leave the other columns blank. Color the whole banner row by status:
-     red `FFFFC7CE` (Missed/Open), orange `FFFCE4D6` (Deferred), green
+     red `FFFFC7CE` (Open), orange `FFFCE4D6` (Deferred), green
   `FFE2F0D9` (Passed).
 - **Detail rows** (outline level 1) — one per atomic, checkable behavior, listed
   directly under their epic so a single expand shows every flow and scenario:
@@ -291,8 +291,11 @@ row types and a single Excel outline level:
 Never scatter the same flow across the sheet or across multiple IDs; all
 scenarios of a flow are contiguous, and all flows of an epic sit in that epic's
 one collapsible block. Until an epic has been reviewed against the target/SDD,
-set its status to `Not Passed - Missed` (red); turn banners orange/green as work
-lands and remove red as items are completed.
+set its status to `Not Passed - Open` (red). After SDD is complete, red means
+the source behavior is evidenced and SDD-covered but destination implementation
+is still open; it does not mean that the requirement was missed. Turn banners
+orange/green as approved deferrals or implementations land and remove red as
+items are completed.
 
 ### Cell formatting (reproduce exactly)
 
@@ -302,7 +305,7 @@ produces the same look:
 
 - **Font:** `Carlito` everywhere (matches the template).
   - Epic banner cells: **bold, size 11**. Font color `FF7F0000` (dark red) on a
-    red/Missed banner; use `FF1F2937` (dark slate) on orange/green/neutral
+    red/Open banner; use `FF1F2937` (dark slate) on orange/green/neutral
     banners.
   - Flow-name cell (column B, first scenario row of a flow): **bold, size 10**,
     color `FF000000`.
@@ -348,7 +351,7 @@ detail rows (do NOT invent finer-grained labels):
   - `Operational path` — operator/admin/background behavior (scheduled jobs,
     notifications, cache/admin operations, batch flows).
 : On a use-case **banner row** (see Workbook Structure) the Scenario column
-instead holds the use-case status: `Passed`, `Not Passed - Missed`, or
+instead holds the use-case status: `Passed`, `Not Passed - Open`, or
 `Not Passed - Deferred/Partial`.
 
 `Functional requirement / step`

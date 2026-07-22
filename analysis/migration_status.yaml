@@ -8,20 +8,20 @@ progress:
   estimate_only: true
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 26
-    claude_usable_reports: 16
-    codex_sessions_started: 31
-    codex_usable_reports: 24
+    claude_sessions_started: 27
+    claude_usable_reports: 17
+    codex_sessions_started: 32
+    codex_usable_reports: 25
     deterministic_batches_covered: 17
     active_sessions: 0
     blocked_or_invalid_sessions: 17
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T15:22:00+02:00
+  updated_at: 2026-07-22T16:15:00+02:00
 
 methodology_stage:
   number: 5
   name: SDD correction after design re-verification
-  status: pass-008-findings-corrected-pending-stage-06-pass-009
+  status: pass-009-findings-corrected-pending-stage-06-pass-010
   last_completed_stage: 5
   incomplete_stages:
     - 3
@@ -29,15 +29,15 @@ methodology_stage:
 
 next_action:
   actor: fresh-independent-agent
-  pass_number: 9
-  report: analysis/reviews/stage-06-pass-009.md
+  pass_number: 10
+  report: analysis/reviews/stage-06-pass-010.md
   instruction: >-
-    Execute Stage 6 Pass 009 as a fresh full-scope consolidation against the
-    committed Pass 008 correction set. Verify every Pass 008 correction,
-    independently enumerate all 135 rows and 27 SDD artifacts, rerun all gates,
-    and obtain the scheduled Claude external cross-check.
+    Execute Stage 6 Pass 010 as a fresh full-scope correction verification
+    against the committed Pass 009 correction set. Verify every accepted
+    Pass 009 finding and preventive audit, independently enumerate all 135
+    rows and 27 SDD artifacts, rerun all gates, and confirm no regression.
   completion_gate: >-
-    A clean Stage 6 Pass 009 with all automated gates passing,
+    A clean Stage 6 Pass 010 with all automated gates passing,
     unresolved_blocked_scopes=0, and an explicit implementation approval.
 
 stage_3_fallback_result:
@@ -156,6 +156,12 @@ review_passes:
     agent: OpenAI Codex fresh read-only reviewer sessions, orchestrated by OpenAI Codex
     result: findings
     report: analysis/reviews/stage-06-pass-008.md
+  - stage: 6
+    pass: 9
+    date: 2026-07-22
+    agent: OpenAI Codex and Claude Code CLI fresh reviewers, orchestrated by OpenAI Codex
+    result: findings
+    report: analysis/reviews/stage-06-pass-009.md
 
 owner_gates:
   constitution_ratification:
@@ -181,7 +187,7 @@ owner_gates:
     frontend: angular-22
     delivery: docker-compose-explicit-migrations
   stage_5_sdd:
-    status: corrected-pending-pass-009
+    status: corrected-pending-pass-010
     completed_on: 2026-07-21
     corrected_on: 2026-07-22
     report: analysis/stage-05-sdd-report.md
@@ -210,9 +216,17 @@ owner_gates:
     permitted_next_stage: 4
 
 known_blockers:
+  - id: stage-06-pass-009-findings
+    affects_stage: 6
+    status: corrected-pending-pass-010
+    detail: >-
+      Fresh Codex and Claude review converged on seven workbook lifecycle,
+      runtime-claim, simulator, traceability, source-evidence, and transfer-rule
+      findings. All accepted findings and preventive audit gaps are corrected.
+    evidence: analysis/reviews/stage-06-pass-009.md
   - id: stage-06-pass-008-findings
     affects_stage: 6
-    status: corrected-pending-pass-009
+    status: superseded-by-pass-009-findings
     detail: >-
       Eligible correction reviewers found three remaining statement-calendar/
       ordering and workbook-bold-governance issues. All were corrected. One

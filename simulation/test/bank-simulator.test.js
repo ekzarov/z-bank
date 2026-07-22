@@ -75,6 +75,21 @@ test('CICS account list omits customerId so the legacy page does not misroute ba
     assert.equal(imsAccount.customerId, '000000001');
 });
 
+test('CICS customer creation rejects total credit-provider failure before persistence', () => {
+    const simulator = new LegacyBankSimulator();
+    const countBefore = simulator.state.customers.length;
+    assert.throws(
+        () => simulator.createCicsCustomer({
+            firstName: 'No',
+            lastName: 'Score',
+            address: { addressLine1: '1 Test Street' },
+            simulateNoCreditAgencyResponse: true
+        }),
+        error => error.code === 'CREDIT_PROVIDER_UNAVAILABLE'
+    );
+    assert.equal(simulator.state.customers.length, countBefore);
+});
+
 test('IMS session rejects duplicate login and preserves observed logout false success', () => {
     const simulator = new LegacyBankSimulator();
     simulator.loginIms('000000001', 'password');

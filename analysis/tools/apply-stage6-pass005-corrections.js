@@ -6,8 +6,8 @@ const ExcelJS = require('exceljs');
 const file = path.join(__dirname, '..', 'legacy_user_flows.xlsx');
 const epicRows = new Set([7, 21, 28, 40, 49, 59, 79, 86, 99, 108, 118, 127]);
 const staticOnlyRows = new Set([24, 25, 41, 42, 43, 44, 45, 46, 47, 48,
-  50, 51, 52, 53, 54, 55, 81, 82, 88, 93, 95, 98, 100, 101, 102, 103,
-  105, 106, 107, 115, 116]);
+  50, 51, 52, 53, 54, 55, 63, 68, 81, 82, 88, 93, 95, 98, 100, 101,
+  102, 103, 105, 106, 107, 113, 114, 115, 116, 117]);
 
 function set(row, column, value) {
   row.getCell(column).value = value;
@@ -24,6 +24,13 @@ function appendRuntimeLabel(value, label) {
   const flows = workbook.getWorksheet('User Flows');
   const rev = workbook.getWorksheet('Rev 1');
   if (!flows || !rev) throw new Error('Expected User Flows and Rev 1 sheets.');
+
+  set(flows.getRow(2), 1, 'Legacy evidence map with Stage 5 SDD coverage complete. Destination implementation remains open until each approved delivery slice is built and accepted.');
+  set(flows.getRow(4), 5, 'Open: source is evidenced and SDD-covered, but destination implementation is not complete and is not deferred.');
+  for (const rowNumber of epicRows) {
+    set(flows.getRow(rowNumber), 3, 'Not Passed - Open');
+    set(flows.getRow(rowNumber), 4, 'Legacy behavior is evidenced and covered by SDD; target implementation has not started.');
+  }
 
   const d012 = 'Decision D-012: preserve statement content and period behavior through an explicit modern job/API without JCL or fixed-width pagination.';
   for (let n = 100; n <= 107; n += 1) set(flows.getRow(n), 10, d012);
@@ -57,10 +64,19 @@ function appendRuntimeLabel(value, label) {
   set(flows.getRow(43), 8, 'legacy/src/base/cics/cobol/BNK1CCA.cbl:576-650; INQACCCU.cbl:457-520; legacy/src/base/cics/bms/BNK1ACC.bms:47-60; Runtime: static-only');
   set(flows.getRow(43), 10, 'Decision D-019: target portfolio pagination returns the complete authorized set without channel display caps.');
   set(flows.getRow(45), 10, 'Decision D-019: target portfolio pagination replaces the IMS six-entry response limit.');
+  set(flows.getRow(32), 8, 'legacy/src/base/cics/cobol/CRECUST.cbl:473-493,758-814,889-922; Runtime: static-only');
   set(flows.getRow(50), 10, 'Decisions D-020/D-023: target generates account identity, sort code, dates, and zero balances atomically.');
   set(flows.getRow(51), 10, 'Decision D-019: target preserves the ten-account business limit while removing presentation caps.');
   set(flows.getRow(52), 10, 'Decision D-023: target account allocation, entity persistence, and audit are atomic.');
+  set(flows.getRow(63), 10, 'Decision D-006: persist balance changes and immutable transaction/audit records atomically.');
+  set(flows.getRow(82), 10, 'Decision D-006: debit, credit, and immutable transaction/audit persistence are atomic.');
+  set(flows.getRow(83), 10, 'Decision D-006: processed-transfer evidence is committed atomically with both balance mutations.');
+  set(flows.getRow(87), 10, 'Decision D-008: expose supported customer capabilities through target REST resources, not path parity.');
   set(flows.getRow(88), 10, 'Decision D-008: target Problem Details replace the three missing generated 400 response files.');
+  set(flows.getRow(90), 10, 'Decision D-008: expose supported IMS-backed capabilities through unified target REST resources.');
+  set(flows.getRow(94), 10, 'Decision D-008: target history resources preserve supported behavior without reproducing legacy route defects.');
+  set(flows.getRow(97), 10, 'Decision D-008: customer creation is exposed as a supported target capability, not legacy path parity.');
+  set(flows.getRow(98), 10, 'Decision D-008: target history resources preserve supported behavior without reproducing legacy route defects.');
   set(flows.getRow(112), 7, 'Partial');
   set(flows.getRow(112), 6, 'The list mapping emits CHECKING; the single-account mapping references $item without a foreach and is not proven valid.');
 
@@ -81,7 +97,11 @@ function appendRuntimeLabel(value, label) {
   set(flows.getRow(119), 4, 'Delete existing CUSTOMER/ACCOUNT/CONTROL rows, then generate and load a requested customer/account range.');
   set(flows.getRow(119), 5, 'The legacy demo utility is destructive and accepts start/end/step/random-seed parameters.');
   set(flows.getRow(119), 10, 'Decisions D-013/D-021: explicit guarded deterministic reset/import replaces destructive startup-style loading.');
+  for (let n = 120; n <= 123; n += 1) {
+    set(flows.getRow(n), 10, 'Decisions D-013/D-021: staged validation and atomic promotion replace partial legacy loading.');
+  }
   set(flows.getRow(124), 10, 'Decisions D-013/D-021: target import includes legacy transaction-run status through staged atomic promotion.');
+  set(flows.getRow(125), 10, 'Decisions D-013/D-021: explicit import validates supported reference data before atomic promotion.');
   set(flows.getRow(126), 10, 'Decisions D-013/D-021: explicit migrations/import use least-privilege operator credentials, not PUBLIC grants.');
 
   set(flows.getRow(130), 8, 'legacy/.setup/zconfig/bank-of-z-definitions.yaml:1-1156; legacy/.setup/setup/setup-cics-region.sh:120-190; Runtime: static-only');
@@ -151,6 +171,17 @@ function appendRuntimeLabel(value, label) {
   rev.eachRow((row) => {
     const id = String(row.getCell(1).value || '');
     if (id === 'R1-G03') row.getCell(3).value = '41-48,50-58,88,110-112';
+    if (id === 'R1-D-001') row.getCell(3).value = '8-14,113-117';
+    if (id === 'R1-D-002') row.getCell(3).value = '15-20,109,113-117';
+    if (id === 'R1-D-004') row.getCell(3).value = '72-78,84';
+    if (id === 'R1-D-005') row.getCell(3).value = '72-78';
+    if (id === 'R1-D-006') row.getCell(3).value = '63,68,82-83,134';
+    if (id === 'R1-D-008') row.getCell(3).value = '87-88,90-98';
+    if (id === 'R1-D-009') row.getCell(3).value = '38-39,53,56,58';
+    if (id === 'R1-D-014') row.getCell(3).value = '113-117,128-132,134-135,137-149,151-153';
+    if (id === 'R1-D-015') row.getCell(3).value = '128-132,135,137-149,151-153';
+    if (id === 'R1-D-018') row.getCell(6).value = 'Target implements normalized search; failed lookup clears stale state and disables mutation.';
+    if (id === 'R1-D-019') row.getCell(3).value = '43,45,51';
     if (id === 'R1-D-020') row.getCell(3).value = '50,71,80,89';
   });
 

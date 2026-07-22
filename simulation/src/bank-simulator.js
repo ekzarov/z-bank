@@ -73,6 +73,13 @@ class LegacyBankSimulator {
                 [...missing, ...(!input.address?.addressLine1 ? ['address.addressLine1'] : [])]
                     .map(field => ({ field, issue: 'Required' })));
         }
+        if (input.simulateNoCreditAgencyResponse) {
+            throw new LegacySimulationError(
+                503,
+                'CREDIT_PROVIDER_UNAVAILABLE',
+                'No credit assessment provider responded'
+            );
+        }
         const next = Math.max(...this.state.customers
             .filter(item => item.system === 'CICS')
             .map(item => Number(item.customerId))) + 1;
@@ -88,7 +95,7 @@ class LegacyBankSimulator {
             address: clone(input.address),
             customerStatus: input.customerStatus || 'ACTIVE',
             createdDate: this.state.metadata.clock,
-            creditScore: input.simulateNoCreditAgencyResponse ? 0 : 650
+            creditScore: 650
         });
         return { customerId, sortCode: this.state.metadata.sortCode };
     }

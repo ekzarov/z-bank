@@ -30,8 +30,11 @@ insufficient-funds transfers leave both accounts and history unchanged.
   and a strictly positive decimal amount with at most two fractional digits.
 - **FR-002** Customer transfers SHALL require ownership of the source account;
   destination details SHALL be disclosed only as required for confirmation.
-- **FR-003** Both accounts SHALL be active and currency-compatible; supported
-  product policies SHALL be evaluated before mutation.
+- **FR-003** Both accounts SHALL be active and currency-compatible. Generic
+  internal transfer source and destination accounts SHALL be transactional
+  `CURRENT`, `SAVING`, or `ISA` accounts. `LOAN` and `MORTGAGE` movements SHALL
+  use their dedicated supported operations and SHALL be rejected by this
+  generic transfer command (D-005).
 - **FR-004** Available funds/overdraft policy SHALL be enforced before debit;
   the legacy absence of an evidenced pre-transfer check SHALL not be preserved.
 - **FR-005** Source debit, destination credit, paired immutable transaction
@@ -51,8 +54,8 @@ insufficient-funds transfers leave both accounts and history unchanged.
 ## Success Criteria
 
 - Unit tests cover validation including fractional precision, ownership,
-  inactive/closed accounts, product/currency, system-managed sort codes, and
-  funds rules.
+  inactive/closed accounts, explicit transactional/loan/mortgage product
+  eligibility, currency, system-managed sort codes, and funds rules.
 - SQL Server tests prove active-account eligibility, two-account atomicity,
   rollback, concurrency, paired history/audit, `Modern` provenance, and
   idempotency.

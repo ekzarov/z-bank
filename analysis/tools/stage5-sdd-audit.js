@@ -8,6 +8,7 @@ const { cellText } = require('./lib');
 const root = path.resolve(__dirname, '..', '..');
 const coverageFile = path.join(root, 'analysis', 'stage-05-sdd-coverage.json');
 const workbookFile = path.join(root, 'analysis', 'legacy_user_flows.xlsx');
+const traceabilityFile = path.join(root, 'specs', 'traceability.md');
 
 (async () => {
   const coverage = JSON.parse(fs.readFileSync(coverageFile, 'utf8'));
@@ -25,11 +26,23 @@ const workbookFile = path.join(root, 'analysis', 'legacy_user_flows.xlsx');
 
   const ownership = new Map();
   const errors = [];
+  const traceability = fs.readFileSync(traceabilityFile, 'utf8');
   for (const slice of coverage.slices) {
     const directory = path.join(root, 'specs', `${slice.id}-${slice.slug}`);
     for (const artifact of ['spec.md', 'plan.md', 'tasks.md']) {
       const file = path.join(directory, artifact);
       if (!fs.existsSync(file)) errors.push(`Missing ${path.relative(root, file)}`);
+    }
+
+    const specFile = path.join(directory, 'spec.md');
+    if (fs.existsSync(specFile)) {
+      const spec = fs.readFileSync(specFile, 'utf8');
+      const requirementIds = [...spec.matchAll(/\*\*(FR-[0-9]+[A-Z]?)\*\*/g)].map((match) => match[1]);
+      for (const requirementId of requirementIds) {
+        if (!new RegExp(`\\b${requirementId}\\b`).test(traceability)) {
+          errors.push(`${path.relative(root, specFile)} ${requirementId} has no reverse entry in specs/traceability.md`);
+        }
+      }
     }
 
     const tasksFile = path.join(directory, 'tasks.md');

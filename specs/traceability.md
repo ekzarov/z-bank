@@ -20,11 +20,16 @@ target requirement or approved deviation. Source confidence (`Yes`, `Partial`,
 | 35-37 | Feature 002 FR-004, FR-006, FR-008 through FR-010 |
 | 38-39 | Feature 002 FR-007 through FR-010; D-009 |
 | 41-42,44,47 | Feature 003 FR-001 through FR-005, FR-009, FR-012 |
-| 43,45 | Feature 003 FR-004, FR-005, FR-012; D-019 |
+| 43,45 | Feature 003 FR-004, FR-005, FR-005A, FR-012; D-019 |
 | 46 | Feature 003 FR-003, FR-009; D-011 |
 | 48 | Feature 003 FR-004, FR-005; direct-link tests in T003/T007 |
-| 50-52 | Feature 003 FR-006, FR-007, FR-012, FR-013; D-019, D-020, D-023 |
-| 53-58 | Feature 003 FR-006 through FR-010, FR-013; D-009, D-016, D-017 |
+| 50 | Feature 003 FR-006, FR-007, FR-012, FR-013; D-020, D-023 |
+| 51 | Feature 003 FR-005A, FR-006, FR-012; D-019 |
+| 52 | Feature 003 FR-006, FR-007, FR-013; D-023 |
+| 53,56,58 | Feature 003 FR-006 through FR-010, FR-013; D-009 |
+| 54 | Feature 003 FR-006, FR-006A, FR-007, FR-013; D-016 |
+| 55 | Feature 003 FR-006 through FR-008, FR-013 |
+| 57 | Feature 003 FR-006 through FR-010, FR-013; D-017 |
 | 60-62 | Feature 004 FR-001, FR-002, FR-004, FR-005, FR-007, FR-008 |
 | 63 | Feature 004 FR-006; D-006 |
 | 64-66 | Feature 004 FR-001, FR-002, FR-004, FR-005, FR-007, FR-008 |
