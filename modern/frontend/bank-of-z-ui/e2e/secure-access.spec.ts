@@ -94,7 +94,7 @@ test('operator can create find update and retire a customer @e2e', async ({ page
   await expect(page.getByRole('status')).toContainText(`Customer ${customerId} retired`);
 });
 
-test('operator can browse create update and close an eligible account @e2e @account-management', async ({ page }) => {
+test('operator can manage an account and book cash with insufficient-funds protection @e2e @account-management @cash-transactions', async ({ page }) => {
   const password = process.env['BANKOFZ_DEMO_PASSWORD'];
   test.skip(!password, 'BANKOFZ_DEMO_PASSWORD is required.');
 
@@ -116,6 +116,24 @@ test('operator can browse create update and close an eligible account @e2e @acco
 
   await page.getByRole('link', { name: new RegExp(accountId) }).click();
   await expect(page.getByRole('heading', { name: new RegExp(accountId) })).toBeVisible();
+
+  await page.getByLabel('Operation').selectOption('deposit');
+  await page.getByLabel('Amount').fill('125.00');
+  await page.getByRole('button', { name: 'Book operation' }).click();
+  await expect(page.getByRole('status')).toContainText(/Deposit \d{12} booked/);
+  await expect(page.locator('.balance-band')).toContainText('£125.00');
+
+  await page.getByLabel('Operation').selectOption('withdrawal');
+  await page.getByLabel('Amount').fill('1000.00');
+  await page.getByRole('button', { name: 'Book operation' }).click();
+  await expect(page.getByRole('alert')).toContainText('exceeds the available balance');
+  await expect(page.locator('.balance-band')).toContainText('£125.00');
+
+  await page.getByLabel('Amount').fill('125.00');
+  await page.getByRole('button', { name: 'Book operation' }).click();
+  await expect(page.getByRole('status')).toContainText(/Withdrawal \d{12} booked/);
+  await expect(page.locator('.balance-band')).toContainText('£0.00');
+
   await page.getByRole('button', { name: 'Edit terms' }).click();
   await page.getByLabel('Interest rate').fill('3.25');
   await page.getByRole('button', { name: 'Save terms' }).click();

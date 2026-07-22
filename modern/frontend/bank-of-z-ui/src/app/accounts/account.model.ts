@@ -34,3 +34,17 @@ export interface AccountMetadata {
   overdraftLimit: number;
   currency: string;
 }
+
+export type CashTransactionDirection = 'deposit' | 'withdrawal';
+
+export interface CashTransaction {
+  reference: string;
+  accountId: string;
+  direction: CashTransactionDirection;
+  amount: number;
+  currency: string;
+  actualBalance: number;
+  availableBalance: number;
+  sourceSystem: string;
+  bookedAt: string;
+}

@@ -1,4 +1,5 @@
 using BankOfZ.Domain.Customers;
+using BankOfZ.Domain.Transactions;
 
 namespace BankOfZ.Domain.Accounts;
 
@@ -25,6 +26,7 @@ public sealed class Account
     public SourceSystem SourceSystem { get; private set; }
     public string? SourceIdentifier { get; private set; }
     public string? RawSourceType { get; private set; }
+    public string? LastTransactionReference { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset UpdatedAt { get; private set; }
     public byte[] Version { get; private set; } = [];
@@ -93,6 +95,45 @@ public sealed class Account
         UpdatedAt = now;
     }
 
+    public void ApplyCash(
+        CashTransactionDirection direction,
+        decimal amount,
+        string transactionReference,
+        DateTimeOffset now)
+    {
+        if (Status != AccountStatus.Active)
+        {
+            throw CashValidation("cash_account_inactive", nameof(Status), "Cash activity requires an active account.");
+        }
+        if (Type is AccountType.Loan or AccountType.Mortgage)
+        {
+            throw CashValidation("cash_product_not_supported", nameof(Type), "Cash activity is not supported for loan or mortgage accounts.");
+        }
+        if (amount <= 0 || amount > CashTransactionRules.MaximumAmount || decimal.Round(amount, 2) != amount)
+        {
+            throw CashValidation("cash_amount_invalid", nameof(amount), "Amount must be positive and have at most two decimal places.");
+        }
+        if (transactionReference.Length != CashTransactionRules.ReferenceLength ||
+            transactionReference.Any(character => !char.IsAsciiHexDigit(character)))
+        {
+            throw CashValidation("cash_reference_invalid", nameof(transactionReference), "Transaction reference is invalid.");
+        }
+
+        var delta = direction switch
+        {
+            CashTransactionDirection.Deposit => amount,
+            CashTransactionDirection.Withdrawal when amount <= AvailableBalance + OverdraftLimit => -amount,
+            CashTransactionDirection.Withdrawal => throw CashValidation(
+                "insufficient_funds", nameof(amount), "Available funds and overdraft are insufficient."),
+            _ => throw CashValidation("cash_direction_invalid", nameof(direction), "Cash direction is not supported.")
+        };
+
+        ActualBalance += delta;
+        AvailableBalance += delta;
+        LastTransactionReference = transactionReference;
+        UpdatedAt = now;
+    }
+
     private static void ValidateMetadata(AccountMetadata metadata)
     {
         if (!Enum.IsDefined(metadata.Type))
@@ -148,4 +189,7 @@ public sealed class Account
 
     private static AccountValidationException Validation(string field, string message) =>
         new(new Dictionary<string, string[]> { [field] = [message] });
+
+    private static CashTransactionValidationException CashValidation(string code, string field, string message) =>
+        new(code, new Dictionary<string, string[]> { [field] = [message] });
 }

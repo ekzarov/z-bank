@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
-import { Account, AccountMetadata, AccountPage } from './account.model';
+import { Account, AccountMetadata, AccountPage, CashTransaction, CashTransactionDirection } from './account.model';
 
 @Injectable({ providedIn: 'root' })
 export class AccountApiService {
@@ -29,6 +29,14 @@ export class AccountApiService {
 
   close(id: string, version: string): Observable<void> {
     return this.withCsrf(() => this.http.post<void>(`api/accounts/${encodeURIComponent(id)}/close`, { version }));
+  }
+
+  bookCash(id: string, direction: CashTransactionDirection, amount: number): Observable<CashTransaction> {
+    const endpoint = direction === 'deposit' ? 'deposits' : 'withdrawals';
+    return this.withCsrf(() => this.http.post<CashTransaction>(
+      `api/accounts/${encodeURIComponent(id)}/${endpoint}`,
+      { amount },
+      { headers: { 'Idempotency-Key': crypto.randomUUID() } }));
   }
 
   private withCsrf<T>(request: () => Observable<T>): Observable<T> {

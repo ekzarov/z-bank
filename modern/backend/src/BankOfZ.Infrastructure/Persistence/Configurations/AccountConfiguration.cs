@@ -1,5 +1,6 @@
 using BankOfZ.Domain.Accounts;
 using BankOfZ.Domain.Customers;
+using BankOfZ.Domain.Transactions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -30,6 +31,9 @@ public sealed class AccountConfiguration : IEntityTypeConfiguration<Account>
             .HasPrecision(CatalogModelConstants.Precision.Money, CatalogModelConstants.Precision.MoneyScale);
         builder.Property(account => account.RawSourceType).HasMaxLength(AccountRules.RawSourceValueMaxLength);
         builder.Property(account => account.SourceIdentifier).HasMaxLength(AccountRules.SourceIdentifierMaxLength);
+        builder.Property(account => account.LastTransactionReference)
+            .HasMaxLength(CashTransactionRules.ReferenceLength)
+            .IsUnicode(false);
         builder.Property(account => account.Version).IsRowVersion();
         builder.HasOne<Customer>()
             .WithMany()

@@ -7,11 +7,21 @@
       <header><div><p class="eyebrow">{{ value.type | titlecase }} account</p><h1>{{ value.sortCode }} / {{ value.id }}</h1></div><span class="status">{{ value.status }}</span></header>
       <section class="balance-band"><div><span>Actual balance</span><strong>{{ value.actualBalance | currency:value.currency:'symbol':'1.2-2' }}</strong></div><div><span>Available balance</span><strong>{{ value.availableBalance | currency:value.currency:'symbol':'1.2-2' }}</strong></div></section>
       <dl><div><dt>Owner</dt><dd>{{ value.customerId }}</dd></div><div><dt>Interest</dt><dd>{{ value.interestRate }}%</dd></div><div><dt>Overdraft</dt><dd>{{ value.overdraftLimit | currency:value.currency:'symbol':'1.0-0' }}</dd></div><div><dt>Opened</dt><dd>{{ value.openedOn }}</dd></div><div><dt>Last statement</dt><dd>{{ value.lastStatementOn }}</dd></div><div><dt>Next statement</dt><dd>{{ value.nextStatementOn }}</dd></div><div><dt>Source</dt><dd>{{ value.sourceSystem }}</dd></div></dl>
+      @if (value.status === 'active' && (value.type === 'current' || value.type === 'saving' || value.type === 'isa')) {
+        <section class="cash-panel" aria-labelledby="cash-heading">
+          <div><p class="eyebrow">Cash operation</p><h2 id="cash-heading">Deposit or withdraw</h2></div>
+          <form [formGroup]="cashForm" (ngSubmit)="bookCash()">
+            <label>Operation<select formControlName="direction"><option value="deposit">Deposit</option><option value="withdrawal">Withdraw</option></select></label>
+            <label>Amount<input type="number" min="0.01" step="0.01" inputmode="decimal" formControlName="amount"></label>
+            <button class="primary" type="submit" [disabled]="booking() || cashForm.invalid">{{ booking() ? 'Booking...' : 'Book operation' }}</button>
+          </form>
+        </section>
+      }
       @if (isOperator() && value.status === 'active') {
         <div class="actions"><button type="button" (click)="startEdit()">Edit terms</button><button type="button" class="danger" (click)="close()" [disabled]="saving()">Close account</button></div>
       }
       @if (editing()) {
-        <form [formGroup]="form" (ngSubmit)="save()"><label>Product<select formControlName="type"><option value="current">Current</option><option value="saving">Saving</option><option value="isa">ISA</option><option value="loan">Loan</option><option value="mortgage">Mortgage</option></select></label><label>Interest rate<input type="number" step=".01" formControlName="interestRate"></label><label>Overdraft limit<input type="number" step="1" formControlName="overdraftLimit"></label><label>Currency<input maxlength="3" formControlName="currency"></label><div><button class="primary" type="submit" [disabled]="saving()">Save terms</button><button type="button" (click)="editing.set(false)">Cancel</button></div></form>
+        <form class="terms-form" [formGroup]="form" (ngSubmit)="save()"><label>Product<select formControlName="type"><option value="current">Current</option><option value="saving">Saving</option><option value="isa">ISA</option><option value="loan">Loan</option><option value="mortgage">Mortgage</option></select></label><label>Interest rate<input type="number" step=".01" formControlName="interestRate"></label><label>Overdraft limit<input type="number" step="1" formControlName="overdraftLimit"></label><label>Currency<input maxlength="3" formControlName="currency"></label><div><button class="primary" type="submit" [disabled]="saving()">Save terms</button><button type="button" (click)="editing.set(false)">Cancel</button></div></form>
       }
     </article>
   }

@@ -8,6 +8,7 @@ public static class CatalogModelConstants
         public const string CustomerAuditEntries = "CustomerAuditEntries";
         public const string Accounts = "Accounts";
         public const string AccountAuditEntries = "AccountAuditEntries";
+        public const string BookedTransactions = "BookedTransactions";
     }
 
     public static class Sequences
@@ -40,5 +41,9 @@ public static class CatalogModelConstants
         public const string AccountInterestRate = "CK_Accounts_InterestRate";
         public const string AccountOverdraftLimit = "CK_Accounts_OverdraftLimit";
         public const string AccountCurrency = "CK_Accounts_Currency";
+        public const string TransactionDirection = "CK_BookedTransactions_Direction";
+        public const string TransactionAmount = "CK_BookedTransactions_Amount";
+        public const string TransactionCurrency = "CK_BookedTransactions_Currency";
+        public const string TransactionSourceSystem = "CK_BookedTransactions_SourceSystem";
     }
 }

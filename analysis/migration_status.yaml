@@ -3,8 +3,8 @@ project: Bank of Z modernization
 updated: 2026-07-22
 
 progress:
-  current_stage_percent: 0
-  overall_percent_estimate: 55
+  current_stage_percent: 85
+  overall_percent_estimate: 58
   estimate_only: true
   estimate_basis: >-
     Full migration estimate: shared Stages 1-6 are complete; three of nine
@@ -21,12 +21,12 @@ progress:
     active_sessions: 0
     blocked_or_invalid_sessions: 20
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T21:17:00+02:00
+  updated_at: 2026-07-22T21:32:00+02:00
 
 methodology_stage:
   number: 7
   name: Implementation - Feature 004 cash transactions
-  status: pending-implementation
+  status: implementation-peer-review-pending
   last_completed_stage: 10
   incomplete_stages:
     - 3
@@ -37,8 +37,8 @@ next_action:
   feature: 004-cash-transactions
   stage: 7
   instruction: >-
-    Implement Feature 004 as the next bounded slice from its approved SDD,
-    then repeat Stages 8 through 10 before Feature 005 starts.
+    Complete the mandatory read-only peer review for Feature 004, resolve any
+    findings, then repeat Stages 8 through 10 before Feature 005 starts.
   completion_gate: >-
     Feature 004 code, tests, SDD/tasks/workbook, deployment, and independent
     acceptance are clean before Feature 005 starts.
