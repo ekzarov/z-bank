@@ -1,0 +1,51 @@
+name: Modern Feature 001
+
+on:
+  pull_request:
+    paths:
+      - "modern/**"
+      - ".github/workflows/modern-feature-001.yml"
+  push:
+    branches: [main]
+    paths:
+      - "modern/**"
+      - ".github/workflows/modern-feature-001.yml"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: "CI-Sql-Password-123!"
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'CI-Sql-Password-123!' -C -Q 'SELECT 1'"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      ConnectionStrings__BankOfZ: "Server=localhost,1433;Database=BankOfZTests;User Id=sa;Password=CI-Sql-Password-123!;Encrypt=False"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.15.0"
+          cache: npm
+          cache-dependency-path: modern/frontend/bank-of-z-ui/package-lock.json
+      - run: dotnet build modern/BankOfZ.slnx
+      - run: dotnet test modern/BankOfZ.slnx --no-build
+      - run: npm ci
+        working-directory: modern/frontend/bank-of-z-ui
+      - run: npm run build
+        working-directory: modern/frontend/bank-of-z-ui
+      - run: npm test
+        working-directory: modern/frontend/bank-of-z-ui
+      - run: npm audit --omit=dev
+        working-directory: modern/frontend/bank-of-z-ui

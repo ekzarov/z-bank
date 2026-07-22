@@ -1,0 +1,4 @@
+**/bin
+**/obj
+frontend/bank-of-z-ui/node_modules
+frontend/bank-of-z-ui/dist

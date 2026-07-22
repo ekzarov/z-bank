@@ -3,25 +3,25 @@ project: Bank of Z modernization
 updated: 2026-07-22
 
 progress:
-  current_stage_percent: 0
-  overall_percent_estimate: 30
+  current_stage_percent: 90
+  overall_percent_estimate: 48
   estimate_only: true
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 28
-    claude_usable_reports: 18
+    claude_sessions_started: 30
+    claude_usable_reports: 20
     codex_sessions_started: 35
     codex_usable_reports: 28
     deterministic_batches_covered: 17
     active_sessions: 0
     blocked_or_invalid_sessions: 18
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T17:17:00+02:00
+  updated_at: 2026-07-22T17:55:00+02:00
 
 methodology_stage:
   number: 7
   name: Iterative implementation - Feature 001 secure access shell
-  status: ready-to-implement
+  status: implementation-complete-pending-compose-and-deploy
   last_completed_stage: 6
   incomplete_stages:
     - 3
@@ -32,9 +32,9 @@ next_action:
   feature: 001-secure-access-shell
   stage: 7
   instruction: >-
-    Implement Feature 001 tasks iteratively with tests first. Keep the map,
-    SDD, tasks, and implementation evidence synchronized, then continue the
-    slice through Stages 8, 9, and 10 before starting Feature 002.
+    Build and smoke the Feature 001 Compose topology, deploy it beside the
+    legacy application, update workbook destination evidence, then continue
+    the slice through Stages 8, 9, and 10 before starting Feature 002.
   completion_gate: >-
     Feature 001 implementation and tests complete, deployed smoke passed, map
     and tasks updated, and independent Stage 10 slice acceptance is clean.

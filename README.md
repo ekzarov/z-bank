@@ -10,14 +10,15 @@ empty workbook template, SDD artifacts, and required verification tooling.
 ## Repository layout
 
 - `legacy/` - byte-for-byte snapshot of the upstream IBM Bank of Z repository.
-- `modern/` - workspace reserved for the future replacement application.
+- `modern/` - the iterative .NET 10, Angular 22, EF Core, and SQL Server
+  replacement application.
 - `analysis/` - the filled Bank of Z parity map, reusable empty template,
   migration methodology, current status, instructions, and audit tooling.
 - `.specify/` - Spec Kit governance and future feature specifications.
 
-Implementation of the replacement must not begin until the legacy behavior has
-been analyzed, recorded in the workbook and specifications, and explicitly
-approved.
+Implementation follows the approved feature-slice loop recorded in
+`analysis/migration_status.yaml`; each slice updates specifications, tests,
+delivery evidence, and the parity map before the next slice starts.
 
 The constitution is adapted for Bank of Z but remains a draft until the owner
 explicitly ratifies it. See `analysis/migration_status.yaml` for the active

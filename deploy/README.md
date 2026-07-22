@@ -42,3 +42,24 @@ IMS_DATASTORE=
 Without those external IBM Z endpoints, the UI and z/OS Connect edge can run,
 but customer/account operations are expected to fail. Do not replace them with
 mocks when demonstrating the legacy baseline.
+
+## Modern replacement
+
+The replacement runs as a separate Compose project and does not modify the
+legacy containers:
+
+```bash
+cd /opt/z-bank/modern
+cp .env.example .env
+# Replace both placeholder values in .env before continuing.
+docker compose up -d db
+docker compose --profile tools run --rm setup migrate
+docker compose --profile tools run --rm setup provision-demo
+docker compose up -d --build api ui
+```
+
+Neither schema migration nor demo identity provisioning runs during normal API
+startup. Repeat `setup migrate` explicitly after a deployment that introduces
+a new migration. The UI binds only to `127.0.0.1:8088`; install the modern
+locations from `deploy/nginx-z-bank.conf` and open `/z-bank-new/` through the
+public HTTPS origin.

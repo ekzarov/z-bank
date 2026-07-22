@@ -9,8 +9,19 @@ const root = path.resolve(__dirname, '..', '..');
 const coverageFile = path.join(root, 'analysis', 'stage-05-sdd-coverage.json');
 const workbookFile = path.join(root, 'analysis', 'legacy_user_flows.xlsx');
 const traceabilityFile = path.join(root, 'specs', 'traceability.md');
+const migrationStatusFile = path.join(root, 'analysis', 'migration_status.yaml');
+
+function currentMethodologyStage() {
+  const status = fs.readFileSync(migrationStatusFile, 'utf8');
+  const section = status.match(/^methodology_stage:\s*\r?\n([\s\S]*?)(?=^\S|\Z)/m)?.[1] || '';
+  const number = Number(section.match(/^\s+number:\s*(\d+)\s*$/m)?.[1]);
+  if (!Number.isInteger(number)) throw new Error('Cannot read methodology_stage.number from migration_status.yaml');
+  return number;
+}
 
 (async () => {
+  const methodologyStage = currentMethodologyStage();
+  const implementationStarted = methodologyStage >= 7;
   const coverage = JSON.parse(fs.readFileSync(coverageFile, 'utf8'));
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(workbookFile);
@@ -79,7 +90,7 @@ const traceabilityFile = path.join(root, 'specs', 'traceability.md');
     }
 
     const tasksFile = path.join(directory, 'tasks.md');
-    if (fs.existsSync(tasksFile) && /^\s*- \[x\]/im.test(fs.readFileSync(tasksFile, 'utf8'))) {
+    if (!implementationStarted && fs.existsSync(tasksFile) && /^\s*- \[x\]/im.test(fs.readFileSync(tasksFile, 'utf8'))) {
       errors.push(`${path.relative(root, tasksFile)} contains completed tasks before implementation`);
     }
 
@@ -100,7 +111,7 @@ const traceabilityFile = path.join(root, 'specs', 'traceability.md');
       if (!cellText(row.getCell(14)).includes(expectedEvidence)) {
         errors.push(`Workbook row ${rowNumber} does not cite ${expectedEvidence}`);
       }
-      if (cellText(row.getCell(9)).trim() !== '') {
+      if (!implementationStarted && cellText(row.getCell(9)).trim() !== '') {
         errors.push(`Workbook row ${rowNumber} claims target implementation before Stage 7`);
       }
     }

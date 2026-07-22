@@ -1,11 +1,16 @@
 # Modern Bank of Z
 
-This directory is reserved for the approved Bank of Z replacement:
+The modern system is delivered as an Angular 22 UI, a .NET 10 API, and SQL
+Server. Normal application startup never creates schema, roles, or users.
 
-- `backend/`: .NET 10 LTS ASP.NET Core Web API with EF Core 10 and SQL Server;
-- `frontend/`: Angular 22 standalone application;
-- deployment: Docker Compose with explicit migrations and no startup seeding.
+Set the two values from `.env.example`, then run:
 
-The Stage 5 design is under `specs/`. No implementation has started. A fresh
-independent Stage 6 review and explicit owner implementation approval are
-required before the first delivery slice may create target code here.
+```powershell
+docker compose up -d db
+docker compose --profile tools run --rm setup migrate
+docker compose --profile tools run --rm setup provision-demo
+docker compose up -d --build api ui
+```
+
+Open `http://localhost:8088/z-bank-new/`. Demo users are `customer`, `operator`, and
+`administrator`; all use the password supplied as `BANKOFZ_DEMO_PASSWORD`.
