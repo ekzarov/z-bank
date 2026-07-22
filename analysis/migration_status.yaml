@@ -3,42 +3,41 @@ project: Bank of Z modernization
 updated: 2026-07-22
 
 progress:
-  current_stage_percent: 99
-  overall_percent_estimate: 25
+  current_stage_percent: 0
+  overall_percent_estimate: 30
   estimate_only: true
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
     claude_sessions_started: 28
     claude_usable_reports: 18
-    codex_sessions_started: 34
-    codex_usable_reports: 27
+    codex_sessions_started: 35
+    codex_usable_reports: 28
     deterministic_batches_covered: 17
     active_sessions: 0
     blocked_or_invalid_sessions: 18
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T17:02:00+02:00
+  updated_at: 2026-07-22T17:17:00+02:00
 
 methodology_stage:
-  number: 5
-  name: SDD correction after design re-verification
-  status: pass-011-findings-corrected-pending-stage-06-pass-012
-  last_completed_stage: 5
+  number: 7
+  name: Iterative implementation - Feature 001 secure access shell
+  status: ready-to-implement
+  last_completed_stage: 6
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: fresh-independent-agent
-  pass_number: 12
-  report: analysis/reviews/stage-06-pass-012.md
+  actor: orchestrator
+  feature: 001-secure-access-shell
+  stage: 7
   instruction: >-
-    Execute Stage 6 Pass 012 as a fresh focused correction verification
-    against the committed Pass 011 correction set. Verify every accepted
-    Pass 011 finding, all five-source decision mappings, legend/header print
-    output, preventive mutation checks, and rerun all deterministic gates.
+    Implement Feature 001 tasks iteratively with tests first. Keep the map,
+    SDD, tasks, and implementation evidence synchronized, then continue the
+    slice through Stages 8, 9, and 10 before starting Feature 002.
   completion_gate: >-
-    A clean Stage 6 Pass 012 with all automated gates passing,
-    unresolved_blocked_scopes=0, and an explicit implementation approval.
+    Feature 001 implementation and tests complete, deployed smoke passed, map
+    and tasks updated, and independent Stage 10 slice acceptance is clean.
 
 stage_3_fallback_result:
   mode: simulate
@@ -174,6 +173,12 @@ review_passes:
     agent: OpenAI Codex fresh read-only reviewer
     result: findings
     report: analysis/reviews/stage-06-pass-011.md
+  - stage: 6
+    pass: 12
+    date: 2026-07-22
+    agent: OpenAI Codex fresh read-only reviewer
+    result: clean
+    report: analysis/reviews/stage-06-pass-012.md
 
 owner_gates:
   constitution_ratification:
@@ -199,13 +204,18 @@ owner_gates:
     frontend: angular-22
     delivery: docker-compose-explicit-migrations
   stage_5_sdd:
-    status: corrected-pending-pass-012
+    status: independently-verified-pass-012
     completed_on: 2026-07-21
     corrected_on: 2026-07-22
     report: analysis/stage-05-sdd-report.md
     slices: 9
     workbook_rows_covered: 135
-  implementation_approval: pending-owner-decision
+  implementation_approval:
+    status: approved
+    approved_by: project owner
+    approved_on: 2026-07-22
+    scope: iterative-feature-slices-starting-with-001
+    basis: explicit owner instruction to proceed autonomously after Stage 6
   stage_3_fallback_decision:
     status: approved
     allowed_modes:
@@ -228,9 +238,16 @@ owner_gates:
     permitted_next_stage: 4
 
 known_blockers:
+  - id: stage-06-pass-012-clean
+    affects_stage: 6
+    status: resolved-stage-6-complete
+    detail: >-
+      Fresh Pass 012 verified all Pass 011 corrections, five-source decision
+      mappings, full Excel rendering, mutation checks, and deterministic gates.
+    evidence: analysis/reviews/stage-06-pass-012.md
   - id: stage-06-pass-011-findings
     affects_stage: 6
-    status: corrected-pending-pass-012
+    status: resolved-verified-by-pass-012
     detail: >-
       Full correction verification found coverage-JSON/spec-header decision
       mappings and Excel print legend/header defects. All are corrected and
