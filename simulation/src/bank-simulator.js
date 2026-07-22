@@ -368,12 +368,21 @@ class LegacyBankSimulator {
             throw new LegacySimulationError(404, 'ACCOUNT_NOT_FOUND', 'Account not found for sort code');
         }
         const customer = this.findCustomer('CICS', account.customerId);
+        if (!/^\d{6}$/.test(reportingMonth)) {
+            throw new LegacySimulationError(400, 'INVALID_REPORTING_MONTH', 'Reporting month must use YYYYMM');
+        }
         const year = reportingMonth.slice(0, 4);
         const month = reportingMonth.slice(4, 6);
-        const days = month === '02' ? 28 : ['04', '06', '09', '11'].includes(month) ? 30 : 31;
+        const monthNumber = Number(month);
+        if (monthNumber < 1 || monthNumber > 12) {
+            throw new LegacySimulationError(400, 'INVALID_REPORTING_MONTH', 'Reporting month must use YYYYMM');
+        }
+        const days = new Date(Date.UTC(Number(year), monthNumber, 0)).getUTCDate();
         const prefix = `${year}-${month}`;
-        const rows = this.state.transactions.filter(item =>
-            item.accountId === account.accountId && item.bookingDateTime.startsWith(prefix));
+        const rows = this.state.transactions
+            .filter(item => item.accountId === account.accountId && item.bookingDateTime.startsWith(prefix))
+            .sort((left, right) => left.bookingDateTime.localeCompare(right.bookingDateTime)
+                || left.transactionId.localeCompare(right.transactionId));
         const credits = money(rows.filter(item => item.creditDebitIndicator === 'CREDIT')
             .reduce((total, item) => total + item.amount, 0));
         const debits = money(rows.filter(item => item.creditDebitIndicator === 'DEBIT')

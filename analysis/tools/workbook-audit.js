@@ -129,8 +129,10 @@ const DATA_START = 7;
         const cell = row.getCell(c);
         const font = cell.font || {};
         const fontColor = font.color && font.color.argb ? font.color.argb.toUpperCase() : null;
-        if (font.name !== 'Carlito' || font.size !== 10 || fontColor !== 'FF000000') {
-          errors.push(`G User Flows r${r} c${c}: font ${font.name}/${font.size}/${fontColor}, expected Carlito/10/FF000000`);
+        const expectedBold = c === 2 && cellText(cell).trim() !== '';
+        if (font.name !== 'Carlito' || font.size !== 10 || fontColor !== 'FF000000'
+          || Boolean(font.bold) !== expectedBold) {
+          errors.push(`G User Flows r${r} c${c}: font ${font.name}/${font.size}/${fontColor}/bold=${font.bold}, expected Carlito/10/FF000000/bold=${expectedBold}`);
         }
         for (const side of ['left', 'right', 'top', 'bottom']) {
           const border = (cell.border || {})[side] || {};

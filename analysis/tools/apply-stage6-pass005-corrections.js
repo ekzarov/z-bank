@@ -105,20 +105,23 @@ function appendRuntimeLabel(value, label) {
     if (staticOnlyRows.has(n)) row.getCell(8).value = appendRuntimeLabel(row.getCell(8).value, 'static-only');
     for (let column = 1; column <= 14; column += 1) {
       const cell = row.getCell(column);
-      cell.font = {
-        ...(cell.font || {}),
+      const style = JSON.parse(JSON.stringify(cell.style || {}));
+      style.font = {
+        ...(style.font || {}),
         name: 'Carlito',
         size: 10,
-        color: { argb: 'FF000000' }
+        color: { argb: 'FF000000' },
+        bold: column === 2 && String(cell.value || '').trim() !== ''
       };
       const border = { style: 'thin', color: { argb: 'FFE7C8BD' } };
-      cell.border = { left: border, right: border, top: border, bottom: border };
-      cell.alignment = {
-        ...(cell.alignment || {}),
+      style.border = { left: border, right: border, top: border, bottom: border };
+      style.alignment = {
+        ...(style.alignment || {}),
         wrapText: true,
         vertical: 'top',
         horizontal: 'left'
       };
+      cell.style = style;
     }
     row.height = undefined;
   }

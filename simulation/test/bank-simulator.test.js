@@ -214,6 +214,26 @@ test('monthly statement validates sort code and reconciles from available balanc
     );
 });
 
+test('monthly statement validates calendar month and orders transactions', () => {
+    const simulator = new LegacyBankSimulator();
+    assert.equal(
+        simulator.monthlyStatement({ accountId: '10000001', reportingMonth: '202402' }).periodTo,
+        '20240229'
+    );
+    for (const reportingMonth of ['202413', '202400', '2024-01', 'abc']) {
+        assert.throws(
+            () => simulator.monthlyStatement({ accountId: '10000001', reportingMonth }),
+            error => error.code === 'INVALID_REPORTING_MONTH'
+        );
+    }
+    simulator.state.transactions.reverse();
+    const statement = simulator.monthlyStatement({ accountId: '10000001', reportingMonth: '202607' });
+    assert.deepEqual(
+        statement.transactions.map(transaction => transaction.transactionId),
+        ['PRTR-000001', 'PRTR-000002']
+    );
+});
+
 test('monthly statement emits the legacy empty-history message', () => {
     const simulator = new LegacyBankSimulator();
     const statement = simulator.monthlyStatement({ accountId: '10000002', reportingMonth: '202606' });
