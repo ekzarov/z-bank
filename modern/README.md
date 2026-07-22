@@ -7,6 +7,7 @@ Set the two values from `.env.example`, then run:
 
 ```powershell
 docker compose up -d db
+docker compose --profile tools build setup
 docker compose --profile tools run --rm setup migrate
 docker compose --profile tools run --rm setup provision-demo
 docker compose up -d --build api ui

@@ -53,6 +53,7 @@ cd /opt/z-bank/modern
 cp .env.example .env
 # Replace both placeholder values in .env before continuing.
 docker compose up -d db
+docker compose --profile tools build setup
 docker compose --profile tools run --rm setup migrate
 docker compose --profile tools run --rm setup provision-demo
 docker compose up -d --build api ui
@@ -60,9 +61,11 @@ docker compose up -d --build api ui
 
 Neither schema migration nor demo identity provisioning runs during normal API
 startup. Repeat `setup migrate` explicitly after a deployment that introduces
-a new migration. The UI binds only to `127.0.0.1:8088`; install the modern
-locations from `deploy/nginx-z-bank.conf` and open `/z-bank-new/` through the
-public HTTPS origin.
+a new migration. Build the `setup` image first so the command cannot reuse an
+older image that lacks the new migration. The UI binds only to
+`127.0.0.1:8088`; install the modern locations from
+`deploy/nginx-z-bank.conf` and open `/z-bank-new/` through the public HTTPS
+origin.
 
 The Feature 002 migration introduces the Customer foreign key. It deliberately
 clears pre-feature free-form `AspNetUsers.CustomerId` values before adding that

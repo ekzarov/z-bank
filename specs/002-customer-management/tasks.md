@@ -20,5 +20,5 @@
   create/update navigation or redisplay.
 - [x] T008 Implement operator customer workspace and customer self-profile.
 - [x] T009 Add tagged Playwright customer create/find/update/retire happy path.
-- [ ] T010 Run gates, update SDD/tasks/workbook, deploy this slice, and prepare
+- [x] T010 Run gates, update SDD/tasks/workbook, deploy this slice, and prepare
   Stage 9/10 evidence before Feature 003 starts.

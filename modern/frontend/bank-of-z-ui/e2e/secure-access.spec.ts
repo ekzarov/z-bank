@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 
 const roleCases = [
-  { userName: 'customer', link: 'My banking', heading: 'My banking', hiddenLinks: ['Customer operations', 'Administration'] },
-  { userName: 'operator', link: 'Customer operations', heading: 'Customer operations', hiddenLinks: ['My banking', 'Administration'] },
+  { userName: 'customer', link: 'My banking', heading: 'My profile', hiddenLinks: ['Customer operations', 'Administration'] },
+  { userName: 'operator', link: 'Customer operations', heading: 'Customer workspace', hiddenLinks: ['My banking', 'Administration'] },
   { userName: 'administrator', link: 'Administration', heading: 'Access administration', hiddenLinks: ['My banking', 'Customer operations'] }
 ];
 
@@ -18,7 +18,7 @@ test('customer can sign in, use a protected route, and sign out @e2e', async ({ 
 
   await expect(page.getByRole('heading', { name: 'Welcome to Bank of Z' })).toBeVisible();
   await page.getByRole('link', { name: 'My banking' }).click();
-  await expect(page.getByRole('heading', { name: 'My banking' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'My profile' })).toBeVisible();
 
   await page.getByRole('button', { name: 'Sign out' }).click();
   await expect(page).toHaveURL(/\/z-bank-new\/sign-in$/);
