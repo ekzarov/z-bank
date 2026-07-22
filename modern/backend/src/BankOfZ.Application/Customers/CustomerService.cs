@@ -78,7 +78,7 @@ public sealed class CustomerService(
         repository.SetExpectedVersion(customer, DecodeVersion(version));
         customer.Update(details, clock.UtcNow);
         auditWriter.Add(new CustomerAuditEntry(actor, clock.UtcNow, "CustomerUpdated", id, "Succeeded", correlationId));
-        await SaveWithConflictAsync(cancellationToken);
+        await repository.SaveChangesAsync(cancellationToken);
         return CustomerView.From(customer);
     }
 
@@ -94,23 +94,11 @@ public sealed class CustomerService(
         var accountStatus = await accountStatusReader.GetAsync(id, cancellationToken);
         customer.Retire(accountStatus.HasActiveAccounts, accountStatus.HasUnresolvedObligations, clock.UtcNow);
         auditWriter.Add(new CustomerAuditEntry(actor, clock.UtcNow, "CustomerRetired", id, "Succeeded", correlationId));
-        await SaveWithConflictAsync(cancellationToken);
+        await repository.SaveChangesAsync(cancellationToken);
     }
 
     private async Task<Customer> GetTrackedAsync(string id, CancellationToken cancellationToken) =>
         await repository.FindAsync(id, true, cancellationToken) ?? throw new CustomerNotFoundException(id);
-
-    private async Task SaveWithConflictAsync(CancellationToken cancellationToken)
-    {
-        try
-        {
-            await repository.SaveChangesAsync(cancellationToken);
-        }
-        catch (CustomerConflictException)
-        {
-            throw;
-        }
-    }
 
     private static byte[] DecodeVersion(string value)
     {

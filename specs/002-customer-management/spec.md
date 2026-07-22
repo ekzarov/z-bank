@@ -52,8 +52,10 @@ accounts produce explicit non-destructive results.
 - **FR-007** Customer retirement SHALL be rejected while active accounts or
   unresolved financial obligations exist; successful retirement SHALL be a
   soft state transition, not destructive history deletion.
-- **FR-008** Every mutation SHALL record actor, timestamp, action, entity ID,
-  result, and correlation ID without sensitive field values.
+- **FR-008** Every successfully persisted mutation SHALL record actor,
+  timestamp, action, entity ID, result, and correlation ID without sensitive
+  field values in the same transaction. Rejected commands are not mutations
+  and SHALL leave neither domain changes nor success-audit records.
 - **FR-009** The model SHALL retain `SourceSystem` (`Cics`, `Ims`, `Modern`) and
   optional source identifier as provenance, not as routing behavior.
 - **FR-010** Supported REST resources SHALL be documented from the target

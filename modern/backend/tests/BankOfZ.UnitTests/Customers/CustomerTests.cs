@@ -40,6 +40,95 @@ public sealed class CustomerTests
     }
 
     [Fact]
+    public void Create_Accepts_Maximum_Age_Boundary()
+    {
+        var customer = CreateCustomer("0000000042", Details(dateOfBirth: new DateOnly(1906, 7, 22)));
+
+        Assert.Equal(new DateOnly(1906, 7, 22), customer.DateOfBirth);
+    }
+
+    [Fact]
+    public void Create_Rejects_Customer_Older_Than_Maximum()
+    {
+        Assert.Throws<CustomerValidationException>(() =>
+            CreateCustomer("0000000042", Details(dateOfBirth: new DateOnly(1905, 7, 22))));
+    }
+
+    [Theory]
+    [InlineData("42")]
+    [InlineData("000000004A")]
+    public void Create_Rejects_Invalid_Customer_Identifier(string id)
+    {
+        Assert.Throws<CustomerValidationException>(() => CreateCustomer(id, Details()));
+    }
+
+    [Theory]
+    [InlineData("10000")]
+    [InlineData("10000A")]
+    public void Create_Rejects_Invalid_Sort_Code(string sortCode)
+    {
+        Assert.Throws<CustomerValidationException>(() => CreateCustomer("0000000042", Details(), sortCode));
+    }
+
+    [Theory]
+    [InlineData(-0.01)]
+    [InlineData(999.01)]
+    public void Create_Rejects_Credit_Score_Outside_Range(double score)
+    {
+        Assert.Throws<CustomerValidationException>(() =>
+            CreateCustomer("0000000042", Details(), creditScore: (decimal)score));
+    }
+
+    [Fact]
+    public void Create_Accepts_Exact_Text_Length_Boundaries()
+    {
+        var customer = CreateCustomer("0000000042", Details(
+            firstName: new string('F', CustomerRules.NameMaxLength),
+            lastName: new string('L', CustomerRules.NameMaxLength),
+            addressLine1: new string('A', CustomerRules.AddressMaxLength),
+            city: new string('C', CustomerRules.CityMaxLength),
+            region: new string('R', CustomerRules.RegionMaxLength),
+            postalCode: new string('P', CustomerRules.PostalCodeMaxLength),
+            countryCode: "GB",
+            phone: new string('1', CustomerRules.PhoneMaxLength)));
+
+        Assert.Equal(CustomerRules.NameMaxLength, customer.FirstName.Length);
+        Assert.Equal(CustomerRules.AddressMaxLength, customer.AddressLine1.Length);
+    }
+
+    [Fact]
+    public void Create_Rejects_Required_And_Overlong_Fields()
+    {
+        Assert.Throws<CustomerValidationException>(() => CreateCustomer(
+            "0000000042",
+            Details(addressLine1: " ")));
+        Assert.Throws<CustomerValidationException>(() => CreateCustomer(
+            "0000000042",
+            Details(firstName: new string('F', CustomerRules.NameMaxLength + 1))));
+        Assert.Throws<CustomerValidationException>(() => CreateCustomer(
+            "0000000042",
+            Details(postalCode: new string('P', CustomerRules.PostalCodeMaxLength + 1))));
+    }
+
+    [Theory]
+    [InlineData("G")]
+    [InlineData("GBR")]
+    public void Create_Rejects_Country_Code_Without_Exact_Length(string countryCode)
+    {
+        Assert.Throws<CustomerValidationException>(() =>
+            CreateCustomer("0000000042", Details(countryCode: countryCode)));
+    }
+
+    [Theory]
+    [InlineData("not-an-email")]
+    [InlineData("")]
+    public void Create_Rejects_Invalid_Email(string email)
+    {
+        Assert.Throws<CustomerValidationException>(() =>
+            CreateCustomer("0000000042", Details(email: email)));
+    }
+
+    [Fact]
     public void Retire_Rejects_Blocking_Accounts_And_Remains_Active()
     {
         var customer = CreateCustomer("0000000042", Details());
@@ -59,11 +148,15 @@ public sealed class CustomerTests
         Assert.Equal("Jamie", customer.FirstName);
     }
 
-    private static Customer CreateCustomer(string id, CustomerDetails details) => Customer.Create(
+    private static Customer CreateCustomer(
+        string id,
+        CustomerDetails details,
+        string sortCode = "100000",
+        decimal creditScore = 700) => Customer.Create(
         id,
-        "100000",
+        sortCode,
         details,
-        700,
+        creditScore,
         new DateOnly(2026, 8, 12),
         SourceSystem.Modern,
         null,
@@ -73,17 +166,25 @@ public sealed class CustomerTests
         string title = "Ms",
         string firstName = "Jamie",
         string lastName = "Doe",
-        DateOnly? dateOfBirth = null) => new(
+        DateOnly? dateOfBirth = null,
+        string addressLine1 = "1 Test Street",
+        string? addressLine2 = null,
+        string city = "London",
+        string? region = null,
+        string postalCode = "EC1A 1AA",
+        string countryCode = "GB",
+        string email = "Jamie@Example.Test",
+        string? phone = null) => new(
         title,
         firstName,
         lastName,
         dateOfBirth ?? new DateOnly(1990, 5, 12),
-        "1 Test Street",
-        null,
-        "London",
-        null,
-        "EC1A 1AA",
-        "GB",
-        "Jamie@Example.Test",
-        null);
+        addressLine1,
+        addressLine2,
+        city,
+        region,
+        postalCode,
+        countryCode,
+        email,
+        phone);
 }

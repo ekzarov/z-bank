@@ -63,3 +63,11 @@ startup. Repeat `setup migrate` explicitly after a deployment that introduces
 a new migration. The UI binds only to `127.0.0.1:8088`; install the modern
 locations from `deploy/nginx-z-bank.conf` and open `/z-bank-new/` through the
 public HTTPS origin.
+
+The Feature 002 migration introduces the Customer foreign key. It deliberately
+clears pre-feature free-form `AspNetUsers.CustomerId` values before adding that
+constraint because no matching Customer rows existed in Feature 001. For the
+demo environment, always run `provision-demo` immediately after `migrate`; the
+idempotent command creates customer `1000000001` and restores the demo user's
+link. For non-demo data, migrate customer records and map existing identity
+links explicitly instead of relying on demo provisioning.
