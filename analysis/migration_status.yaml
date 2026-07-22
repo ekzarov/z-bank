@@ -3,8 +3,8 @@ project: Bank of Z modernization
 updated: 2026-07-22
 
 progress:
-  current_stage_percent: 85
-  overall_percent_estimate: 58
+  current_stage_percent: 0
+  overall_percent_estimate: 59
   estimate_only: true
   estimate_basis: >-
     Full migration estimate: shared Stages 1-6 are complete; three of nine
@@ -13,20 +13,20 @@ progress:
     not the full nine-slice migration.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 42
-    claude_usable_reports: 31
+    claude_sessions_started: 43
+    claude_usable_reports: 32
     codex_sessions_started: 35
     codex_usable_reports: 28
     deterministic_batches_covered: 17
     active_sessions: 0
     blocked_or_invalid_sessions: 20
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T21:43:00+02:00
+  updated_at: 2026-07-22T21:49:00+02:00
 
 methodology_stage:
-  number: 7
-  name: Implementation - Feature 004 cash transactions
-  status: implementation-peer-review-pending
+  number: 8
+  name: Delivery - Feature 004 cash transactions
+  status: pending-local-and-remote-smoke
   last_completed_stage: 10
   incomplete_stages:
     - 3
@@ -37,8 +37,8 @@ next_action:
   feature: 004-cash-transactions
   stage: 7
   instruction: >-
-    Complete the mandatory read-only peer review for Feature 004, resolve any
-    findings, then repeat Stages 8 through 10 before Feature 005 starts.
+    Run the complete local delivery gates, apply the versioned migration by an
+    explicit setup command, deploy Feature 004, and complete the live smoke.
   completion_gate: >-
     Feature 004 code, tests, SDD/tasks/workbook, deployment, and independent
     acceptance are clean before Feature 005 starts.
