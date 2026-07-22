@@ -29,7 +29,10 @@ The deployed HTTPS application was exercised through the browser:
 - API authorization, generic failures, lockout, CSRF, and Problem Details
   remained covered by the real-SQL integration suite.
 
-The public Playwright run completed four tests with four passes. The workbook
+After the Stage 10 Pass 001 correction loop, the deployed application was
+rebuilt from `c8d6e79` and the complete public walkthrough was repeated. The
+public Playwright run completed five tests with five passes, including a
+simulated API outage that opened the recoverable unavailable page. The workbook
 now marks all 19 slice rows implemented and provides target file, test, route,
 and deployment evidence. `UF-001` and revision gap `R1-G01` are closed.
 
@@ -44,5 +47,5 @@ workbook and Feature 001 SDD.
 - Workbook audit: passed, 19 closed and 116 open rows.
 - SDD audit: passed, 135 rows and 27 artifacts.
 - Legacy evidence audit: passed, 512 references.
-- Angular unit tests: 13 passed.
-- Public HTTPS Playwright: 4 passed.
+- Angular unit tests: 15 passed.
+- Public HTTPS Playwright: 5 passed.

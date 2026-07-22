@@ -3,7 +3,7 @@ project: Bank of Z modernization
 updated: 2026-07-22
 
 progress:
-  current_stage_percent: 70
+  current_stage_percent: 0
   overall_percent_estimate: 57
   estimate_only: true
   external_review:
@@ -16,25 +16,26 @@ progress:
     active_sessions: 0
     blocked_or_invalid_sessions: 18
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T18:31:00+02:00
+  updated_at: 2026-07-22T18:35:00+02:00
 
 methodology_stage:
-  number: 7
-  name: Feature 001 correction loop after Stage 10 Pass 001
-  status: corrections-verified-locally
+  number: 10
+  name: Independent slice acceptance - Feature 001 secure access shell
+  status: pending-independent-pass-002
   last_completed_stage: 9
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: orchestrator
+  actor: fresh-independent-agent
   feature: 001-secure-access-shell
-  stage: 7
+  stage: 10
   instruction: >-
-    Commit and deploy the three accepted Pass 001 corrections, rerun the live
-    smoke and browser suite, then prepare an immutable revision for fresh
-    independent Stage 10 Pass 002.
+    Independently verify the three accepted Pass 001 corrections and recheck
+    Feature 001 against its workbook rows, SDD, code, automated gates, and
+    deployed legacy/modern URLs. Record Pass 002 without modifying reviewed
+    artifacts.
   completion_gate: >-
     Eligible Stage 10 Pass 002 is clean, all gates pass, and Feature 001 tasks
     and workbook evidence are synchronized before Feature 002 begins.
