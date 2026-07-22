@@ -3,41 +3,40 @@ project: Bank of Z modernization
 updated: 2026-07-22
 
 progress:
-  current_stage_percent: 75
-  overall_percent_estimate: 57
+  current_stage_percent: 0
+  overall_percent_estimate: 60
   estimate_only: true
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 32
-    claude_usable_reports: 22
+    claude_sessions_started: 33
+    claude_usable_reports: 23
     codex_sessions_started: 35
     codex_usable_reports: 28
     deterministic_batches_covered: 17
     active_sessions: 0
     blocked_or_invalid_sessions: 19
-    unresolved_blocked_scopes: 1
-  updated_at: 2026-07-22T18:43:00+02:00
+    unresolved_blocked_scopes: 0
+  updated_at: 2026-07-22T18:51:00+02:00
 
 methodology_stage:
-  number: 10
-  name: Independent slice acceptance - Feature 001 secure access shell
-  status: pending-independent-pass-003
-  last_completed_stage: 9
+  number: 7
+  name: Implementation - Feature 002 customer management
+  status: ready-to-implement
+  last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: fresh-independent-agent
-  feature: 001-secure-access-shell
-  stage: 10
+  actor: orchestrator
+  feature: 002-customer-management
+  stage: 7
   instruction: >-
-    Rerun complete independent Feature 001 acceptance in a fresh session with
-    Node 24.15.0 explicitly on PATH. Resolve the Pass 002 Angular-gate blocker
-    and record Pass 003 without modifying reviewed artifacts.
+    Implement Feature 002 customer management as the next isolated delivery
+    slice, including tests, explicit migration, UI, and peer review, then run
+    Stages 8 through 10 before Feature 003 starts.
   completion_gate: >-
-    Eligible Stage 10 Pass 003 is clean, all gates pass, and Feature 001 tasks
-    and workbook evidence are synchronized before Feature 002 begins.
+    Feature 002 implementation and peer review pass all gates before delivery.
 
 stage_3_fallback_result:
   mode: simulate
@@ -191,6 +190,19 @@ review_passes:
     agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
     result: blocked
     report: analysis/reviews/stage-10-pass-002.md
+  - stage: 10
+    pass: 3
+    date: 2026-07-22
+    agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: clean
+    report: analysis/reviews/stage-10-pass-003.md
+
+accepted_slices:
+  - feature: 001-secure-access-shell
+    accepted_on: 2026-07-22
+    stage_10_pass: 3
+    report: analysis/reviews/stage-10-pass-003.md
+    workbook_rows: 19
 
 owner_gates:
   constitution_ratification:
