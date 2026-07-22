@@ -86,4 +86,5 @@ accounts produce explicit non-destructive results.
 - SQL Server/API tests cover search, CRUD, concurrency, relationships, rollback,
   role/ownership rules, and audit records.
 - Angular tests and Playwright cover operator CRUD, stale-state clearing,
-  success navigation/redisplay, composed account summaries, and self-view.
+  success navigation/redisplay, the explicit pre-Feature-003 profile boundary,
+  and self-view. Composed account summaries remain a Feature 003 criterion.
