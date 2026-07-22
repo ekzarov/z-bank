@@ -11,7 +11,7 @@ describe('authGuard', () => {
     const session = signal({ isAuthenticated: true, userName: 'customer', customerId: '1000000001', roles: ['Customer'] });
     TestBed.configureTestingModule({
       providers: [
-        { provide: SessionService, useValue: { session, load: vi.fn() } },
+        { provide: SessionService, useValue: { session, unavailable: signal(false), load: vi.fn() } },
         { provide: Router, useValue: { createUrlTree: vi.fn() } }
       ]
     });
@@ -27,7 +27,7 @@ describe('authGuard', () => {
     const redirect = {} as UrlTree;
     TestBed.configureTestingModule({
       providers: [
-        { provide: SessionService, useValue: { session, load: vi.fn(() => of(null)) } },
+        { provide: SessionService, useValue: { session, unavailable: signal(false), load: vi.fn(() => of(null)) } },
         { provide: Router, useValue: { createUrlTree: vi.fn(() => redirect) } }
       ]
     });
@@ -36,5 +36,24 @@ describe('authGuard', () => {
       authGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot));
 
     expect(await firstValueFrom(result as ReturnType<typeof of>)).toBe(redirect);
+  });
+
+  it('redirects to the unavailable route when session loading reports an outage', async () => {
+    const session = signal(null);
+    const unavailable = signal(true);
+    const redirect = {} as UrlTree;
+    const createUrlTree = vi.fn(() => redirect);
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: SessionService, useValue: { session, unavailable, load: vi.fn(() => of(null)) } },
+        { provide: Router, useValue: { createUrlTree } }
+      ]
+    });
+
+    const result = TestBed.runInInjectionContext(() =>
+      authGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot));
+
+    expect(await firstValueFrom(result as ReturnType<typeof of>)).toBe(redirect);
+    expect(createUrlTree).toHaveBeenCalledWith(['/unavailable']);
   });
 });

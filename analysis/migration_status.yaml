@@ -3,40 +3,40 @@ project: Bank of Z modernization
 updated: 2026-07-22
 
 progress:
-  current_stage_percent: 0
+  current_stage_percent: 70
   overall_percent_estimate: 57
   estimate_only: true
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 30
-    claude_usable_reports: 20
+    claude_sessions_started: 31
+    claude_usable_reports: 21
     codex_sessions_started: 35
     codex_usable_reports: 28
     deterministic_batches_covered: 17
     active_sessions: 0
     blocked_or_invalid_sessions: 18
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T18:13:00+02:00
+  updated_at: 2026-07-22T18:31:00+02:00
 
 methodology_stage:
-  number: 10
-  name: Independent slice acceptance - Feature 001 secure access shell
-  status: pending-independent-acceptance
+  number: 7
+  name: Feature 001 correction loop after Stage 10 Pass 001
+  status: corrections-verified-locally
   last_completed_stage: 9
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: fresh-independent-agent
+  actor: orchestrator
   feature: 001-secure-access-shell
-  stage: 10
+  stage: 7
   instruction: >-
-    Independently accept Feature 001 against its workbook rows, SDD, code,
-    automated gates, and deployed legacy/modern URLs. Record Pass 001 without
-    modifying reviewed artifacts.
+    Commit and deploy the three accepted Pass 001 corrections, rerun the live
+    smoke and browser suite, then prepare an immutable revision for fresh
+    independent Stage 10 Pass 002.
   completion_gate: >-
-    Eligible Stage 10 Pass 001 is clean, all gates pass, and Feature 001 tasks
+    Eligible Stage 10 Pass 002 is clean, all gates pass, and Feature 001 tasks
     and workbook evidence are synchronized before Feature 002 begins.
 
 stage_3_fallback_result:
@@ -179,6 +179,12 @@ review_passes:
     agent: OpenAI Codex fresh read-only reviewer
     result: clean
     report: analysis/reviews/stage-06-pass-012.md
+  - stage: 10
+    pass: 1
+    date: 2026-07-22
+    agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: findings
+    report: analysis/reviews/stage-10-pass-001.md
 
 owner_gates:
   constitution_ratification:

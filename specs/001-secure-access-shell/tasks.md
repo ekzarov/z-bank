@@ -34,5 +34,5 @@
 - [x] T012 Implement the accessible application shell, sign-in, logout,
   navigation, and error routes.
 - [x] T013 Add nginx same-origin routing and a slice-specific Compose smoke.
-- [ ] T014 Run all gates, update SDD/tasks/workbook destination evidence, deploy
+- [x] T014 Run all gates, update SDD/tasks/workbook destination evidence, deploy
   the slice, and prepare Stage 9/10 evidence.

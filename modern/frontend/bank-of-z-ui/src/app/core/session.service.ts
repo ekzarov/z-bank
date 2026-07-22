@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { catchError, map, Observable, of, switchMap, tap } from 'rxjs';
 import { LoginRequest, Session } from './session.model';
@@ -7,12 +7,17 @@ import { LoginRequest, Session } from './session.model';
 export class SessionService {
   private readonly http = inject(HttpClient);
   readonly session = signal<Session | null>(null);
+  readonly unavailable = signal(false);
 
   load(): Observable<Session | null> {
     return this.http.get<Session>('api/session').pipe(
       map(session => session.isAuthenticated ? session : null),
-      tap(session => this.session.set(session)),
-      catchError(() => {
+      tap(session => {
+        this.unavailable.set(false);
+        this.session.set(session);
+      }),
+      catchError((error: HttpErrorResponse) => {
+        this.unavailable.set(error.status === 0 || error.status >= 500);
         this.session.set(null);
         return of(null);
       })

@@ -55,7 +55,7 @@ describe('SessionService', () => {
     http.verify();
   });
 
-  it('clears the session when the API is unavailable', () => {
+  it('marks the API unavailable and clears the session for a server outage', () => {
     TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
     const service = TestBed.inject(SessionService);
     const http = TestBed.inject(HttpTestingController);
@@ -64,6 +64,20 @@ describe('SessionService', () => {
     http.expectOne('api/session').flush({}, { status: 503, statusText: 'Unavailable' });
 
     expect(service.session()).toBeNull();
+    expect(service.unavailable()).toBe(true);
+    http.verify();
+  });
+
+  it('does not classify an unauthorized session response as an outage', () => {
+    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+    const service = TestBed.inject(SessionService);
+    const http = TestBed.inject(HttpTestingController);
+
+    service.load().subscribe();
+    http.expectOne('api/session').flush({}, { status: 401, statusText: 'Unauthorized' });
+
+    expect(service.session()).toBeNull();
+    expect(service.unavailable()).toBe(false);
     http.verify();
   });
 });

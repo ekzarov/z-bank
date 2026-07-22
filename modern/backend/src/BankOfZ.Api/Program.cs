@@ -75,6 +75,7 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy(AuthorizationPolicies.Administrator, policy => policy.RequireRole(BankRoles.Administrator));
 
 builder.Services.AddSingleton<CustomerAccessEvaluator>();
+builder.Services.AddSingleton<InvalidCredentialWorkFactor>();
 builder.Services.AddScoped<ISecurityAudit, SecurityAudit>();
 builder.Services.AddProblemDetails();
 builder.Services.AddHealthChecks();

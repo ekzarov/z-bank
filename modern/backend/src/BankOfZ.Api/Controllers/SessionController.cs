@@ -14,7 +14,8 @@ public sealed class SessionController(
     SignInManager<ApplicationUser> signInManager,
     UserManager<ApplicationUser> userManager,
     IAntiforgery antiforgery,
-    ISecurityAudit audit) : ControllerBase
+    ISecurityAudit audit,
+    InvalidCredentialWorkFactor invalidCredentialWorkFactor) : ControllerBase
 {
     [AllowAnonymous]
     [HttpGet]
@@ -58,6 +59,7 @@ public sealed class SessionController(
         var user = await userManager.FindByNameAsync(request.UserName);
         if (user is null)
         {
+            invalidCredentialWorkFactor.Verify(request.Password);
             audit.Record("login", null, false, "invalid-credentials");
             return Unauthorized(GenericLoginProblem());
         }

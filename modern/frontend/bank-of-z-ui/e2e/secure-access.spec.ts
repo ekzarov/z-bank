@@ -26,6 +26,19 @@ test('customer can sign in, use a protected route, and sign out @e2e', async ({ 
   await expect(page).toHaveURL(/\/z-bank-new\/sign-in$/);
 });
 
+test('API outage opens the recoverable unavailable page @e2e', async ({ page }) => {
+  await page.route('**/api/session', route => route.fulfill({
+    status: 503,
+    contentType: 'application/problem+json',
+    body: JSON.stringify({ title: 'Service Unavailable', status: 503 })
+  }));
+
+  await page.goto('customer');
+
+  await expect(page).toHaveURL(/\/z-bank-new\/unavailable$/);
+  await expect(page.getByRole('heading', { name: 'We could not complete that request' })).toBeVisible();
+});
+
 for (const roleCase of roleCases) {
   test(`${roleCase.userName} sees only authorized navigation @e2e`, async ({ page }) => {
     const password = process.env['BANKOFZ_DEMO_PASSWORD'];
