@@ -4,44 +4,43 @@ updated: 2026-07-22
 
 progress:
   current_stage_percent: 0
-  overall_percent_estimate: 63
+  overall_percent_estimate: 67
   estimate_only: true
   estimate_basis: >-
-    Full migration estimate: shared Stages 1-6 are complete; three of nine
-    slices are accepted and Feature 004 has completed implementation, delivery,
-    live reconciliation, and deterministic gates pending Stage 10 acceptance.
-    Final consolidated acceptance remains.
+    Full migration estimate: shared Stages 1-6 and four of nine iterative
+    implementation/delivery/acceptance slices are complete. Feature 005 is the
+    next slice and final consolidated acceptance remains.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 43
-    claude_usable_reports: 32
+    claude_sessions_started: 46
+    claude_usable_reports: 33
     codex_sessions_started: 35
     codex_usable_reports: 28
     deterministic_batches_covered: 17
     active_sessions: 0
-    blocked_or_invalid_sessions: 20
+    blocked_or_invalid_sessions: 22
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T23:20:00+02:00
+  updated_at: 2026-07-22T23:40:00+02:00
 
 methodology_stage:
-  number: 10
-  name: Independent acceptance - Feature 004 cash transactions
-  status: pending-fresh-read-only-review
+  number: 7
+  name: Coding - Feature 005 funds transfers
+  status: pending-iterative-implementation
   last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: OpenAI Codex orchestrator, then fresh Claude Code CLI reviewer
-  feature: 004-cash-transactions
-  stage: 10
+  actor: OpenAI Codex orchestrator
+  feature: 005-funds-transfers
+  stage: 7
   instruction: >-
-    Run a fresh read-only Stage 10 acceptance against the committed Feature 004
-    candidate; findings return to Stage 5/7 and clean releases Feature 005.
+    Implement Feature 005 as the next isolated slice, run peer review and gates,
+    then repeat Stages 8-10 before Feature 006 starts.
   completion_gate: >-
-    Feature 004 code, tests, SDD/tasks/workbook, deployment, and independent
-    acceptance are clean before Feature 005 starts.
+    Feature 005 code, tests, SDD/tasks/workbook, deployment, and independent
+    acceptance are clean before Feature 006 starts.
 
 stage_3_fallback_result:
   mode: simulate
@@ -219,6 +218,12 @@ review_passes:
     agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
     result: clean
     report: analysis/reviews/stage-10-pass-006.md
+  - stage: 10
+    pass: 7
+    date: 2026-07-22
+    agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: clean
+    report: analysis/reviews/stage-10-pass-007.md
 
 accepted_slices:
   - feature: 001-secure-access-shell
@@ -236,6 +241,11 @@ accepted_slices:
     stage_10_pass: 6
     report: analysis/reviews/stage-10-pass-006.md
     workbook_rows: 21
+  - feature: 004-cash-transactions
+    accepted_on: 2026-07-22
+    stage_10_pass: 7
+    report: analysis/reviews/stage-10-pass-007.md
+    workbook_rows: 20
 
 owner_gates:
   constitution_ratification:
