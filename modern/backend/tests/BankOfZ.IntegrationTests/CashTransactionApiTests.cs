@@ -70,6 +70,22 @@ public sealed class CashTransactionApiTests(BankOfZTestsFixture fixture)
     }
 
     [Fact]
+    public async Task Missing_And_Oversized_Idempotency_Keys_Are_Rejected_Without_Booking()
+    {
+        using var client = CreateClient();
+        await LoginAsync(client, "operator");
+        await CreateAccountAsync(client);
+
+        var missing = await SendCashAsync(client, "10000001", "deposits", 50m, null);
+        var oversized = await SendCashAsync(client, "10000001", "deposits", 50m, new string('x', 65));
+
+        await AssertCodeAsync(missing, "idempotency_key_invalid");
+        await AssertCodeAsync(oversized, "idempotency_key_invalid");
+        await using var scope = Fixture.Factory.Services.CreateAsyncScope();
+        Assert.Empty(await scope.ServiceProvider.GetRequiredService<BankOfZIdentityContext>().BookedTransactions.ToArrayAsync());
+    }
+
+    [Fact]
     public async Task Concurrent_Cash_Requests_Are_Serialized_Without_Lost_Updates()
     {
         using var setupClient = CreateClient();
@@ -162,7 +178,7 @@ public sealed class CashTransactionApiTests(BankOfZTestsFixture fixture)
         string accountId,
         string direction,
         decimal amount,
-        string idempotencyKey)
+        string? idempotencyKey)
     {
         var csrf = await client.GetFromJsonAsync<JsonElement>("/api/session/csrf");
         using var request = new HttpRequestMessage(HttpMethod.Post, $"/api/accounts/{accountId}/{direction}")
@@ -170,7 +186,10 @@ public sealed class CashTransactionApiTests(BankOfZTestsFixture fixture)
             Content = JsonContent.Create(new { amount })
         };
         request.Headers.Add("X-XSRF-TOKEN", csrf.GetProperty("token").GetString());
-        request.Headers.Add("Idempotency-Key", idempotencyKey);
+        if (idempotencyKey is not null)
+        {
+            request.Headers.Add("Idempotency-Key", idempotencyKey);
+        }
         return await client.SendAsync(request);
     }
 

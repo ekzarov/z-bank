@@ -13,15 +13,15 @@ progress:
     not the full nine-slice migration.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 41
-    claude_usable_reports: 30
+    claude_sessions_started: 42
+    claude_usable_reports: 31
     codex_sessions_started: 35
     codex_usable_reports: 28
     deterministic_batches_covered: 17
     active_sessions: 0
     blocked_or_invalid_sessions: 20
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T21:32:00+02:00
+  updated_at: 2026-07-22T21:43:00+02:00
 
 methodology_stage:
   number: 7

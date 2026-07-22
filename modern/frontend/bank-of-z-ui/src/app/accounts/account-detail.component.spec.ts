@@ -46,7 +46,7 @@ describe('AccountDetailComponent', () => {
   });
 
   it('books cash and reloads the account with the resulting balance', () => {
-    api.bookCash.mockReturnValue(of({ reference: '000000000042', availableBalance: 125, currency: 'GBP' }));
+    api.bookCash.mockReturnValue(of({ reference: '0123456789abcdef0123456789abcdef', availableBalance: 125, currency: 'GBP' }));
     const fixture = TestBed.createComponent(AccountDetailComponent);
     fixture.detectChanges();
 
@@ -60,7 +60,7 @@ describe('AccountDetailComponent', () => {
 
     expect(api.bookCash).toHaveBeenCalledWith('10000001', 'deposit', 125);
     expect(api.find).toHaveBeenCalledTimes(2);
-    expect(fixture.nativeElement.querySelector('[role="status"]').textContent).toContain('000000000042');
+    expect(fixture.nativeElement.querySelector('[role="status"]').textContent).toContain('0123456789abcdef0123456789abcdef');
   });
 });
 

@@ -120,7 +120,7 @@ test('operator can manage an account and book cash with insufficient-funds prote
   await page.getByLabel('Operation').selectOption('deposit');
   await page.getByLabel('Amount').fill('125.00');
   await page.getByRole('button', { name: 'Book operation' }).click();
-  await expect(page.getByRole('status')).toContainText(/Deposit \d{12} booked/);
+  await expect(page.getByRole('status')).toContainText(/Deposit [0-9a-f]{32} booked/);
   await expect(page.locator('.balance-band')).toContainText('£125.00');
 
   await page.getByLabel('Operation').selectOption('withdrawal');
@@ -131,7 +131,7 @@ test('operator can manage an account and book cash with insufficient-funds prote
 
   await page.getByLabel('Amount').fill('125.00');
   await page.getByRole('button', { name: 'Book operation' }).click();
-  await expect(page.getByRole('status')).toContainText(/Withdrawal \d{12} booked/);
+  await expect(page.getByRole('status')).toContainText(/Withdrawal [0-9a-f]{32} booked/);
   await expect(page.locator('.balance-band')).toContainText('£0.00');
 
   await page.getByRole('button', { name: 'Edit terms' }).click();
