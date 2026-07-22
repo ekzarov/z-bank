@@ -1,0 +1,26 @@
+.workspace { width: min(1240px, calc(100% - 32px)); padding-top: 36px; }
+.page-heading, .editor-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.search { margin: 22px 0; padding: 18px; border: 1px solid #cbd8de; background: #fff; }
+.search label, label { display: grid; gap: 6px; font-size: .85rem; font-weight: 650; }
+.search div { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-top: 8px; }
+input, select { width: 100%; min-height: 40px; padding: 8px 10px; border: 1px solid #aebfc8; border-radius: 4px; font: inherit; }
+button { min-height: 40px; padding: 8px 16px; border: 1px solid #2b697d; border-radius: 4px; color: #17455a; background: #fff; cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: .5; }
+.primary { color: #fff; background: #176b79; border-color: #176b79; }
+.danger { color: #9c2f28; border-color: #c66b65; }
+.workspace-grid { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 20px; align-items: start; }
+aside, .editor { padding: 22px; border: 1px solid #cbd8de; border-radius: 6px; background: #fff; }
+.result { width: 100%; margin-bottom: 8px; text-align: left; border-color: #d4dee3; }
+.result strong, .result span { display: block; }
+.result span, .muted { color: #637985; font-size: .85rem; }
+.result.active { border-color: #176b79; background: #eef8f8; }
+fieldset { margin: 20px 0 14px; padding: 0; border: 0; }
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.wide { grid-column: 1 / -1; }
+.actions { display: flex; gap: 10px; }
+.status { padding: 5px 9px; color: #285c3c; background: #e2f2e7; border-radius: 4px; text-transform: capitalize; }
+.notice, .error { padding: 12px 14px; border-left: 4px solid #2d7f91; background: #fff; }
+.error { border-color: #b54840; color: #862922; }
+dl { display: grid; grid-template-columns: repeat(4, 1fr); margin: 22px 0 0; border-top: 1px solid #dce4e8; }
+dl div { padding-top: 14px; } dt { color: #637985; font-size: .75rem; } dd { margin: 4px 0 0; }
+@media (max-width: 820px) { .workspace-grid { grid-template-columns: 1fr; } .fields { grid-template-columns: 1fr; } .wide { grid-column: auto; } dl { grid-template-columns: repeat(2, 1fr); } }

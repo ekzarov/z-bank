@@ -1,13 +1,17 @@
+using BankOfZ.Application.Customers;
 using BankOfZ.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace BankOfZ.IntegrationTests;
 
-public sealed class BankOfZApiFactory(string connectionString) : WebApplicationFactory<Program>
+public sealed class BankOfZApiFactory(
+    string connectionString,
+    CustomerOptions? customerOptions = null) : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -27,6 +31,11 @@ public sealed class BankOfZApiFactory(string connectionString) : WebApplicationF
                 service.ServiceType == typeof(DbContextOptions<BankOfZIdentityContext>));
             services.Remove(descriptor);
             services.AddDbContext<BankOfZIdentityContext>(options => options.UseSqlServer(connectionString));
+            if (customerOptions is not null)
+            {
+                services.RemoveAll<CustomerOptions>();
+                services.AddSingleton(customerOptions);
+            }
         });
     }
 }
