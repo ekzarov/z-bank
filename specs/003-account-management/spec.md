@@ -49,7 +49,8 @@ ineligible accounts remain unchanged with a clear result.
   types are ISA, CURRENT, LOAN, SAVING, and MORTGAGE. Interest is non-negative,
   at most `9999.99`, and has at most two decimals; loan/mortgage interest is
   non-zero; overdraft is a non-negative integer. Creation SHALL reject an
-  eleventh account. The system generates the account number, derives the
+  eleventh active account; closed accounts retained for history do not consume
+  this limit. The system generates the account number, derives the
   validated sort code from bank configuration, assigns the opening date,
   initializes balances to zero, and manages statement dates (D-016/D-020).
 - **FR-006A** Metadata updates SHALL never accept or change actual/available
@@ -74,7 +75,8 @@ ineligible accounts remain unchanged with a clear result.
 ## Success Criteria
 
 - Unit tests cover type mapping, exact rate/overdraft/default rules, the
-  ten-account limit, statement-date ownership, and lifecycle/product rules.
+  ten-active-account limit, statement-date ownership, and lifecycle/product
+  rules; API tests reject omitted required product type.
 - SQL Server tests cover ownership FK, typed constraints, precision, optimistic
   concurrency, closure eligibility, audit atomicity, and rollback of the full
   identifier-allocation/account/audit creation transaction.

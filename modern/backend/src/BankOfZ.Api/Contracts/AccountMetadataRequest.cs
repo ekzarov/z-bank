@@ -1,9 +1,10 @@
+using System.Text.Json.Serialization;
 using BankOfZ.Domain.Accounts;
 
 namespace BankOfZ.Api.Contracts;
 
 public sealed record AccountMetadataRequest(
-    AccountType Type,
+    [property: JsonRequired] AccountType Type,
     decimal InterestRate,
     int OverdraftLimit,
     string Currency)

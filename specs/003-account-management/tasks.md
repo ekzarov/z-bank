@@ -1,7 +1,7 @@
 # Tasks: Account Management and Balances
 
 - [x] T001 Add unit tests for account type normalization, validation, balance
-  representation, the ten-account customer limit, system-managed statement
+  representation, the ten-active-account customer limit, system-managed statement
   dates, generated account/default fields, configured bank sort code, exact
   interest/overdraft boundaries, metadata
   balance immutability, and lifecycle eligibility.
@@ -10,7 +10,7 @@
   constraints, and atomic rollback of identifier allocation/account/audit
   creation.
 - [x] T003 Add API tests for customer/operator access, list/detail, CRUD,
-  empty/not-found, validation, eleventh-account rejection, statement-date
+  empty/not-found, required product type validation, eleventh-active-account rejection, statement-date
   protection, Problem Details for list/detail/balance, safe closure, direct
   deep links/invalid parameters, and standard failures.
 - [x] T004 Implement account domain, application use cases, repository queries,
