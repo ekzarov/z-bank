@@ -3,7 +3,7 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 72
+  current_stage_percent: 88
   overall_percent_estimate: 98
   estimate_only: true
   estimate_basis: >-
@@ -18,13 +18,13 @@ progress:
     an explicit external IBM-runtime risk.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 76
-    claude_usable_reports: 57
+    claude_sessions_started: 78
+    claude_usable_reports: 58
     codex_sessions_started: 37
     codex_usable_reports: 30
     deterministic_batches_covered: 23
     active_sessions: 0
-    blocked_or_invalid_sessions: 25
+    blocked_or_invalid_sessions: 26
     unresolved_blocked_scopes: 0
   updated_at: 2026-07-23T21:32:00+02:00
 

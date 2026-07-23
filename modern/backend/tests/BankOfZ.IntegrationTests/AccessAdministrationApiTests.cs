@@ -87,6 +87,13 @@ public sealed class AccessAdministrationApiTests(BankOfZTestsFixture fixture)
             new { role = "Operator", customerId = (string?)null, version });
         Assert.Equal(HttpStatusCode.Conflict, stale.StatusCode);
 
+        var missingVersion = await SendWithCsrfAsync(
+            client,
+            HttpMethod.Put,
+            $"/api/administration/users/{id}/lockout",
+            new { locked = true });
+        Assert.Equal(HttpStatusCode.BadRequest, missingVersion.StatusCode);
+
         var delete = await SendWithCsrfAsync(
             client,
             HttpMethod.Delete,
@@ -151,6 +158,60 @@ public sealed class AccessAdministrationApiTests(BankOfZTestsFixture fixture)
             $"/api/administration/security-audit?eventName=user-locked&actorOrSubject={id}&succeeded=false");
         Assert.True(audit.GetProperty("total").GetInt32() >= 1);
         Assert.Equal("conflict", audit.GetProperty("items")[0].GetProperty("outcome").GetString());
+    }
+
+    [Fact]
+    public async Task Concurrent_Administrator_Lockouts_Preserve_An_Unlocked_Administrator()
+    {
+        using var bootstrap = CreateClient();
+        await LoginAsync(bootstrap, "administrator");
+        await CreateAdministratorAsync(bootstrap, "administrator-a");
+        await CreateAdministratorAsync(bootstrap, "administrator-b");
+
+        using var first = CreateClient();
+        using var second = CreateClient();
+        (await LoginResponseAsync(first, "administrator-a", "Temporary-Password-123!"))
+            .EnsureSuccessStatusCode();
+        (await LoginResponseAsync(second, "administrator-b", "Temporary-Password-123!"))
+            .EnsureSuccessStatusCode();
+
+        var original = await FindUserAsync(first, "administrator");
+        var lockOriginal = await SendWithCsrfAsync(
+            first,
+            HttpMethod.Put,
+            $"/api/administration/users/{original.GetProperty("id").GetGuid()}/lockout",
+            new { locked = true, version = original.GetProperty("version").GetString() });
+        lockOriginal.EnsureSuccessStatusCode();
+
+        var firstUser = await FindUserAsync(second, "administrator-a");
+        var secondUser = await FindUserAsync(first, "administrator-b");
+        var attempts = await Task.WhenAll(
+            SendWithCsrfAsync(
+                first,
+                HttpMethod.Put,
+                $"/api/administration/users/{secondUser.GetProperty("id").GetGuid()}/lockout",
+                new { locked = true, version = secondUser.GetProperty("version").GetString() }),
+            SendWithCsrfAsync(
+                second,
+                HttpMethod.Put,
+                $"/api/administration/users/{firstUser.GetProperty("id").GetGuid()}/lockout",
+                new { locked = true, version = firstUser.GetProperty("version").GetString() }));
+
+        Assert.Contains(attempts, response => response.StatusCode == HttpStatusCode.OK);
+        Assert.Contains(attempts, response => response.StatusCode == HttpStatusCode.Conflict);
+
+        await using var scope = Fixture.Factory.Services.CreateAsyncScope();
+        var context = scope.ServiceProvider.GetRequiredService<BankOfZIdentityContext>();
+        var administratorRole = await context.Roles
+            .SingleAsync(role => role.Name == "Administrator");
+        var unlockedAdministrators = await (
+            from userRole in context.UserRoles
+            join user in context.Users on userRole.UserId equals user.Id
+            where userRole.RoleId == administratorRole.Id
+                && (!user.LockoutEnabled || user.LockoutEnd == null || user.LockoutEnd <= DateTimeOffset.UtcNow)
+            select user.Id)
+            .CountAsync();
+        Assert.True(unlockedAdministrators >= 1);
     }
 
     [Fact]
@@ -224,6 +285,23 @@ public sealed class AccessAdministrationApiTests(BankOfZTestsFixture fixture)
     private static async Task LoginAsync(HttpClient client, string userName)
     {
         var response = await LoginResponseAsync(client, userName, "Demo-Password-123!");
+        response.EnsureSuccessStatusCode();
+    }
+
+    private static async Task CreateAdministratorAsync(HttpClient client, string userName)
+    {
+        var response = await SendWithCsrfAsync(
+            client,
+            HttpMethod.Post,
+            "/api/administration/users",
+            new
+            {
+                userName,
+                email = $"{userName}@example.test",
+                password = "Temporary-Password-123!",
+                role = "Administrator",
+                customerId = (string?)null
+            });
         response.EnsureSuccessStatusCode();
     }
 

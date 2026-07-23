@@ -74,7 +74,7 @@ export class AccessAdministrationComponent {
         const refreshed = page.items.find(user => user.id === selectedId) ?? null;
         if (selectedId) this.selectUser(refreshed);
       },
-      error: () => this.error.set('Users could not be loaded.')
+      error: response => this.handleLoadError(response, 'Users could not be loaded.')
     });
   }
 
@@ -121,6 +121,7 @@ export class AccessAdministrationComponent {
     const user = this.selected();
     if (!user || this.roleForm.invalid) return;
     const value = this.roleForm.getRawValue();
+    if (!confirm(`Change ${user.userName}'s role to ${value.role}?`)) return;
     this.saving.set(true);
     this.clearFeedback();
     this.api.changeRole(
@@ -160,7 +161,7 @@ export class AccessAdministrationComponent {
           this.auditEntries.set(page.items);
           this.auditTotal.set(page.total);
         },
-        error: () => this.error.set('Security audit could not be loaded.')
+        error: response => this.handleLoadError(response, 'Security audit could not be loaded.')
       });
   }
 
@@ -176,6 +177,12 @@ export class AccessAdministrationComponent {
       return;
     }
     this.error.set(response.error?.title ?? fallback);
+  }
+
+  private handleLoadError(response: HttpErrorResponse, fallback: string): void {
+    this.error.set(response.status === 403
+      ? 'Administrator access is required.'
+      : fallback);
   }
 
   private clearFeedback(): void {

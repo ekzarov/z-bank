@@ -67,7 +67,7 @@ public sealed class SessionController(
                 null,
                 false,
                 "invalid-credentials",
-                HttpContext.TraceIdentifier));
+                SecurityAuditLimits.NormalizeCorrelationId(HttpContext.TraceIdentifier)));
             return Unauthorized(GenericLoginProblem());
         }
 
@@ -85,7 +85,7 @@ public sealed class SessionController(
                 user.Id.ToString(),
                 false,
                 result.IsLockedOut ? "locked-out" : "invalid-credentials",
-                HttpContext.TraceIdentifier));
+                SecurityAuditLimits.NormalizeCorrelationId(HttpContext.TraceIdentifier)));
             return Unauthorized(GenericLoginProblem());
         }
 
@@ -96,7 +96,7 @@ public sealed class SessionController(
             user.Id.ToString(),
             true,
             "authenticated",
-            HttpContext.TraceIdentifier));
+            SecurityAuditLimits.NormalizeCorrelationId(HttpContext.TraceIdentifier)));
         return Ok(new SessionResponse(true, user.UserName, user.CustomerId, roles.ToArray()));
     }
 
@@ -112,7 +112,7 @@ public sealed class SessionController(
             subjectId,
             true,
             "session-revoked",
-            HttpContext.TraceIdentifier));
+            SecurityAuditLimits.NormalizeCorrelationId(HttpContext.TraceIdentifier)));
         return NoContent();
     }
 

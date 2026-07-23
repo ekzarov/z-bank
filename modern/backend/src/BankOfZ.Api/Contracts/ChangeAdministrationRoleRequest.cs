@@ -1,6 +1,8 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace BankOfZ.Api.Contracts;
 
 public sealed record ChangeAdministrationRoleRequest(
-    string Role,
-    string? CustomerId,
-    string Version);
+    [Required, MaxLength(32)] string Role,
+    [MaxLength(10)] string? CustomerId,
+    [Required] string Version);

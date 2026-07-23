@@ -42,7 +42,7 @@ public sealed class AccessAdministrationController(
                 request.Role,
                 request.CustomerId),
             ActorId(),
-            HttpContext.TraceIdentifier,
+            SecurityAuditLimits.NormalizeCorrelationId(HttpContext.TraceIdentifier),
             cancellationToken);
         return CreatedAtAction(nameof(FindUser), new { id = result.Id }, result);
     }
@@ -56,7 +56,7 @@ public sealed class AccessAdministrationController(
             id,
             new(request.Role, request.CustomerId, request.Version),
             ActorId(),
-            HttpContext.TraceIdentifier,
+            SecurityAuditLimits.NormalizeCorrelationId(HttpContext.TraceIdentifier),
             cancellationToken));
 
     [HttpPut("users/{id:guid}/lockout")]
@@ -68,7 +68,7 @@ public sealed class AccessAdministrationController(
             id,
             new(request.Locked, request.Version),
             ActorId(),
-            HttpContext.TraceIdentifier,
+            SecurityAuditLimits.NormalizeCorrelationId(HttpContext.TraceIdentifier),
             cancellationToken));
 
     [HttpGet("security-audit")]
