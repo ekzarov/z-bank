@@ -9,6 +9,9 @@ public static class CatalogModelConstants
         public const string Accounts = "Accounts";
         public const string AccountAuditEntries = "AccountAuditEntries";
         public const string BookedTransactions = "BookedTransactions";
+        public const string StatementSnapshots = "StatementSnapshots";
+        public const string StatementTransactionSnapshots = "StatementTransactionSnapshots";
+        public const string StatementAuditEntries = "StatementAuditEntries";
     }
 
     public static class Sequences
@@ -24,6 +27,10 @@ public static class CatalogModelConstants
         public const int Result = 32;
         public const int CorrelationId = 64;
         public const int Currency = 3;
+        public const int StatementDataVersion = 64;
+        public const int StatementDescription = 128;
+        public const int StatementFailure = 512;
+        public const int StatementAccountType = 32;
     }
 
     public static class Precision
@@ -32,6 +39,8 @@ public static class CatalogModelConstants
         public const int MoneyScale = 2;
         public const int Interest = 6;
         public const int InterestScale = 2;
+        public const int StatementMoney = 18;
+        public const int StatementMoneyScale = 2;
     }
 
     public static class Constraints
@@ -45,5 +54,7 @@ public static class CatalogModelConstants
         public const string TransactionAmount = "CK_BookedTransactions_Amount";
         public const string TransactionCurrency = "CK_BookedTransactions_Currency";
         public const string TransactionSourceSystem = "CK_BookedTransactions_SourceSystem";
+        public const string StatementMonth = "CK_StatementSnapshots_Month";
+        public const string StatementTransactionDirection = "CK_StatementTransactionSnapshots_Direction";
     }
 }

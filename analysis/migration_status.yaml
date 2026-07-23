@@ -4,28 +4,28 @@ updated: 2026-07-23
 
 progress:
   current_stage_percent: 0
-  overall_percent_estimate: 86
+  overall_percent_estimate: 93
   estimate_only: true
   estimate_basis: >-
-    Full migration estimate: shared Stages 1-6 and six of nine iterative
-    implementation/delivery/acceptance slices are complete. Feature 006 passed
-    code/test gates, peer review, public delivery, live revision, and clean
-    independent acceptance. Feature 007 is the next delivery slice.
+    Full migration estimate: shared Stages 1-6 and seven of nine iterative
+    slices are accepted. Feature 007 passed implementation, peer review,
+    public delivery, live revision, Pass 010 correction, and clean independent
+    repeat acceptance. Feature 008 is the next delivery slice.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 59
-    claude_usable_reports: 41
-    codex_sessions_started: 35
-    codex_usable_reports: 28
+    claude_sessions_started: 63
+    claude_usable_reports: 45
+    codex_sessions_started: 37
+    codex_usable_reports: 30
     deterministic_batches_covered: 23
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T13:53:00+02:00
+  updated_at: 2026-07-23T15:31:00+02:00
 
 methodology_stage:
   number: 7
-  name: Coding - Feature 007 monthly statements
+  name: Coding - Feature 008 data initialization
   status: ready-to-start
   last_completed_stage: 10
   incomplete_stages:
@@ -34,14 +34,14 @@ methodology_stage:
 
 next_action:
   actor: OpenAI Codex orchestrator
-  feature: 007-monthly-statements
+  feature: 008-data-initialization
   stage: 7
   instruction: >-
-    Implement and test the approved Feature 007 monthly-statements slice,
-    synchronize its SDD/tasks/workbook, and repeat Stages 8-10.
+    Implement and test the approved Feature 008 explicit migration and import
+    slice, synchronize its SDD/tasks/workbook, and repeat Stages 8-10.
   completion_gate: >-
-    Feature 006 code, tests, SDD/tasks/workbook, deployment, and independent
-    acceptance are clean before Feature 007 starts.
+    Feature 007 code, tests, SDD/tasks/workbook, public delivery, Pass 010
+    correction, and clean Pass 011 acceptance are complete.
 
 stage_3_fallback_result:
   mode: simulate
@@ -237,6 +237,18 @@ review_passes:
     agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
     result: clean
     report: analysis/reviews/stage-10-pass-009.md
+  - stage: 10
+    pass: 10
+    date: 2026-07-23
+    agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: findings
+    report: analysis/reviews/stage-10-pass-010.md
+  - stage: 10
+    pass: 11
+    date: 2026-07-23
+    agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: clean
+    report: analysis/reviews/stage-10-pass-011.md
 
 accepted_slices:
   - feature: 001-secure-access-shell
@@ -269,6 +281,11 @@ accepted_slices:
     stage_10_pass: 9
     report: analysis/reviews/stage-10-pass-009.md
     workbook_rows: 7
+  - feature: 007-monthly-statements
+    accepted_on: 2026-07-23
+    stage_10_pass: 11
+    report: analysis/reviews/stage-10-pass-011.md
+    workbook_rows: 8
 
 owner_gates:
   constitution_ratification:

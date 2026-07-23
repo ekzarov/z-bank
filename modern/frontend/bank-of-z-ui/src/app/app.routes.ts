@@ -11,15 +11,20 @@ import { CustomerWorkspaceComponent } from './customers/customer-workspace.compo
 import { AccountDetailComponent } from './accounts/account-detail.component';
 import { TransactionHistoryComponent } from './accounts/transaction-history.component';
 import { TransactionHistoryDetailComponent } from './accounts/transaction-history-detail.component';
+import { BulkStatementsComponent } from './statements/bulk-statements.component';
+import { StatementComponent } from './statements/statement.component';
 
 export const routes: Routes = [
   { path: 'sign-in', component: SignInComponent },
   { path: 'unavailable', component: UnavailableComponent },
   { path: '', component: DashboardComponent, canActivate: [authGuard] },
   { path: 'customer', component: CustomerProfileComponent, canActivate: [authGuard, roleGuard], data: { role: 'Customer' } },
+  { path: 'operations/statements', component: BulkStatementsComponent, canActivate: [authGuard, roleGuard], data: { role: 'Operator' } },
   { path: 'operations', component: CustomerWorkspaceComponent, canActivate: [authGuard, roleGuard], data: { role: 'Operator' } },
   { path: 'accounts/:id/transactions/:reference', component: TransactionHistoryDetailComponent, canActivate: [authGuard] },
   { path: 'accounts/:id/transactions', component: TransactionHistoryComponent, canActivate: [authGuard] },
+  { path: 'accounts/:id/statements/:generationId', component: StatementComponent, canActivate: [authGuard] },
+  { path: 'accounts/:id/statements', component: StatementComponent, canActivate: [authGuard] },
   { path: 'accounts/:id', component: AccountDetailComponent, canActivate: [authGuard] },
   { path: 'administration', component: RoleWorkspaceComponent, canActivate: [authGuard, roleGuard], data: { role: 'Administrator', title: 'Access administration' } },
   { path: '**', component: NotFoundComponent }

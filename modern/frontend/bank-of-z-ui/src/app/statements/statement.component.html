@@ -1,0 +1,80 @@
+<section class="page statement-page">
+  <a class="back no-print" [routerLink]="['/accounts', accountId()]">Account details</a>
+  <header class="page-heading no-print">
+    <div><p class="eyebrow">Monthly statements</p><h1>Account {{ accountId() }}</h1></div>
+    @if (statement()) { <button type="button" (click)="print()">Print statement</button> }
+  </header>
+
+  <form class="period-form no-print" [formGroup]="form" (ngSubmit)="generate()">
+    <label>Year<input type="number" min="2000" max="2100" formControlName="year"></label>
+    <label>Month<select formControlName="month">
+      <option [ngValue]="1">January</option><option [ngValue]="2">February</option>
+      <option [ngValue]="3">March</option><option [ngValue]="4">April</option>
+      <option [ngValue]="5">May</option><option [ngValue]="6">June</option>
+      <option [ngValue]="7">July</option><option [ngValue]="8">August</option>
+      <option [ngValue]="9">September</option><option [ngValue]="10">October</option>
+      <option [ngValue]="11">November</option><option [ngValue]="12">December</option>
+    </select></label>
+    <button class="primary" type="submit" [disabled]="form.invalid || loading()">
+      {{ loading() ? 'Generating...' : 'Generate statement' }}
+    </button>
+  </form>
+
+  @if (error()) { <p class="error no-print" role="alert">{{ error() }}</p> }
+
+  @if (statement(); as value) {
+    <article class="statement" aria-label="Monthly statement">
+      <header class="statement-heading">
+        <div><p class="brand">Bank of Z</p><h2>Monthly account statement</h2></div>
+        <dl>
+          <div><dt>Statement date</dt><dd>{{ value.statementDate | date:'longDate':'UTC' }}</dd></div>
+          <div><dt>Period</dt><dd>{{ value.periodStartUtc | date:'mediumDate':'UTC' }} to {{ value.statementDate | date:'mediumDate':'UTC' }}</dd></div>
+        </dl>
+      </header>
+
+      <section class="identity-grid">
+        <div><p class="eyebrow">Customer</p><strong>{{ value.customerName }}</strong><p class="preline">{{ value.customerAddress }}</p><p>{{ value.customerPhone || 'No phone provided' }}</p></div>
+        <div><p class="eyebrow">Account</p><strong>{{ value.sortCode }} / {{ value.accountId }}</strong><p>{{ value.accountType | titlecase }} &middot; {{ value.currency }}</p><p>{{ value.interestRate }}% interest &middot; {{ value.overdraftLimit | currency:value.currency:'symbol':'1.0-0' }} overdraft</p></div>
+      </section>
+
+      <section class="summary" aria-label="Statement summary">
+        <div><span>Opening balance</span><strong>{{ value.openingBalance | currency:value.currency:'symbol':'1.2-2' }}</strong></div>
+        <div><span>Credits</span><strong class="credit">{{ value.totalCredits | currency:value.currency:'symbol':'1.2-2' }}</strong></div>
+        <div><span>Debits</span><strong class="debit">{{ value.totalDebits | currency:value.currency:'symbol':'1.2-2' }}</strong></div>
+        <div><span>Closing balance</span><strong>{{ value.closingBalance | currency:value.currency:'symbol':'1.2-2' }}</strong></div>
+        <div><span>Available</span><strong>{{ value.availableBalance | currency:value.currency:'symbol':'1.2-2' }}</strong></div>
+      </section>
+
+      <section class="transactions" aria-label="Statement transactions">
+        <h3>Transactions <span>{{ value.transactionCount }}</span></h3>
+        @if (value.transactions.length) {
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Reference</th><th>Description</th><th>Type</th><th>Amount</th></tr></thead>
+              <tbody>
+                @for (transaction of value.transactions; track transaction.reference) {
+                  <tr>
+                    <td>{{ transaction.bookedAt | date:'medium':'UTC' }}</td>
+                    <td class="mono">{{ transaction.reference }}</td>
+                    <td>{{ transaction.description }}</td>
+                    <td>{{ transaction.direction | titlecase }}</td>
+                    <td [class.credit]="transaction.direction === 'deposit'" [class.debit]="transaction.direction === 'withdrawal'">
+                      {{ transaction.direction === 'withdrawal' ? '-' : '+' }}{{ transaction.amount | currency:value.currency:'symbol':'1.2-2' }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <div class="empty"><h3>No transactions for this period</h3><p>This is a valid statement with zero transaction activity.</p></div>
+        }
+      </section>
+
+      <footer>
+        <span>Generation {{ value.generationId }}</span>
+        <span>Generated {{ value.generatedAt | date:'medium':'UTC' }} &middot; data as of {{ value.dataAsOf | date:'medium':'UTC' }}</span>
+      </footer>
+    </article>
+  }
+</section>

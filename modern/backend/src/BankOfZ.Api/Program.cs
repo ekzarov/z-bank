@@ -15,6 +15,8 @@ using BankOfZ.Infrastructure.Customers;
 using BankOfZ.Infrastructure.Persistence;
 using BankOfZ.Application.Transactions;
 using BankOfZ.Infrastructure.Transactions;
+using BankOfZ.Application.Statements;
+using BankOfZ.Infrastructure.Statements;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
@@ -106,6 +108,11 @@ builder.Services.AddScoped<InternalTransferService>();
 builder.Services.AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>();
 builder.Services.AddScoped<TransactionHistoryService>();
 builder.Services.AddSingleton<HistoryCursorCodec>();
+builder.Services.AddSingleton(
+    builder.Configuration.GetSection(StatementOptions.SectionName).Get<StatementOptions>()
+    ?? new StatementOptions());
+builder.Services.AddScoped<IStatementRepository, StatementRepository>();
+builder.Services.AddScoped<StatementService>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICustomerAuditWriter, CustomerAuditWriter>();
 builder.Services.AddScoped<ICustomerAccountStatusReader, CustomerAccountStatusReader>();
@@ -117,6 +124,7 @@ builder.Services.AddExceptionHandler<CustomerExceptionHandler>();
 builder.Services.AddExceptionHandler<AccountExceptionHandler>();
 builder.Services.AddExceptionHandler<CashTransactionExceptionHandler>();
 builder.Services.AddExceptionHandler<TransactionHistoryExceptionHandler>();
+builder.Services.AddExceptionHandler<StatementExceptionHandler>();
 builder.Services.AddHealthChecks();
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {

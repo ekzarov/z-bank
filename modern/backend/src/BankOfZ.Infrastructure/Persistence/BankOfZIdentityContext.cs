@@ -1,6 +1,7 @@
 using BankOfZ.Domain.Accounts;
 using BankOfZ.Domain.Customers;
 using BankOfZ.Domain.Transactions;
+using BankOfZ.Domain.Statements;
 using BankOfZ.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -16,6 +17,9 @@ public sealed class BankOfZIdentityContext(DbContextOptions<BankOfZIdentityConte
     public DbSet<Account> Accounts => Set<Account>();
     public DbSet<AccountAuditRecord> AccountAuditEntries => Set<AccountAuditRecord>();
     public DbSet<BookedTransaction> BookedTransactions => Set<BookedTransaction>();
+    public DbSet<StatementSnapshot> StatementSnapshots => Set<StatementSnapshot>();
+    public DbSet<StatementTransactionSnapshot> StatementTransactionSnapshots => Set<StatementTransactionSnapshot>();
+    public DbSet<StatementAuditRecord> StatementAuditEntries => Set<StatementAuditRecord>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
