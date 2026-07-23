@@ -1,33 +1,33 @@
 schema_version: 1
 project: Bank of Z modernization
-updated: 2026-07-22
+updated: 2026-07-23
 
 progress:
-  current_stage_percent: 75
-  overall_percent_estimate: 74
+  current_stage_percent: 25
+  overall_percent_estimate: 75
   estimate_only: true
   estimate_basis: >-
     Full migration estimate: shared Stages 1-6 and four of nine iterative
     implementation/delivery/acceptance slices are complete. Feature 005 code,
-    tests, migration, Docker smoke, and local E2E are complete; peer review,
-    public deployment, documentation closure, and slice acceptance remain.
+    tests, workbook closure, local Docker/E2E, and two-round backend/UI peer
+    review are complete; public delivery and independent acceptance remain.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 46
-    claude_usable_reports: 33
+    claude_sessions_started: 55
+    claude_usable_reports: 37
     codex_sessions_started: 35
     codex_usable_reports: 28
-    deterministic_batches_covered: 17
+    deterministic_batches_covered: 19
     active_sessions: 0
-    blocked_or_invalid_sessions: 22
+    blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T12:00:00+02:00
+  updated_at: 2026-07-23T13:30:00+02:00
 
 methodology_stage:
-  number: 7
-  name: Coding - Feature 005 funds transfers
-  status: implementation-candidate-awaiting-peer-review
-  last_completed_stage: 10
+  number: 8
+  name: Delivery - Feature 005 funds transfers
+  status: peer-reviewed-candidate-awaiting-public-delivery
+  last_completed_stage: 7
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
@@ -35,10 +35,10 @@ methodology_stage:
 next_action:
   actor: OpenAI Codex orchestrator
   feature: 005-funds-transfers
-  stage: 7
+  stage: 8
   instruction: >-
-    Run a fresh read-only Claude peer review of the immutable Feature 005
-    candidate, resolve confirmed findings, then repeat Stages 8-10 before
+    Deploy the peer-reviewed Feature 005 candidate with explicit migration and
+    demo provisioning, close public smoke, then complete Stages 9-10 before
     Feature 006 starts.
   completion_gate: >-
     Feature 005 code, tests, SDD/tasks/workbook, deployment, and independent
