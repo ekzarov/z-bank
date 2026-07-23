@@ -3,7 +3,7 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 90
+  current_stage_percent: 95
   overall_percent_estimate: 99
   estimate_only: true
   estimate_basis: >-
@@ -13,20 +13,20 @@ progress:
     revision, and final Stage 10 acceptance remain.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 68
-    claude_usable_reports: 49
+    claude_sessions_started: 69
+    claude_usable_reports: 50
     codex_sessions_started: 37
     codex_usable_reports: 30
     deterministic_batches_covered: 23
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T17:56:48+02:00
+  updated_at: 2026-07-23T18:03:55+02:00
 
 methodology_stage:
   number: 7
   name: Coding - Feature 009 delivery operations
-  status: peer-review-corrections-ready-for-repeat-review
+  status: peer-review-complete-ready-for-deployment
   last_completed_stage: 10
   incomplete_stages:
     - 3
@@ -37,9 +37,9 @@ next_action:
   feature: 009-delivery-operations
   stage: 7
   instruction: >-
-    Run a fresh Claude repeat review over the Feature 009 correction diff.
-    When clean, merge and deploy it, reconcile live behavior, and obtain a
-    fresh Stage 10 acceptance pass.
+    Commit the final test-only peer-review correction, merge Feature 009,
+    deploy it, reconcile live behavior, and obtain a fresh Stage 10 acceptance
+    pass.
   completion_gate: >-
     Feature 008 is accepted by clean Stage 10 Pass 012 and T008 is complete.
 

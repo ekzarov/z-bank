@@ -48,7 +48,7 @@ public sealed class FinancialFailureDiagnosticsTests(BankOfZTestsFixture fixture
             client,
             HttpMethod.Post,
             "/api/accounts/10000001/transfers?password=must-not-be-logged",
-            new { destinationAccountId = "10000002", amount = 40m },
+            new { destinationAccountId = "10000002", amount = 1234.56m },
             "transfer-failure",
             correlationId);
 
@@ -58,7 +58,7 @@ public sealed class FinancialFailureDiagnosticsTests(BankOfZTestsFixture fixture
         await using var scope = Fixture.Factory.Services.CreateAsyncScope();
         var context = scope.ServiceProvider.GetRequiredService<BankOfZIdentityContext>();
         var accounts = await context.Accounts.OrderBy(account => account.Id).ToArrayAsync();
-        Assert.Equal(100m, accounts[0].ActualBalance);
+        Assert.Equal(2000m, accounts[0].ActualBalance);
         Assert.Equal(0m, accounts[1].ActualBalance);
         Assert.Empty(await context.BookedTransactions
             .Where(transaction => transaction.TransferCorrelationId != null)
@@ -75,7 +75,7 @@ public sealed class FinancialFailureDiagnosticsTests(BankOfZTestsFixture fixture
         Assert.Equal("/api/accounts/10000001/transfers", failure.Properties["Path"]);
         Assert.DoesNotContain("must-not-be-logged", failure.Message, StringComparison.Ordinal);
         Assert.DoesNotContain("transfer-failure", failure.Message, StringComparison.Ordinal);
-        Assert.DoesNotContain("40", failure.Message, StringComparison.Ordinal);
+        Assert.DoesNotContain("1234.56", failure.Message, StringComparison.Ordinal);
     }
 
     private static HttpClient CreateClient(BankOfZApiFactory factory) =>
@@ -110,7 +110,7 @@ public sealed class FinancialFailureDiagnosticsTests(BankOfZTestsFixture fixture
             client,
             HttpMethod.Post,
             "/api/accounts/10000001/deposits",
-            new { amount = 100m },
+            new { amount = 2000m },
             "failure-test-funding");
 
     private static async Task<HttpResponseMessage> SendMutationAsync(
