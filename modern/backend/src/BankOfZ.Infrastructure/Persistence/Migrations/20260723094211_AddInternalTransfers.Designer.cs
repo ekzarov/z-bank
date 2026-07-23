@@ -4,6 +4,7 @@ using BankOfZ.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankOfZ.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(BankOfZIdentityContext))]
-    partial class BankOfZIdentityContextModelSnapshot : ModelSnapshot
+    [Migration("20260723094211_AddInternalTransfers")]
+    partial class AddInternalTransfers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -319,12 +322,12 @@ namespace BankOfZ.Infrastructure.Persistence.Migrations
                     b.HasIndex("Reference")
                         .IsUnique();
 
+                    b.HasIndex("TransferCorrelationId");
+
                     b.HasIndex("AccountId", "CreatedAt");
 
                     b.HasIndex("AccountId", "IdempotencyKey")
                         .IsUnique();
-
-                    b.HasIndex("TransferCorrelationId");
 
                     b.ToTable("BookedTransactions", null, t =>
                         {

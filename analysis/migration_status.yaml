@@ -3,13 +3,14 @@ project: Bank of Z modernization
 updated: 2026-07-22
 
 progress:
-  current_stage_percent: 0
-  overall_percent_estimate: 67
+  current_stage_percent: 75
+  overall_percent_estimate: 74
   estimate_only: true
   estimate_basis: >-
     Full migration estimate: shared Stages 1-6 and four of nine iterative
-    implementation/delivery/acceptance slices are complete. Feature 005 is the
-    next slice and final consolidated acceptance remains.
+    implementation/delivery/acceptance slices are complete. Feature 005 code,
+    tests, migration, Docker smoke, and local E2E are complete; peer review,
+    public deployment, documentation closure, and slice acceptance remain.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
     claude_sessions_started: 46
@@ -20,12 +21,12 @@ progress:
     active_sessions: 0
     blocked_or_invalid_sessions: 22
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-22T23:40:00+02:00
+  updated_at: 2026-07-23T12:00:00+02:00
 
 methodology_stage:
   number: 7
   name: Coding - Feature 005 funds transfers
-  status: pending-iterative-implementation
+  status: implementation-candidate-awaiting-peer-review
   last_completed_stage: 10
   incomplete_stages:
     - 3
@@ -36,8 +37,9 @@ next_action:
   feature: 005-funds-transfers
   stage: 7
   instruction: >-
-    Implement Feature 005 as the next isolated slice, run peer review and gates,
-    then repeat Stages 8-10 before Feature 006 starts.
+    Run a fresh read-only Claude peer review of the immutable Feature 005
+    candidate, resolve confirmed findings, then repeat Stages 8-10 before
+    Feature 006 starts.
   completion_gate: >-
     Feature 005 code, tests, SDD/tasks/workbook, deployment, and independent
     acceptance are clean before Feature 006 starts.

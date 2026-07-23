@@ -68,10 +68,17 @@ static async Task EnsureUserAsync(
 {
     if (await users.FindByNameAsync(userName) is { } existing)
     {
-        if (existing.CustomerId != customerId)
+        foreach (var validator in users.PasswordValidators)
         {
-            existing.CustomerId = customerId;
-            EnsureSucceeded(await users.UpdateAsync(existing));
+            EnsureSucceeded(await validator.ValidateAsync(users, existing, password));
+        }
+        existing.CustomerId = customerId;
+        existing.PasswordHash = users.PasswordHasher.HashPassword(existing, password);
+        existing.SecurityStamp = Guid.NewGuid().ToString();
+        EnsureSucceeded(await users.UpdateAsync(existing));
+        if (!await users.IsInRoleAsync(existing, role))
+        {
+            EnsureSucceeded(await users.AddToRoleAsync(existing, role));
         }
         return;
     }

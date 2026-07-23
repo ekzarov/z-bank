@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
-import { Account, AccountMetadata, AccountPage, CashTransaction, CashTransactionDirection } from './account.model';
+import { Account, AccountMetadata, AccountPage, CashTransaction, CashTransactionDirection, InternalTransfer } from './account.model';
 
 @Injectable({ providedIn: 'root' })
 export class AccountApiService {
@@ -36,6 +36,13 @@ export class AccountApiService {
     return this.withCsrf(() => this.http.post<CashTransaction>(
       `api/accounts/${encodeURIComponent(id)}/${endpoint}`,
       { amount },
+      { headers: { 'Idempotency-Key': crypto.randomUUID() } }));
+  }
+
+  transfer(sourceAccountId: string, destinationAccountId: string, amount: number): Observable<InternalTransfer> {
+    return this.withCsrf(() => this.http.post<InternalTransfer>(
+      `api/accounts/${encodeURIComponent(sourceAccountId)}/transfers`,
+      { destinationAccountId, amount },
       { headers: { 'Idempotency-Key': crypto.randomUUID() } }));
   }
 

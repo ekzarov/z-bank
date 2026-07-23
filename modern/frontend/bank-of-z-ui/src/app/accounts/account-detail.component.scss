@@ -9,6 +9,7 @@ dl { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }dt{color:#637
 .actions,.terms-form>div{display:flex;gap:10px}.actions{margin-top:24px;padding-top:20px;border-top:1px solid #dce4e8}
 button{min-height:40px;padding:8px 14px;border:1px solid #2b697d;border-radius:4px;color:#17455a;background:#fff;cursor:pointer}.danger{color:#9c2f28;border-color:#c66b65}.primary{color:#fff;background:#176b79}
 .terms-form{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px;padding:18px;background:#f2f7f8}label{display:grid;gap:6px;font-size:.8rem;font-weight:650}input,select{min-height:40px;padding:8px;border:1px solid #aebfc8;border-radius:4px}.terms-form>div{grid-column:1/-1}
-.cash-panel{margin-top:24px;padding:20px;border-top:1px solid #dce4e8;background:#f7fafb}.cash-panel h2{margin:2px 0 14px;font-size:1.15rem}.cash-panel form{display:grid;grid-template-columns:minmax(150px,1fr) minmax(150px,1fr) auto;gap:12px;align-items:end}.cash-panel button{min-width:150px}
+.cash-panel,.transfer-panel{margin-top:24px;padding:20px;border-top:1px solid #dce4e8;background:#f7fafb}.cash-panel h2,.transfer-panel h2{margin:2px 0 14px;font-size:1.15rem}.cash-panel form,.transfer-panel form{display:grid;grid-template-columns:minmax(150px,1fr) minmax(150px,1fr) auto;gap:12px;align-items:end}.cash-panel button,.transfer-panel button{min-width:150px}
+.transfer-panel{background:#f5f8f3}
 .notice,.error{padding:12px 14px;border-left:4px solid #2d7f91;background:#fff}.error{border-color:#b54840;color:#862922}
-@media(max-width:650px){.balance-band,dl,.terms-form,.cash-panel form{grid-template-columns:1fr}.cash-panel button{width:100%}}
+@media(max-width:650px){.balance-band,dl,.terms-form,.cash-panel form,.transfer-panel form{grid-template-columns:1fr}.cash-panel button,.transfer-panel button{width:100%}}

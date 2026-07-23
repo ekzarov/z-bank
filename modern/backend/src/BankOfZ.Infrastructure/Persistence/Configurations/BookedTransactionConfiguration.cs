@@ -32,6 +32,8 @@ public sealed class BookedTransactionConfiguration : IEntityTypeConfiguration<Bo
             .HasMaxLength(CashTransactionRules.IdempotencyKeyMaxLength).IsUnicode(false);
         builder.Property(transaction => transaction.RequestFingerprint)
             .HasMaxLength(CashTransactionRules.RequestFingerprintMaxLength).IsUnicode(false);
+        builder.Property(transaction => transaction.TransferCorrelationId)
+            .HasMaxLength(CashTransactionRules.TransferCorrelationIdLength).IsUnicode(false);
         builder.HasOne<Account>()
             .WithMany()
             .HasForeignKey(transaction => transaction.AccountId)
@@ -42,6 +44,7 @@ public sealed class BookedTransactionConfiguration : IEntityTypeConfiguration<Bo
             .OnDelete(DeleteBehavior.Restrict);
         builder.HasIndex(transaction => transaction.Reference).IsUnique();
         builder.HasIndex(transaction => new { transaction.AccountId, transaction.IdempotencyKey }).IsUnique();
+        builder.HasIndex(transaction => transaction.TransferCorrelationId);
         builder.HasIndex(transaction => new { transaction.AccountId, transaction.CreatedAt });
     }
 }

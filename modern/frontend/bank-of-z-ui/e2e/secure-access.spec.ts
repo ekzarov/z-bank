@@ -1,5 +1,13 @@
 import { expect, test } from '@playwright/test';
 
+function requiredDemoPassword(): string {
+  const password = process.env['BANKOFZ_DEMO_PASSWORD'];
+  if (!password) {
+    throw new Error('BANKOFZ_DEMO_PASSWORD is required; credentialed E2E tests must not be skipped.');
+  }
+  return password;
+}
+
 const roleCases = [
   { userName: 'customer', link: 'My banking', heading: 'My profile', hiddenLinks: ['Customer operations', 'Administration'] },
   { userName: 'operator', link: 'Customer operations', heading: 'Customer workspace', hiddenLinks: ['My banking', 'Administration'] },
@@ -7,13 +15,12 @@ const roleCases = [
 ];
 
 test('customer can sign in, use a protected route, and sign out @e2e', async ({ page }) => {
-  const password = process.env['BANKOFZ_DEMO_PASSWORD'];
-  test.skip(!password, 'BANKOFZ_DEMO_PASSWORD is required.');
+  const password = requiredDemoPassword();
 
   await page.goto('customer');
   await expect(page).toHaveURL(/\/z-bank-new\/sign-in$/);
   await page.getByLabel('User name').fill('customer');
-  await page.getByLabel('Password').fill(password!);
+  await page.getByLabel('Password').fill(password);
   await page.getByRole('button', { name: 'Sign in' }).click();
 
   await expect(page.getByRole('heading', { name: 'Welcome to Bank of Z' })).toBeVisible();
@@ -41,12 +48,11 @@ test('API outage opens the recoverable unavailable page @e2e', async ({ page }) 
 
 for (const roleCase of roleCases) {
   test(`${roleCase.userName} sees only authorized navigation @e2e`, async ({ page }) => {
-    const password = process.env['BANKOFZ_DEMO_PASSWORD'];
-    test.skip(!password, 'BANKOFZ_DEMO_PASSWORD is required.');
+    const password = requiredDemoPassword();
 
     await page.goto('sign-in');
     await page.getByLabel('User name').fill(roleCase.userName);
-    await page.getByLabel('Password').fill(password!);
+    await page.getByLabel('Password').fill(password);
     await page.getByRole('button', { name: 'Sign in' }).click();
 
     await page.getByRole('link', { name: roleCase.link }).click();
@@ -58,12 +64,11 @@ for (const roleCase of roleCases) {
 }
 
 test('operator can create find update and retire a customer @e2e', async ({ page }) => {
-  const password = process.env['BANKOFZ_DEMO_PASSWORD'];
-  test.skip(!password, 'BANKOFZ_DEMO_PASSWORD is required.');
+  const password = requiredDemoPassword();
 
   await page.goto('sign-in');
   await page.getByLabel('User name').fill('operator');
-  await page.getByLabel('Password').fill(password!);
+  await page.getByLabel('Password').fill(password);
   await page.getByRole('button', { name: 'Sign in' }).click();
   await page.getByRole('link', { name: 'Customer operations' }).click();
 
@@ -95,12 +100,11 @@ test('operator can create find update and retire a customer @e2e', async ({ page
 });
 
 test('operator can manage an account and book cash with insufficient-funds protection @e2e @account-management @cash-transactions', async ({ page }) => {
-  const password = process.env['BANKOFZ_DEMO_PASSWORD'];
-  test.skip(!password, 'BANKOFZ_DEMO_PASSWORD is required.');
+  const password = requiredDemoPassword();
 
   await page.goto('sign-in');
   await page.getByLabel('User name').fill('operator');
-  await page.getByLabel('Password').fill(password!);
+  await page.getByLabel('Password').fill(password);
   await page.getByRole('button', { name: 'Sign in' }).click();
   await page.getByRole('link', { name: 'Customer operations' }).click();
   await page.getByLabel('Customer ID or name').fill('1000000001');
@@ -118,18 +122,18 @@ test('operator can manage an account and book cash with insufficient-funds prote
   await expect(page.getByRole('heading', { name: new RegExp(accountId) })).toBeVisible();
 
   await page.getByLabel('Operation').selectOption('deposit');
-  await page.getByLabel('Amount').fill('125.00');
+  await page.locator('.cash-panel').getByLabel('Amount').fill('125.00');
   await page.getByRole('button', { name: 'Book operation' }).click();
   await expect(page.getByRole('status')).toContainText(/Deposit [0-9a-f]{32} booked/);
   await expect(page.locator('.balance-band')).toContainText('£125.00');
 
   await page.getByLabel('Operation').selectOption('withdrawal');
-  await page.getByLabel('Amount').fill('1000.00');
+  await page.locator('.cash-panel').getByLabel('Amount').fill('1000.00');
   await page.getByRole('button', { name: 'Book operation' }).click();
   await expect(page.getByRole('alert')).toContainText('exceeds the available balance');
   await expect(page.locator('.balance-band')).toContainText('£125.00');
 
-  await page.getByLabel('Amount').fill('125.00');
+  await page.locator('.cash-panel').getByLabel('Amount').fill('125.00');
   await page.getByRole('button', { name: 'Book operation' }).click();
   await expect(page.getByRole('status')).toContainText(/Withdrawal [0-9a-f]{32} booked/);
   await expect(page.locator('.balance-band')).toContainText('£0.00');
@@ -143,4 +147,46 @@ test('operator can manage an account and book cash with insufficient-funds prote
   await page.getByRole('button', { name: 'Close account' }).click();
   await expect(page.getByRole('status')).toContainText('Account closed');
   await expect(page.getByText('closed', { exact: true })).toBeVisible();
+});
+
+test('operator can transfer between accounts and rejected transfer keeps the balance @e2e @funds-transfers', async ({ page }) => {
+  const password = requiredDemoPassword();
+
+  await page.goto('sign-in');
+  await page.getByLabel('User name').fill('operator');
+  await page.getByLabel('Password').fill(password);
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.getByRole('link', { name: 'Customer operations' }).click();
+  await page.getByLabel('Customer ID or name').fill('1000000001');
+  await page.getByRole('button', { name: 'Search' }).click();
+
+  const createAccount = async (): Promise<string> => {
+    await page.getByRole('button', { name: 'New account' }).click();
+    await page.getByLabel('Product').selectOption('current');
+    await page.getByRole('button', { name: 'Create' }).click();
+    const status = page.getByRole('status');
+    await expect(status).toContainText(/Account \d{8} created/);
+    return (await status.textContent())!.match(/\d{8}/)![0];
+  };
+
+  const sourceId = await createAccount();
+  const destinationId = await createAccount();
+  await page.getByRole('link', { name: new RegExp(sourceId) }).click();
+
+  await page.getByLabel('Operation').selectOption('deposit');
+  await page.getByLabel('Amount', { exact: true }).first().fill('100.00');
+  await page.getByRole('button', { name: 'Book operation' }).click();
+  await expect(page.locator('.balance-band')).toContainText('100.00');
+
+  await page.getByLabel('Destination account').fill(destinationId);
+  await page.locator('.transfer-panel').getByLabel('Amount').fill('25.00');
+  await page.getByRole('button', { name: 'Transfer', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText(/Transfer [0-9a-f]{32} booked/);
+  await expect(page.locator('.balance-band')).toContainText('75.00');
+
+  await page.getByLabel('Destination account').fill(destinationId);
+  await page.locator('.transfer-panel').getByLabel('Amount').fill('1000.00');
+  await page.getByRole('button', { name: 'Transfer', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('exceeds the available balance');
+  await expect(page.locator('.balance-band')).toContainText('75.00');
 });

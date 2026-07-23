@@ -48,3 +48,9 @@ export interface CashTransaction {
   sourceSystem: string;
   bookedAt: string;
 }
+
+export interface InternalTransfer {
+  correlationId: string;
+  source: CashTransaction;
+  destination: CashTransaction;
+}

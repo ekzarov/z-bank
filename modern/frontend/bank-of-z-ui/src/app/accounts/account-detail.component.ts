@@ -22,6 +22,7 @@ export class AccountDetailComponent {
   protected readonly editing = signal(false);
   protected readonly saving = signal(false);
   protected readonly booking = signal(false);
+  protected readonly transferring = signal(false);
   protected readonly error = signal('');
   protected readonly message = signal('');
   protected readonly form = new FormGroup({
@@ -33,6 +34,15 @@ export class AccountDetailComponent {
   protected readonly cashForm = new FormGroup({
     direction: new FormControl<CashTransactionDirection>('deposit', { nonNullable: true, validators: Validators.required }),
     amount: new FormControl<number | null>(null, { validators: [Validators.required, Validators.min(0.01), Validators.max(9999999999999999.99)] })
+  });
+  protected readonly transferForm = new FormGroup({
+    destinationAccountId: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.pattern(/^\d{8}$/)]
+    }),
+    amount: new FormControl<number | null>(null, {
+      validators: [Validators.required, Validators.min(0.01), Validators.max(9999999999999999.99)]
+    })
   });
 
   constructor() {
@@ -93,6 +103,30 @@ export class AccountDetailComponent {
       });
   }
 
+  protected transfer(): void {
+    const account = this.account();
+    if (!account || this.transferForm.invalid || this.transferring()) {
+      this.transferForm.markAllAsTouched();
+      return;
+    }
+
+    const { destinationAccountId, amount } = this.transferForm.getRawValue();
+    this.transferring.set(true);
+    this.error.set('');
+    this.message.set('');
+    this.api.transfer(account.id, destinationAccountId, amount!)
+      .pipe(finalize(() => this.transferring.set(false)))
+      .subscribe({
+        next: result => {
+          this.transferForm.reset();
+          this.load(
+            account.id,
+            `Transfer ${result.correlationId} booked. Available balance: ${this.formatMoney(result.source.availableBalance, result.source.currency)}.`);
+        },
+        error: response => this.error.set(this.transferError(response?.error?.code))
+      });
+  }
+
   private cashError(code?: string): string {
     switch (code) {
       case 'insufficient_funds': return 'The withdrawal exceeds the available balance and overdraft limit.';
@@ -101,6 +135,20 @@ export class AccountDetailComponent {
       case 'cash_amount_invalid': return 'Enter a positive amount with no more than two decimal places.';
       case 'idempotency_conflict': return 'This operation conflicts with an earlier request. Please try again.';
       default: return 'The cash operation could not be completed.';
+    }
+  }
+
+  private transferError(code?: string): string {
+    switch (code) {
+      case 'transfer_same_account': return 'Choose a different destination account.';
+      case 'transfer_currency_mismatch': return 'Source and destination accounts must use the same currency.';
+      case 'transfer_account_not_found': return 'The destination account was not found or is unavailable.';
+      case 'insufficient_funds': return 'The transfer exceeds the available balance and overdraft limit.';
+      case 'cash_account_inactive': return 'Transfers require two active accounts.';
+      case 'cash_product_not_supported': return 'Transfers are unavailable for this account product.';
+      case 'cash_amount_invalid': return 'Enter a positive amount with no more than two decimal places.';
+      case 'idempotency_conflict': return 'This transfer conflicts with an earlier request. Please try again.';
+      default: return 'The transfer could not be completed.';
     }
   }
 

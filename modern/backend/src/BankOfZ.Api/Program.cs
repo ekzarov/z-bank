@@ -101,6 +101,8 @@ builder.Services.AddScoped<IAccountAuditWriter, AccountAuditWriter>();
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<ICashTransactionRepository, CashTransactionRepository>();
 builder.Services.AddScoped<CashTransactionService>();
+builder.Services.AddScoped<IInternalTransferRepository, InternalTransferRepository>();
+builder.Services.AddScoped<InternalTransferService>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICustomerAuditWriter, CustomerAuditWriter>();
 builder.Services.AddScoped<ICustomerAccountStatusReader, CustomerAccountStatusReader>();
