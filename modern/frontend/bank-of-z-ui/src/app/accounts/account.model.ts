@@ -54,3 +54,26 @@ export interface InternalTransfer {
   source: CashTransaction;
   destination: CashTransaction;
 }
+
+export interface TransactionHistoryItem {
+  reference: string;
+  accountId: string;
+  direction: CashTransactionDirection;
+  amount: number;
+  currency: string;
+  resultingActualBalance: number;
+  resultingAvailableBalance: number;
+  status: string;
+  description: string;
+  bookedAt: string;
+  transferCorrelationId: string | null;
+  relatedTransferReference: string | null;
+  sourceSystem: string;
+  sourceIdentifier: string | null;
+}
+
+export interface TransactionHistoryPage {
+  items: TransactionHistoryItem[];
+  pageSize: number;
+  nextCursor: string | null;
+}

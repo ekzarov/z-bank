@@ -1,0 +1,47 @@
+<main class="history-page">
+  <header class="page-heading">
+    <div>
+      <p class="eyebrow">Account {{ accountId() }}</p>
+      <h1>Transaction history</h1>
+    </div>
+    <a [routerLink]="['/accounts', accountId()]">Account details</a>
+  </header>
+
+  <form class="filters" [formGroup]="filters" (ngSubmit)="applyFilters()">
+    <label>From <input type="date" formControlName="from"></label>
+    <label>To <span>(exclusive)</span> <input type="date" formControlName="to"></label>
+    <button type="submit" [disabled]="loading()">Apply</button>
+  </form>
+
+  @if (error()) {
+    <p class="notice error" role="alert">{{ error() }}</p>
+  } @else if (!loading() && items().length === 0) {
+    <section class="empty">
+      <h2>No transactions</h2>
+      <p>This account has no activity in the selected period.</p>
+    </section>
+  } @else {
+    <section class="transaction-list" aria-label="Transactions">
+      @for (item of items(); track item.reference) {
+        <a class="transaction-row"
+          [routerLink]="['/accounts', accountId(), 'transactions', item.reference]">
+          <span class="direction" [class.debit]="item.direction === 'withdrawal'">
+            {{ item.direction === 'deposit' ? '+' : '-' }}
+          </span>
+          <span class="summary">
+            <strong>{{ item.description }}</strong>
+            <small>{{ item.bookedAt | date:'medium' }} · {{ item.sourceSystem | titlecase }}</small>
+          </span>
+          <span class="amount" [class.debit]="item.direction === 'withdrawal'">
+            {{ item.amount | currency:item.currency:'symbol':'1.2-2' }}
+          </span>
+        </a>
+      }
+    </section>
+    @if (nextCursor()) {
+      <button class="load-more" type="button" (click)="loadMore()" [disabled]="loading()">
+        {{ loading() ? 'Loading...' : 'Load more' }}
+      </button>
+    }
+  }
+</main>

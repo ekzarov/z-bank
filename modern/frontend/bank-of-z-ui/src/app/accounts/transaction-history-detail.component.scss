@@ -1,0 +1,13 @@
+.detail-page { width:min(720px,calc(100% - 32px)); margin:36px auto 64px; }
+.back { color:#126d74; font-weight:700; }
+header { margin:24px 0; padding:26px 0; border-top:1px solid #cad7dc; border-bottom:1px solid #cad7dc; }
+header p { margin:0; color:#536a76; font-weight:700; text-transform:uppercase; }
+header h1 { margin:8px 0; font-size:2.4rem; }
+header span { color:#12613e; font-weight:800; }
+dl { margin:0; }
+dl div { display:grid; grid-template-columns:180px 1fr; gap:18px; padding:14px 0; border-bottom:1px solid #d6e0e4; }
+dt { color:#637985; }
+dd { margin:0; overflow-wrap:anywhere; font-weight:700; }
+.mono { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.9rem; }
+.notice { margin-top:24px; padding:14px; border-left:4px solid #b54840; background:#fff; }
+@media (max-width:560px) { dl div { grid-template-columns:1fr; gap:5px; } }

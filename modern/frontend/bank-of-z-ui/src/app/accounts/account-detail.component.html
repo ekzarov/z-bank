@@ -5,6 +5,7 @@
   @if (account(); as value) {
     <article class="account-detail">
       <header><div><p class="eyebrow">{{ value.type | titlecase }} account</p><h1>{{ value.sortCode }} / {{ value.id }}</h1></div><span class="status">{{ value.status }}</span></header>
+      <a class="history-link" [routerLink]="['/accounts', value.id, 'transactions']">View transaction history</a>
       <section class="balance-band"><div><span>Actual balance</span><strong>{{ value.actualBalance | currency:value.currency:'symbol':'1.2-2' }}</strong></div><div><span>Available balance</span><strong>{{ value.availableBalance | currency:value.currency:'symbol':'1.2-2' }}</strong></div></section>
       <dl><div><dt>Owner</dt><dd>{{ value.customerId }}</dd></div><div><dt>Interest</dt><dd>{{ value.interestRate }}%</dd></div><div><dt>Overdraft</dt><dd>{{ value.overdraftLimit | currency:value.currency:'symbol':'1.0-0' }}</dd></div><div><dt>Opened</dt><dd>{{ value.openedOn }}</dd></div><div><dt>Last statement</dt><dd>{{ value.lastStatementOn }}</dd></div><div><dt>Next statement</dt><dd>{{ value.nextStatementOn }}</dd></div><div><dt>Source</dt><dd>{{ value.sourceSystem }}</dd></div></dl>
       @if (value.status === 'active' && (value.type === 'current' || value.type === 'saving' || value.type === 'isa')) {

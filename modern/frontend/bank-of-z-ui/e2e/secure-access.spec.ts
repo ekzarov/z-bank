@@ -71,6 +71,32 @@ test('customer can transfer between owned demo accounts and see a rejected trans
   await expect(page.getByRole('alert')).toContainText('exceeds the available balance');
 });
 
+test('customer can filter transaction history and open a transaction @e2e @transaction-history', async ({ page }) => {
+  const password = requiredDemoPassword();
+  await page.goto('sign-in');
+  await page.getByLabel('User name').fill('customer');
+  await page.getByLabel('Password').fill(password);
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await expect(page.getByRole('heading', { name: 'Welcome to Bank of Z' })).toBeVisible();
+  await page.goto('accounts/10000000');
+
+  await page.getByLabel('Operation').selectOption('deposit');
+  await page.locator('.cash-panel').getByLabel('Amount').fill('7.50');
+  await page.getByRole('button', { name: 'Book operation' }).click();
+  await expect(page.getByRole('status')).toContainText(/Deposit [0-9a-f]{32} booked/);
+
+  await page.getByRole('link', { name: 'View transaction history' }).click();
+  await expect(page.getByRole('heading', { name: 'Transaction history' })).toBeVisible();
+  await page.getByLabel('From').fill('2020-01-01');
+  await page.getByLabel('To').fill('2035-01-01');
+  await page.getByRole('button', { name: 'Apply' }).click();
+  await expect(page.getByRole('region', { name: 'Transactions' })).toBeVisible();
+
+  await page.locator('.transaction-row').first().click();
+  await expect(page.getByText('Reference', { exact: true })).toBeVisible();
+  await expect(page.getByText('Resulting balance', { exact: true })).toBeVisible();
+});
+
 for (const roleCase of roleCases) {
   test(`${roleCase.userName} sees only authorized navigation @e2e`, async ({ page }) => {
     const password = requiredDemoPassword();
@@ -202,4 +228,57 @@ test('operator can transfer between accounts and rejected transfer keeps the bal
   await page.getByRole('button', { name: 'Transfer', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('exceeds the available balance');
   await expect(page.locator('.balance-band')).toHaveText(balanceAfterTransfer!);
+});
+
+test('operator sees empty and populated history while a customer cannot see the foreign account @e2e @transaction-history', async ({ page }) => {
+  const password = requiredDemoPassword();
+  await page.goto('sign-in');
+  await page.getByLabel('User name').fill('operator');
+  await page.getByLabel('Password').fill(password);
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.getByRole('link', { name: 'Customer operations' }).click();
+
+  await page.getByRole('button', { name: 'New customer' }).click();
+  await page.getByLabel('First name').fill('History');
+  await page.getByLabel('Last name').fill('Scope');
+  await page.getByLabel('Date of birth').fill('1988-03-20');
+  await page.getByLabel('Address', { exact: true }).fill('6 Audit Lane');
+  await page.getByLabel('City').fill('London');
+  await page.getByLabel('Postal code').fill('EC2A 2BB');
+  await page.getByLabel('Email').fill(`history.${Date.now()}@example.test`);
+  await page.getByRole('button', { name: 'Save' }).click();
+
+  const customerStatus = page.getByRole('status');
+  await expect(customerStatus).toContainText(/Customer \d{10} saved/);
+  const customerId = (await customerStatus.textContent())!.match(/\d{10}/)![0];
+  await page.getByLabel('Customer ID or name').fill(customerId);
+  await page.getByRole('button', { name: 'Search' }).click();
+  await page.getByRole('button', { name: 'New account' }).click();
+  await page.getByLabel('Product').selectOption('current');
+  await page.getByRole('button', { name: 'Create' }).click();
+
+  const accountStatus = page.getByRole('status');
+  await expect(accountStatus).toContainText(/Account \d{8} created/);
+  const accountId = (await accountStatus.textContent())!.match(/\d{8}/)![0];
+  await page.getByRole('link', { name: new RegExp(accountId) }).click();
+  await page.getByRole('link', { name: 'View transaction history' }).click();
+  await expect(page.getByRole('heading', { name: 'No transactions' })).toBeVisible();
+
+  await page.getByRole('link', { name: 'Account details' }).click();
+  await page.getByLabel('Operation').selectOption('deposit');
+  await page.locator('.cash-panel').getByLabel('Amount').fill('32.10');
+  await page.getByRole('button', { name: 'Book operation' }).click();
+  await expect(page.getByRole('status')).toContainText(/Deposit [0-9a-f]{32} booked/);
+  await page.getByRole('link', { name: 'View transaction history' }).click();
+  await expect(page.locator('.transaction-row')).toHaveCount(1);
+  await page.locator('.transaction-row').click();
+  await expect(page.getByText('Reference', { exact: true })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Sign out' }).click();
+  await page.getByLabel('User name').fill('customer');
+  await page.getByLabel('Password').fill(password);
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await expect(page.getByRole('heading', { name: 'Welcome to Bank of Z' })).toBeVisible();
+  await page.goto(`accounts/${accountId}/transactions`);
+  await expect(page.getByRole('alert')).toContainText('Transaction history was not found');
 });

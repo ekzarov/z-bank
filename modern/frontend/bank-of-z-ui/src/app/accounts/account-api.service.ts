@@ -1,7 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
-import { Account, AccountMetadata, AccountPage, CashTransaction, CashTransactionDirection, InternalTransfer } from './account.model';
+import {
+  Account,
+  AccountMetadata,
+  AccountPage,
+  CashTransaction,
+  CashTransactionDirection,
+  InternalTransfer,
+  TransactionHistoryItem,
+  TransactionHistoryPage
+} from './account.model';
 
 @Injectable({ providedIn: 'root' })
 export class AccountApiService {
@@ -44,6 +53,26 @@ export class AccountApiService {
       `api/accounts/${encodeURIComponent(sourceAccountId)}/transfers`,
       { destinationAccountId, amount },
       { headers: { 'Idempotency-Key': crypto.randomUUID() } }));
+  }
+
+  history(
+    accountId: string,
+    from?: string,
+    to?: string,
+    cursor?: string
+  ): Observable<TransactionHistoryPage> {
+    const params: Record<string, string | number> = { pageSize: 50 };
+    if (from) params['from'] = from;
+    if (to) params['to'] = to;
+    if (cursor) params['cursor'] = cursor;
+    return this.http.get<TransactionHistoryPage>(
+      `api/accounts/${encodeURIComponent(accountId)}/transactions`,
+      { params });
+  }
+
+  transaction(accountId: string, reference: string): Observable<TransactionHistoryItem> {
+    return this.http.get<TransactionHistoryItem>(
+      `api/accounts/${encodeURIComponent(accountId)}/transactions/${encodeURIComponent(reference)}`);
   }
 
   private withCsrf<T>(request: () => Observable<T>): Observable<T> {

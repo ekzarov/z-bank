@@ -1,0 +1,29 @@
+<main class="detail-page">
+  <a class="back" [routerLink]="['/accounts', accountId(), 'transactions']">Back to transaction history</a>
+  @if (error()) {
+    <p class="notice" role="alert">{{ error() }}</p>
+  } @else if (transaction(); as item) {
+    <header>
+      <p>{{ item.direction | titlecase }}</p>
+      <h1>{{ item.amount | currency:item.currency:'symbol':'1.2-2' }}</h1>
+      <span>{{ item.status | titlecase }}</span>
+    </header>
+    <dl>
+      <div><dt>Description</dt><dd>{{ item.description }}</dd></div>
+      <div><dt>Booked</dt><dd>{{ item.bookedAt | date:'medium' }}</dd></div>
+      <div><dt>Reference</dt><dd class="mono">{{ item.reference }}</dd></div>
+      <div><dt>Source</dt><dd>{{ item.sourceSystem | titlecase }}</dd></div>
+      <div><dt>Resulting balance</dt><dd>{{ item.resultingActualBalance | currency:item.currency }}</dd></div>
+      <div><dt>Available balance</dt><dd>{{ item.resultingAvailableBalance | currency:item.currency }}</dd></div>
+      @if (item.relatedTransferReference) {
+        <div><dt>Related transfer</dt><dd class="mono">{{ item.relatedTransferReference }}</dd></div>
+      }
+      @if (item.transferCorrelationId) {
+        <div><dt>Correlation</dt><dd class="mono">{{ item.transferCorrelationId }}</dd></div>
+      }
+      @if (item.sourceIdentifier) {
+        <div><dt>Legacy source ID</dt><dd class="mono">{{ item.sourceIdentifier }}</dd></div>
+      }
+    </dl>
+  }
+</main>
