@@ -67,6 +67,10 @@ public sealed class InternalTransferApiTests(BankOfZTestsFixture fixture)
         await CreateAccountAsync(client);
         await CreateAccountAsync(client, currency: "USD");
         await CreateAccountAsync(client, type: "loan", interestRate: 1m);
+        var closedSource = await CreateAccountAsync(client);
+        var closedDestination = await CreateAccountAsync(client);
+        await CloseAccountAsync(client, "10000004", closedSource);
+        await CloseAccountAsync(client, "10000005", closedDestination);
         await SendCashAsync(client, "10000001", 50m, "fund-invalid");
 
         await AssertCodeAsync(
@@ -85,6 +89,14 @@ public sealed class InternalTransferApiTests(BankOfZTestsFixture fixture)
             await SendTransferAsync(client, "10000001", "10000003", 1000m, "funds"),
             HttpStatusCode.BadRequest,
             "insufficient_funds");
+        await AssertCodeAsync(
+            await SendTransferAsync(client, "10000004", "10000001", 1m, "closed-source"),
+            HttpStatusCode.BadRequest,
+            "cash_account_inactive");
+        await AssertCodeAsync(
+            await SendTransferAsync(client, "10000001", "10000005", 1m, "closed-destination"),
+            HttpStatusCode.BadRequest,
+            "cash_account_inactive");
 
         await using var scope = Fixture.Factory.Services.CreateAsyncScope();
         var context = scope.ServiceProvider.GetRequiredService<BankOfZIdentityContext>();
@@ -165,6 +177,20 @@ public sealed class InternalTransferApiTests(BankOfZTestsFixture fixture)
             $"/api/accounts/{accountId}/deposits",
             new { amount },
             key);
+
+    private static async Task CloseAccountAsync(
+        HttpClient client,
+        string accountId,
+        HttpResponseMessage createResponse)
+    {
+        var account = await createResponse.Content.ReadFromJsonAsync<JsonElement>();
+        var response = await SendMutationAsync(
+            client,
+            HttpMethod.Post,
+            $"/api/accounts/{accountId}/close",
+            new { version = account.GetProperty("version").GetString() });
+        response.EnsureSuccessStatusCode();
+    }
 
     private static Task<HttpResponseMessage> SendTransferAsync(
         HttpClient client,

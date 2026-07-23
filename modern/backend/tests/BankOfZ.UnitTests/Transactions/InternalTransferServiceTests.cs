@@ -84,15 +84,83 @@ public sealed class InternalTransferServiceTests
         Assert.False(repository.SaveCalled);
     }
 
+    [Theory]
+    [InlineData(AccountType.Current)]
+    [InlineData(AccountType.Saving)]
+    [InlineData(AccountType.Isa)]
+    public async Task Transactional_Products_Are_Eligible(AccountType type)
+    {
+        var source = CreateAccount("10000001", type: type);
+        source.ApplyCash(CashTransactionDirection.Deposit, 10m, Reference('a'), Now);
+        var repository = new FakeRepository(source, CreateAccount("10000002", type: type));
+
+        await CreateService(repository).TransferAsync(
+            "10000001", "10000002", 1m, "eligible", "customer", default);
+
+        Assert.True(repository.SaveCalled);
+    }
+
+    [Theory]
+    [InlineData(AccountType.Loan)]
+    [InlineData(AccountType.Mortgage)]
+    public async Task Lending_Destination_Is_Rejected_Without_Saving(AccountType type)
+    {
+        var source = CreateAccount("10000001");
+        source.ApplyCash(CashTransactionDirection.Deposit, 10m, Reference('a'), Now);
+        var repository = new FakeRepository(source, CreateAccount("10000002", type: type));
+
+        var exception = await Assert.ThrowsAsync<CashTransactionValidationException>(() =>
+            CreateService(repository).TransferAsync(
+                "10000001", "10000002", 1m, "lending", "customer", default));
+
+        Assert.Equal("cash_product_not_supported", exception.Code);
+        Assert.False(repository.SaveCalled);
+    }
+
+    [Theory]
+    [InlineData("0")]
+    [InlineData("-1")]
+    [InlineData("10.001")]
+    public async Task Invalid_Amount_Is_Rejected_Without_Saving(string value)
+    {
+        var repository = new FakeRepository(CreateAccount("10000001"), CreateAccount("10000002"));
+
+        var exception = await Assert.ThrowsAsync<CashTransactionValidationException>(() =>
+            CreateService(repository).TransferAsync(
+                "10000001", "10000002", decimal.Parse(value), "amount", "customer", default));
+
+        Assert.Equal("cash_amount_invalid", exception.Code);
+        Assert.False(repository.SaveCalled);
+    }
+
+    [Fact]
+    public async Task Currency_Mismatch_Is_Rejected_Without_Mutation()
+    {
+        var source = CreateAccount("10000001");
+        source.ApplyCash(CashTransactionDirection.Deposit, 10m, Reference('a'), Now);
+        var repository = new FakeRepository(source, CreateAccount("10000002", "USD"));
+
+        var exception = await Assert.ThrowsAsync<CashTransactionValidationException>(() =>
+            CreateService(repository).TransferAsync(
+                "10000001", "10000002", 1m, "currency", "customer", default));
+
+        Assert.Equal("transfer_currency_mismatch", exception.Code);
+        Assert.Equal(10m, source.ActualBalance);
+        Assert.False(repository.SaveCalled);
+    }
+
     private static InternalTransferService CreateService(
         FakeRepository repository,
         FakeAuditWriter? audit = null) => new(repository, audit ?? new FakeAuditWriter(), new FakeClock());
 
-    private static Account CreateAccount(string id, string currency = "GBP") => Account.Create(
+    private static Account CreateAccount(
+        string id,
+        string currency = "GBP",
+        AccountType type = AccountType.Current) => Account.Create(
         id,
         "1000000001",
         "100000",
-        new AccountMetadata(AccountType.Current, 0, 0, currency),
+        new AccountMetadata(type, type is AccountType.Loan or AccountType.Mortgage ? 1 : 0, 0, currency),
         SourceSystem.Modern,
         null,
         null,

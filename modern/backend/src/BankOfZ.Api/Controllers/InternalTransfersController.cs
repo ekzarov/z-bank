@@ -31,9 +31,12 @@ public sealed class InternalTransfersController(
 
         var source = await accounts.FindAsync(sourceAccountId, cancellationToken);
         var destination = await accounts.FindAsync(request.DestinationAccountId, cancellationToken);
+        var customerId = User.IsInRole(BankRoles.Customer)
+            ? (await users.GetUserAsync(User))?.CustomerId
+            : null;
         if (source is null || destination is null ||
-            !await CanAccessCustomerAsync(source.CustomerId) ||
-            !await CanAccessCustomerAsync(destination.CustomerId))
+            !CanAccessCustomer(source.CustomerId, customerId) ||
+            !CanAccessCustomer(destination.CustomerId, customerId))
         {
             return TransferProblem(404, "Account not found", "transfer_account_not_found");
         }
@@ -47,15 +50,9 @@ public sealed class InternalTransfersController(
             cancellationToken));
     }
 
-    private async Task<bool> CanAccessCustomerAsync(string customerId)
-    {
-        if (User.IsInRole(BankRoles.Operator))
-        {
-            return true;
-        }
-        var user = await users.GetUserAsync(User);
-        return User.IsInRole(BankRoles.Customer) && user?.CustomerId == customerId;
-    }
+    private bool CanAccessCustomer(string accountCustomerId, string? signedInCustomerId) =>
+        User.IsInRole(BankRoles.Operator) ||
+        User.IsInRole(BankRoles.Customer) && signedInCustomerId == accountCustomerId;
 
     private static bool ValidId(string id) =>
         id.Length == AccountRules.IdLength && id.All(char.IsAsciiDigit);
