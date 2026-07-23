@@ -37,6 +37,20 @@ test('customer generates and views a populated monthly statement @e2e @monthly-s
   await expect(page.getByRole('button', { name: 'Print statement' })).toBeVisible();
 });
 
+test('customer generates and views an empty monthly statement @e2e @monthly-statements', async ({ page }) => {
+  await signIn(page, 'customer');
+  await page.goto('accounts/10000000/statements');
+  await page.getByLabel('Year').fill('2000');
+  await page.getByLabel('Month').selectOption({ label: 'January' });
+  await page.getByRole('button', { name: 'Generate statement' }).click();
+
+  await expect(page).toHaveURL(/\/accounts\/10000000\/statements\/[0-9a-f-]{36}$/);
+  const transactions = page.getByRole('region', { name: 'Statement transactions' });
+  await expect(transactions.getByRole('heading', { name: 'No transactions for this period' })).toBeVisible();
+  await expect(transactions).toContainText('zero transaction activity');
+  await expect(transactions.locator('tbody tr')).toHaveCount(0);
+});
+
 test('operator sees partial bulk outcomes and retries only failures @e2e @monthly-statements @bulk-statements', async ({ page }) => {
   await signIn(page, 'operator');
   const requests: Array<{ accountIds: string[] | null }> = [];
