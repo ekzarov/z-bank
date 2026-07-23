@@ -3,30 +3,30 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 92
-  overall_percent_estimate: 97
+  current_stage_percent: 0
+  overall_percent_estimate: 99
   estimate_only: true
   estimate_basis: >-
-    Full migration estimate: shared Stages 1-6 and seven of nine iterative
-    slices are accepted. Feature 008 implementation, tests, clean-install
-    Compose smoke, workbook synchronization, and two Claude peer-review rounds
-    are complete. Public delivery, live revision, and Stage 10 acceptance remain.
+    Full migration estimate: shared Stages 1-6 and eight of nine iterative
+    slices are accepted. Feature 008 passed public delivery, live revision,
+    correction, and clean Stage 10 Pass 012. Feature 009 is the final planned
+    runtime/deployment slice.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 65
-    claude_usable_reports: 47
+    claude_sessions_started: 66
+    claude_usable_reports: 48
     codex_sessions_started: 37
     codex_usable_reports: 30
     deterministic_batches_covered: 23
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T16:41:32+02:00
+  updated_at: 2026-07-23T17:11:22+02:00
 
 methodology_stage:
   number: 7
-  name: Coding - Feature 008 data initialization
-  status: implementation-peer-reviewed
+  name: Coding - Feature 009 runtime and deployment operations
+  status: ready-to-start
   last_completed_stage: 10
   incomplete_stages:
     - 3
@@ -34,14 +34,14 @@ methodology_stage:
 
 next_action:
   actor: OpenAI Codex orchestrator
-  feature: 008-data-initialization
+  feature: 009-runtime-and-deployment-operations
   stage: 7
   instruction: >-
-    Commit the peer-reviewed Feature 008 candidate, deliver it to the public
-    stand, reconcile the live behavior, and run fresh Stage 10 acceptance.
+    Implement Feature 009 as the final iterative slice, run deterministic gates
+    and Claude peer review, deploy it, reconcile live behavior, and obtain a
+    fresh Stage 10 acceptance pass.
   completion_gate: >-
-    Feature 008 code, tests, clean Compose bootstrap, SDD/tasks/workbook
-    synchronization, and two Claude peer-review rounds are complete.
+    Feature 008 is accepted by clean Stage 10 Pass 012 and T008 is complete.
 
 stage_3_fallback_result:
   mode: simulate
@@ -249,6 +249,12 @@ review_passes:
     agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
     result: clean
     report: analysis/reviews/stage-10-pass-011.md
+  - stage: 10
+    pass: 12
+    date: 2026-07-23
+    agent: Claude Code CLI fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: clean
+    report: analysis/reviews/stage-10-pass-012.md
 
 accepted_slices:
   - feature: 001-secure-access-shell
@@ -285,6 +291,11 @@ accepted_slices:
     accepted_on: 2026-07-23
     stage_10_pass: 11
     report: analysis/reviews/stage-10-pass-011.md
+    workbook_rows: 8
+  - feature: 008-data-initialization
+    accepted_on: 2026-07-23
+    stage_10_pass: 12
+    report: analysis/reviews/stage-10-pass-012.md
     workbook_rows: 8
 
 owner_gates:

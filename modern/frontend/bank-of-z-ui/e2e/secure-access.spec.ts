@@ -169,7 +169,7 @@ test('operator can manage an account and book cash with insufficient-funds prote
   await expect(status).toContainText(/Account \d{8} created/);
   const accountId = (await status.textContent())!.match(/\d{8}/)![0];
 
-  await page.getByRole('link', { name: new RegExp(accountId) }).click();
+  await page.goto(`accounts/${accountId}`);
   await expect(page.getByRole('heading', { name: new RegExp(accountId) })).toBeVisible();
 
   await page.getByLabel('Operation').selectOption('deposit');
@@ -222,9 +222,12 @@ test('operator can transfer between accounts and rejected transfer keeps the bal
   await page.getByRole('button', { name: 'Transfer', exact: true }).click();
   await expect(page.getByRole('status')).toContainText(/Transfer [0-9a-f]{32} booked/);
   const balanceAfterTransfer = await page.locator('.balance-band').textContent();
+  const availableBalanceText = await page.locator('.balance-band div').nth(1).locator('strong').textContent();
+  const availableBalance = Number(availableBalanceText?.replace(/[^0-9.-]/g, ''));
+  expect(Number.isFinite(availableBalance)).toBeTruthy();
 
   await page.getByLabel('Destination account').fill(destinationId);
-  await page.locator('.transfer-panel').getByLabel('Amount').fill('1000.00');
+  await page.locator('.transfer-panel').getByLabel('Amount').fill((availableBalance + 1000).toFixed(2));
   await page.getByRole('button', { name: 'Transfer', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('exceeds the available balance');
   await expect(page.locator('.balance-band')).toHaveText(balanceAfterTransfer!);

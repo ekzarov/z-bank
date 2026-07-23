@@ -18,5 +18,5 @@
 - [x] T006 Build and document EF migration bundle/apply/verify commands.
 - [x] T007 Add Compose operator profiles/commands without automatic migration or
   seeding dependencies on API startup.
-- [ ] T008 Run gates, update SDD/tasks/workbook, deploy this slice, and prepare
+- [x] T008 Run gates, update SDD/tasks/workbook, deploy this slice, and prepare
   Stage 9/10 evidence before Feature 009 starts.
