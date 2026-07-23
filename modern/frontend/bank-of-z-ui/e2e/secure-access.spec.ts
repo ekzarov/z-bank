@@ -46,6 +46,31 @@ test('API outage opens the recoverable unavailable page @e2e', async ({ page }) 
   await expect(page.getByRole('heading', { name: 'We could not complete that request' })).toBeVisible();
 });
 
+test('customer can transfer between owned demo accounts and see a rejected transfer @e2e @funds-transfers', async ({ page }) => {
+  const password = requiredDemoPassword();
+  await page.goto('sign-in');
+  await page.getByLabel('User name').fill('customer');
+  await page.getByLabel('Password').fill(password);
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.getByRole('link', { name: 'My banking' }).click();
+  await page.getByRole('link', { name: /10000000/ }).click();
+
+  await page.getByLabel('Operation').selectOption('deposit');
+  await page.locator('.cash-panel').getByLabel('Amount').fill('10.00');
+  await page.getByRole('button', { name: 'Book operation' }).click();
+  await expect(page.getByRole('status')).toContainText(/Deposit [0-9a-f]{32} booked/);
+
+  await page.getByLabel('Destination account').fill('10000099');
+  await page.locator('.transfer-panel').getByLabel('Amount').fill('5.00');
+  await page.getByRole('button', { name: 'Transfer', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText(/Transfer [0-9a-f]{32} booked/);
+
+  await page.getByLabel('Destination account').fill('10000099');
+  await page.locator('.transfer-panel').getByLabel('Amount').fill('999999.00');
+  await page.getByRole('button', { name: 'Transfer', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('exceeds the available balance');
+});
+
 for (const roleCase of roleCases) {
   test(`${roleCase.userName} sees only authorized navigation @e2e`, async ({ page }) => {
     const password = requiredDemoPassword();
@@ -156,37 +181,25 @@ test('operator can transfer between accounts and rejected transfer keeps the bal
   await page.getByLabel('User name').fill('operator');
   await page.getByLabel('Password').fill(password);
   await page.getByRole('button', { name: 'Sign in' }).click();
-  await page.getByRole('link', { name: 'Customer operations' }).click();
-  await page.getByLabel('Customer ID or name').fill('1000000001');
-  await page.getByRole('button', { name: 'Search' }).click();
-
-  const createAccount = async (): Promise<string> => {
-    await page.getByRole('button', { name: 'New account' }).click();
-    await page.getByLabel('Product').selectOption('current');
-    await page.getByRole('button', { name: 'Create' }).click();
-    const status = page.getByRole('status');
-    await expect(status).toContainText(/Account \d{8} created/);
-    return (await status.textContent())!.match(/\d{8}/)![0];
-  };
-
-  const sourceId = await createAccount();
-  const destinationId = await createAccount();
-  await page.getByRole('link', { name: new RegExp(sourceId) }).click();
+  await expect(page.getByRole('heading', { name: 'Welcome to Bank of Z' })).toBeVisible();
+  const sourceId = '10000000';
+  const destinationId = '10000099';
+  await page.goto(`accounts/${sourceId}`);
 
   await page.getByLabel('Operation').selectOption('deposit');
-  await page.getByLabel('Amount', { exact: true }).first().fill('100.00');
+  await page.locator('.cash-panel').getByLabel('Amount').fill('100.00');
   await page.getByRole('button', { name: 'Book operation' }).click();
-  await expect(page.locator('.balance-band')).toContainText('100.00');
+  await expect(page.getByRole('status')).toContainText(/Deposit [0-9a-f]{32} booked/);
 
   await page.getByLabel('Destination account').fill(destinationId);
   await page.locator('.transfer-panel').getByLabel('Amount').fill('25.00');
   await page.getByRole('button', { name: 'Transfer', exact: true }).click();
   await expect(page.getByRole('status')).toContainText(/Transfer [0-9a-f]{32} booked/);
-  await expect(page.locator('.balance-band')).toContainText('75.00');
+  const balanceAfterTransfer = await page.locator('.balance-band').textContent();
 
   await page.getByLabel('Destination account').fill(destinationId);
   await page.locator('.transfer-panel').getByLabel('Amount').fill('1000.00');
   await page.getByRole('button', { name: 'Transfer', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('exceeds the available balance');
-  await expect(page.locator('.balance-band')).toContainText('75.00');
+  await expect(page.locator('.balance-band')).toHaveText(balanceAfterTransfer!);
 });

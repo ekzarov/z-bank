@@ -43,7 +43,7 @@ var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Applicati
 var database = scope.ServiceProvider.GetRequiredService<BankOfZIdentityContext>();
 
 await EnsureDemoCustomerAsync(database);
-await EnsureDemoAccountAsync(database);
+await EnsureDemoAccountsAsync(database);
 
 foreach (var role in BankRoles.All)
 {
@@ -126,34 +126,42 @@ static async Task EnsureDemoCustomerAsync(BankOfZIdentityContext context)
     await context.SaveChangesAsync();
 }
 
-static async Task EnsureDemoAccountAsync(BankOfZIdentityContext context)
+static async Task EnsureDemoAccountsAsync(BankOfZIdentityContext context)
 {
-    const string accountId = "10000000";
-    if (await context.Accounts.AnyAsync(account => account.Id == accountId))
+    var demoAccounts = new[]
     {
-        return;
-    }
+        (Id: "10000000", Type: AccountType.Current, Interest: 0.25m, Overdraft: 500, RawType: "CURRENT"),
+        (Id: "10000099", Type: AccountType.Saving, Interest: 1.50m, Overdraft: 0, RawType: "SAVING")
+    };
 
     var now = DateTimeOffset.UtcNow;
-    context.Accounts.Add(Account.Create(
-        accountId,
-        "1000000001",
-        "100000",
-        new AccountMetadata(AccountType.Current, 0.25m, 500, "GBP"),
-        SourceSystem.Modern,
-        "demo-provisioning",
-        "CURRENT",
-        now));
-    context.AccountAuditEntries.Add(new AccountAuditRecord
+    foreach (var demo in demoAccounts)
     {
-        Actor = "setup",
-        Timestamp = now,
-        Action = "AccountCreated",
-        AccountId = accountId,
-        CustomerId = "1000000001",
-        Result = "Succeeded",
-        CorrelationId = "demo-provisioning"
-    });
+        if (await context.Accounts.AnyAsync(account => account.Id == demo.Id))
+        {
+            continue;
+        }
+
+        context.Accounts.Add(Account.Create(
+            demo.Id,
+            "1000000001",
+            "100000",
+            new AccountMetadata(demo.Type, demo.Interest, demo.Overdraft, "GBP"),
+            SourceSystem.Modern,
+            "demo-provisioning",
+            demo.RawType,
+            now));
+        context.AccountAuditEntries.Add(new AccountAuditRecord
+        {
+            Actor = "setup",
+            Timestamp = now,
+            Action = "AccountCreated",
+            AccountId = demo.Id,
+            CustomerId = "1000000001",
+            Result = "Succeeded",
+            CorrelationId = "demo-provisioning"
+        });
+    }
     await context.SaveChangesAsync();
 }
 

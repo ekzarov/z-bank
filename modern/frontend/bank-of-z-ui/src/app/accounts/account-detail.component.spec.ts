@@ -86,6 +86,25 @@ describe('AccountDetailComponent', () => {
     expect(fixture.nativeElement.querySelector('[role="status"]').textContent)
       .toContain('abcdef0123456789abcdef0123456789');
   });
+
+  it('keeps cash and transfer submission disabled for sub-cent amounts', () => {
+    const fixture = TestBed.createComponent(AccountDetailComponent);
+    fixture.detectChanges();
+
+    const cashAmount = fixture.nativeElement.querySelector('.cash-panel input[formControlName="amount"]');
+    cashAmount.value = '10.001';
+    cashAmount.dispatchEvent(new Event('input'));
+    const destination = fixture.nativeElement.querySelector('input[formControlName="destinationAccountId"]');
+    destination.value = '10000002';
+    destination.dispatchEvent(new Event('input'));
+    const transferAmount = fixture.nativeElement.querySelector('.transfer-panel input[formControlName="amount"]');
+    transferAmount.value = '10.001';
+    transferAmount.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.cash-panel button').disabled).toBe(true);
+    expect(fixture.nativeElement.querySelector('.transfer-panel button').disabled).toBe(true);
+  });
 });
 
 const account = {

@@ -1,7 +1,7 @@
 import { CurrencyPipe, TitleCasePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { SessionService } from '../core/session.service';
@@ -33,7 +33,9 @@ export class AccountDetailComponent {
   });
   protected readonly cashForm = new FormGroup({
     direction: new FormControl<CashTransactionDirection>('deposit', { nonNullable: true, validators: Validators.required }),
-    amount: new FormControl<number | null>(null, { validators: [Validators.required, Validators.min(0.01), Validators.max(9999999999999999.99)] })
+    amount: new FormControl<number | null>(null, {
+      validators: [Validators.required, Validators.min(0.01), Validators.max(9999999999999999.99), twoDecimalPlaces]
+    })
   });
   protected readonly transferForm = new FormGroup({
     destinationAccountId: new FormControl('', {
@@ -41,7 +43,7 @@ export class AccountDetailComponent {
       validators: [Validators.required, Validators.pattern(/^\d{8}$/)]
     }),
     amount: new FormControl<number | null>(null, {
-      validators: [Validators.required, Validators.min(0.01), Validators.max(9999999999999999.99)]
+      validators: [Validators.required, Validators.min(0.01), Validators.max(9999999999999999.99), twoDecimalPlaces]
     })
   });
 
@@ -163,4 +165,10 @@ export class AccountDetailComponent {
       error: response => this.error.set(response.status === 404 ? 'Account was not found.' : 'Account is currently unavailable.')
     });
   }
+}
+
+function twoDecimalPlaces(control: AbstractControl<number | null>): ValidationErrors | null {
+  if (control.value === null) return null;
+  const scaled = control.value * 100;
+  return Math.abs(Math.round(scaled) - scaled) < 1e-8 ? null : { decimalPrecision: true };
 }
