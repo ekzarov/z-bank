@@ -3,45 +3,44 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 98
-  overall_percent_estimate: 99
-  estimate_only: true
+  current_stage_percent: 100
+  overall_percent_estimate: 100
+  estimate_only: false
   estimate_basis: >-
-    Full migration estimate: shared Stages 1-6 and eight of nine iterative
-    slices are accepted. Feature 009 implementation and deterministic local
-    verification are complete; independent peer review, public delivery, live
-    revision, and final Stage 10 acceptance remain.
+    The declared migration scope is complete: all nine iterative slices and all
+    135 workbook rows passed consolidated clean Stage 10 Pass 013. The approved
+    Stage 3 simulation fallback remains an explicit external IBM-runtime risk.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 69
-    claude_usable_reports: 50
+    claude_sessions_started: 70
+    claude_usable_reports: 51
     codex_sessions_started: 37
     codex_usable_reports: 30
     deterministic_batches_covered: 23
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T18:07:49+02:00
+  updated_at: 2026-07-23T18:15:19+02:00
 
 methodology_stage:
   number: 10
   name: Final acceptance - Feature 009 and consolidated migration
-  status: ready-for-fresh-independent-review
-  last_completed_stage: 9
+  status: complete-clean-pass-013
+  last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: Fresh Claude Code CLI independent reviewer
+  actor: Project owner
   feature: 009-delivery-operations
   stage: 10
   instruction: >-
-    Independently review Feature 009 delivery and live-revision evidence, then
-    verify the consolidated closure of all nine slices and 135 workbook rows.
+    Use the deployed legacy and modern applications for demonstration. Reopen
+    Stage 3 only when authorized IBM infrastructure becomes available.
   completion_gate: >-
-    Feature 009 is merged, deployed, and clean through Stage 9; all prior eight
-    slices have clean immutable Stage 10 acceptance reports.
+    Feature 009 and the consolidated nine-slice migration are accepted by clean
+    Stage 10 Pass 013.
 
 stage_3_fallback_result:
   mode: simulate
@@ -255,6 +254,12 @@ review_passes:
     agent: Claude Code CLI fresh read-only reviewer, orchestrated by OpenAI Codex
     result: clean
     report: analysis/reviews/stage-10-pass-012.md
+  - stage: 10
+    pass: 13
+    date: 2026-07-23
+    agent: Claude Code CLI fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: clean
+    report: analysis/reviews/stage-10-pass-013.md
 
 accepted_slices:
   - feature: 001-secure-access-shell
@@ -297,6 +302,11 @@ accepted_slices:
     stage_10_pass: 12
     report: analysis/reviews/stage-10-pass-012.md
     workbook_rows: 8
+  - feature: 009-delivery-operations
+    accepted_on: 2026-07-23
+    stage_10_pass: 13
+    report: analysis/reviews/stage-10-pass-013.md
+    workbook_rows: 26
 
 owner_gates:
   constitution_ratification:

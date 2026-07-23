@@ -20,5 +20,5 @@
   diagnostics, and broken TOC tooling.
 - [x] T008 Add tagged Playwright deployed-system smoke and restart/persistence
   verification.
-- [ ] T009 Run slice Stage 9/10 evidence, then run the final consolidated Stage
+- [x] T009 Run slice Stage 9/10 evidence, then run the final consolidated Stage
   10 acceptance only after all prior slices are accepted.
