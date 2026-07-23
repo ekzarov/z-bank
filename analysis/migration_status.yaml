@@ -4,46 +4,44 @@ updated: 2026-07-23
 
 progress:
   current_stage_percent: 0
-  overall_percent_estimate: 85
+  overall_percent_estimate: 86
   estimate_only: true
   estimate_basis: >-
-    Full migration estimate: shared Stages 1-6 and five of nine iterative
-    implementation/delivery/acceptance slices are complete. Feature 006 has
-    passed implementation, code/test gates, workbook synchronization,
-    read-only peer review, public delivery, and live revision; independent
-    Stage 10 acceptance remains.
+    Full migration estimate: shared Stages 1-6 and six of nine iterative
+    implementation/delivery/acceptance slices are complete. Feature 006 passed
+    code/test gates, peer review, public delivery, live revision, and clean
+    independent acceptance. Feature 007 is the next delivery slice.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 58
-    claude_usable_reports: 40
+    claude_sessions_started: 59
+    claude_usable_reports: 41
     codex_sessions_started: 35
     codex_usable_reports: 28
-    deterministic_batches_covered: 22
+    deterministic_batches_covered: 23
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T13:42:00+02:00
+  updated_at: 2026-07-23T13:53:00+02:00
 
 methodology_stage:
-  number: 10
-  name: Independent acceptance - Feature 006 transaction history
-  status: ready-for-independent-review
-  last_completed_stage: 9
+  number: 7
+  name: Coding - Feature 007 monthly statements
+  status: ready-to-start
+  last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
   actor: OpenAI Codex orchestrator
-  feature: 006-transaction-history
-  stage: 10
+  feature: 007-monthly-statements
+  stage: 7
   instruction: >-
-    Run a fresh formal read-only Stage 10 pass against committed revision
-    4afb465 and the Feature 006 delivery/live evidence. Resolve every finding
-    before owner-independent acceptance is recorded.
+    Implement and test the approved Feature 007 monthly-statements slice,
+    synchronize its SDD/tasks/workbook, and repeat Stages 8-10.
   completion_gate: >-
-    Feature 006 code, tests, SDD/tasks/workbook, deployment, public smoke, and
-    Stage 9 live revision are clean before independent acceptance starts.
+    Feature 006 code, tests, SDD/tasks/workbook, deployment, and independent
+    acceptance are clean before Feature 007 starts.
 
 stage_3_fallback_result:
   mode: simulate
@@ -233,6 +231,12 @@ review_passes:
     agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
     result: clean
     report: analysis/reviews/stage-10-pass-008.md
+  - stage: 10
+    pass: 9
+    date: 2026-07-23
+    agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: clean
+    report: analysis/reviews/stage-10-pass-009.md
 
 accepted_slices:
   - feature: 001-secure-access-shell
@@ -260,6 +264,11 @@ accepted_slices:
     stage_10_pass: 8
     report: analysis/reviews/stage-10-pass-008.md
     workbook_rows: 6
+  - feature: 006-transaction-history
+    accepted_on: 2026-07-23
+    stage_10_pass: 9
+    report: analysis/reviews/stage-10-pass-009.md
+    workbook_rows: 7
 
 owner_gates:
   constitution_ratification:
