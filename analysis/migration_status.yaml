@@ -3,7 +3,7 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 95
+  current_stage_percent: 98
   overall_percent_estimate: 99
   estimate_only: true
   estimate_basis: >-
@@ -21,27 +21,27 @@ progress:
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T18:03:55+02:00
+  updated_at: 2026-07-23T18:07:49+02:00
 
 methodology_stage:
-  number: 7
-  name: Coding - Feature 009 delivery operations
-  status: peer-review-complete-ready-for-deployment
-  last_completed_stage: 10
+  number: 10
+  name: Final acceptance - Feature 009 and consolidated migration
+  status: ready-for-fresh-independent-review
+  last_completed_stage: 9
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: OpenAI Codex orchestrator
+  actor: Fresh Claude Code CLI independent reviewer
   feature: 009-delivery-operations
-  stage: 7
+  stage: 10
   instruction: >-
-    Commit the final test-only peer-review correction, merge Feature 009,
-    deploy it, reconcile live behavior, and obtain a fresh Stage 10 acceptance
-    pass.
+    Independently review Feature 009 delivery and live-revision evidence, then
+    verify the consolidated closure of all nine slices and 135 workbook rows.
   completion_gate: >-
-    Feature 008 is accepted by clean Stage 10 Pass 012 and T008 is complete.
+    Feature 009 is merged, deployed, and clean through Stage 9; all prior eight
+    slices have clean immutable Stage 10 acceptance reports.
 
 stage_3_fallback_result:
   mode: simulate
