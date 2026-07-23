@@ -3,46 +3,45 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 95
-  overall_percent_estimate: 92
+  current_stage_percent: 0
+  overall_percent_estimate: 93
   estimate_only: true
   estimate_basis: >-
-    Full migration estimate: shared Stages 1-6 and six of nine iterative
-    slices are accepted. Feature 007 implementation, delivery, and live
-    revision are complete; Stage 10 Pass 010 found one missing empty-statement
-    browser test, which is corrected pending fresh Pass 011.
+    Full migration estimate: shared Stages 1-6 and seven of nine iterative
+    slices are accepted. Feature 007 passed implementation, peer review,
+    public delivery, live revision, Pass 010 correction, and clean independent
+    repeat acceptance. Feature 008 is the next delivery slice.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 62
-    claude_usable_reports: 44
+    claude_sessions_started: 63
+    claude_usable_reports: 45
     codex_sessions_started: 37
     codex_usable_reports: 30
     deterministic_batches_covered: 23
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T15:20:54+02:00
+  updated_at: 2026-07-23T15:31:00+02:00
 
 methodology_stage:
-  number: 10
-  name: Independent acceptance - Feature 007 monthly statements
-  status: correction-complete-pending-repeat-review
-  last_completed_stage: 9
+  number: 7
+  name: Coding - Feature 008 data initialization
+  status: ready-to-start
+  last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: Claude Code CLI fresh independent reviewer, orchestrated by OpenAI Codex
-  feature: 007-monthly-statements
-  stage: 10
+  actor: OpenAI Codex orchestrator
+  feature: 008-data-initialization
+  stage: 7
   instruction: >-
-    Commit the Pass 010 empty-statement Playwright correction and delivery
-    evidence, then run fresh Stage 10 Pass 011 against the corrected immutable
-    revision.
+    Implement and test the approved Feature 008 explicit migration and import
+    slice, synchronize its SDD/tasks/workbook, and repeat Stages 8-10.
   completion_gate: >-
-    Pass 011 must independently verify the Pass 010 correction, complete
-    Feature 007 scope, unchanged immutable HEAD, and clean worktree.
+    Feature 007 code, tests, SDD/tasks/workbook, public delivery, Pass 010
+    correction, and clean Pass 011 acceptance are complete.
 
 stage_3_fallback_result:
   mode: simulate
@@ -244,6 +243,12 @@ review_passes:
     agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
     result: findings
     report: analysis/reviews/stage-10-pass-010.md
+  - stage: 10
+    pass: 11
+    date: 2026-07-23
+    agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: clean
+    report: analysis/reviews/stage-10-pass-011.md
 
 accepted_slices:
   - feature: 001-secure-access-shell
@@ -276,6 +281,11 @@ accepted_slices:
     stage_10_pass: 9
     report: analysis/reviews/stage-10-pass-009.md
     workbook_rows: 7
+  - feature: 007-monthly-statements
+    accepted_on: 2026-07-23
+    stage_10_pass: 11
+    report: analysis/reviews/stage-10-pass-011.md
+    workbook_rows: 8
 
 owner_gates:
   constitution_ratification:
