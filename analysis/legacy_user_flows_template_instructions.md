@@ -74,6 +74,15 @@ numbers. The active methodology stage and next action come only from
    - Convert the discovered user-visible behavior into feature specs,
      clarifications, plans, and tasks.
    - Mark whether each workbook row is covered, deferred, or missed by SDD.
+   - Coverage is outcome-level, not page-level. When one row lists several
+     observable actions, every action needs an SDD requirement and planned
+     verification; a shell, route, heading, or navigation link does not cover
+     the bundled business outcomes.
+   - Keep a target-surface inventory of all proposed routes, menu items, roles,
+     screens, API operations, and jobs. Every visible surface needs a concrete
+     useful action or observable contract. A target-only role requires an
+     explicit owner-approved requirement and must not be inferred from a
+     similarly named legacy page.
    - Do not implement code until the user explicitly approves the next
      implementation step.
 
@@ -108,6 +117,12 @@ numbers. The active methodology stage and next action come only from
    - Fill destination columns with implemented status, notes, and code evidence.
    - Use the workbook to identify gaps between legacy behavior, SDD, and the
      target implementation.
+   - For every role, open every visible target destination and complete its
+     useful action. Login success, `200 OK`, route access, and the expected
+     heading prove reachability only; they do not prove implementation.
+   - Visible placeholder text or generic empty workspaces are red gaps. A
+     deferred surface must be owner-approved, documented, and hidden from
+     production navigation.
 
 6. **Reconcile SDD ↔ workbook and plan the next gaps (end of each milestone, and before "done")**
    - Sweep every `specs/NNN-*/tasks.md` and list the tasks still unchecked
@@ -439,6 +454,8 @@ space. A populated detail row must not use white as a lifecycle state.
 ## Quality Rules
 
 - Do not claim `Yes` without concrete evidence.
+- Do not claim `Yes` for a bundled row until every observable outcome in the
+  row has target code and test evidence, or is split/deferred explicitly.
 - Do not treat documentation as source truth when code contradicts it.
 - Prefer small rows over giant bundled requirements.
 - Preserve legacy vocabulary where it matters, but explain it in modern
@@ -461,6 +478,10 @@ Before handing the workbook back:
 
 - Every legacy behavior row has source evidence.
 - Every destination `Yes` or `Partial` has target evidence.
+- Every shipped route and role-visible destination has a useful action in the
+  target-surface inventory and automated evidence beyond a heading/status
+  assertion.
+- No visible target destination contains placeholder or future-slice text.
 - Every `Deferred in SDD? = Yes` has SDD evidence.
 - Red rows are actionable and not vague.
 - Orange rows contain an explicit deferral and its reason.

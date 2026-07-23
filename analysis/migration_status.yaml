@@ -3,14 +3,16 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 100
-  overall_percent_estimate: 100
-  estimate_only: false
+  current_stage_percent: 10
+  overall_percent_estimate: 98
+  estimate_only: true
   estimate_basis: >-
-    Stage 10 Pass 014 cleanly accepted the deployed Feature 009 production
-    stylesheet/CSP correction and supersedes Pass 013 for that scope. All nine
-    slices and 135 workbook rows remain accepted. The approved Stage 3
-    simulation fallback remains an explicit external IBM-runtime risk.
+    The project owner's live role walkthrough found a visible Administrator
+    placeholder with no useful action. Previously accepted legacy banking
+    behavior remains implemented under Customer and Operator, but the
+    target-only Administrator surface requires an owner decision and a new
+    Stage 5-10 correction loop. The approved Stage 3 simulation fallback
+    remains an explicit external IBM-runtime risk.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
     claude_sessions_started: 73
@@ -21,12 +23,12 @@ progress:
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T19:49:00+02:00
+  updated_at: 2026-07-23T20:18:00+02:00
 
 methodology_stage:
-  number: 10
-  name: Final acceptance - Feature 009 and consolidated migration
-  status: complete-clean-pass-014
+  number: 4
+  name: Requirements revision - Administrator target surface
+  status: reopened-owner-observed-gap
   last_completed_stage: 10
   incomplete_stages:
     - 3
@@ -34,14 +36,16 @@ methodology_stage:
 
 next_action:
   actor: Project owner
-  feature: 009-delivery-operations
-  stage: 10
+  feature: administrator-surface
+  stage: 4
   instruction: >-
-    Use the deployed legacy and modern applications for demonstration. Reopen
-    Stage 3 only when authorized IBM infrastructure becomes available.
+    Decide whether strict legacy parity removes the target Administrator role
+    and surface, or target modernization adds an owner-approved Administrator
+    feature with concrete useful actions.
   completion_gate: >-
-    Feature 009 and the consolidated nine-slice migration are accepted by clean
-    Stage 10 Pass 014.
+    Record the owner decision, update the workbook and SDD, pass independent
+    Stage 6 verification, and take the resulting correction slice through
+    Stages 7-10 with a clean target-surface audit.
 
 stage_3_fallback_result:
   mode: simulate
@@ -315,12 +319,20 @@ accepted_slices:
     report: analysis/reviews/stage-10-pass-014.md
     workbook_rows: 26
 
+reopened_slices:
+  - feature: 001-secure-access-shell
+    discovered_on: 2026-07-23
+    source: project-owner-live-walkthrough
+    status: owner-decision-required
+    report: analysis/stage-09-administrator-surface-gap.md
+    failing_gate: npm --prefix analysis/tools run audit:target
+
 owner_gates:
   constitution_ratification:
     status: approved
     approved_by: project owner
-    approved_on: 2026-07-21
-    version: 0.6.1
+    approved_on: 2026-07-23
+    version: 0.7.0
   requirements_revision:
     status: approved
     approved_by: project owner
@@ -373,6 +385,15 @@ owner_gates:
     permitted_next_stage: 4
 
 known_blockers:
+  - id: target-administrator-surface-gap
+    affects_stage: 4
+    status: owner-decision-required
+    detail: >-
+      The visible target-only Administrator route is a placeholder with no
+      owner-approved useful action. The target-surface audit blocks acceptance
+      until the role is removed for strict parity or specified and delivered
+      as an explicit modernization feature.
+    evidence: analysis/stage-09-administrator-surface-gap.md; analysis/target-surface-inventory.json
   - id: stage-06-pass-012-clean
     affects_stage: 6
     status: resolved-stage-6-complete
@@ -533,5 +554,6 @@ governed_artifacts:
   workbook_instructions: analysis/legacy_user_flows_template_instructions.md
   review_protocol: analysis/reviews/README.md
   review_template: analysis/reviews/review_template.md
+  target_surface_inventory: analysis/target-surface-inventory.json
   methodology: analysis/migration_methodology.md
   constitution: .specify/memory/constitution.md

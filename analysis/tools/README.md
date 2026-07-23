@@ -39,6 +39,20 @@ Exit 0 / `AUDIT OK` means every invariant holds. Invariants checked:
   A:N; every `Rev N` data row has one uniform fill across A:I. This prevents
   partial repainting and inconsistent epic headings after workbook exports.
 
+## Run the target-surface audit
+
+```bash
+npm --prefix analysis/tools run audit:target
+```
+
+This gate reconciles Angular routes and navigation with
+`analysis/target-surface-inventory.json`, requires a concrete useful action with
+SDD/code/test evidence for every implemented surface, and requires test
+evidence to identify the concrete test name after `#`. It rejects visible
+gap/deferred destinations, rejects roles without a role-specific useful action,
+and scans shipped UI source for governed placeholder markers. Route existence,
+authorization, HTTP success, or a heading-only test cannot satisfy this gate.
+
 ## Writing mutation scripts
 
 Use `lib.js` — it encodes the incident-born rules:

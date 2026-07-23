@@ -69,6 +69,7 @@ conflict to the owner.
 | [Migration status](analysis/migration_status.yaml) | Machine-readable checkpoint and next action | At every stage transition or gate decision |
 | [Review protocol and records](analysis/reviews/README.md) | Auditable evidence for independent and control passes | Every Stage 2, 6, or 10 pass, including clean and blocked passes |
 | [Cross-agent orchestration](analysis/agent_orchestration.md) | Direct read-only review through an external agent CLI, including context checkpoints | Whenever agents review or challenge one another without owner message relay |
+| [Target surface inventory](analysis/target-surface-inventory.json) | Every shipped route, role-visible destination, useful action, and its SDD/code/test evidence | Stage 5 design and every Stage 7-10 delivery loop |
 | [Legacy reconnaissance](analysis/legacy_reconnaissance.md) | Stage 1 handoff and evidence boundary | New legacy evidence changes the handoff |
 | [Legacy deployment overview](analysis/cobol_deployment_overview.md) | What can and cannot run without IBM infrastructure | Runtime prerequisites or deployment knowledge changes |
 | [Constitution](.specify/memory/constitution.md) | Project governance and non-negotiable constraints | Through an explicit, documented amendment |
@@ -114,6 +115,19 @@ no Bank of Z evidence; the filled workbook is the governed project record.
   correction, and the repeat-review outcome.
 - Keep code, tests, SDD, tasks, and the filled workbook synchronized in the
   same implementation PR.
+- A route, menu item, role workspace, screen, API operation, or job is not
+  complete merely because it exists, returns success, or shows the expected
+  heading. Every shipped surface MUST appear in
+  `analysis/target-surface-inventory.json` with at least one concrete useful
+  action or observable contract and SDD, code, and automated-test evidence.
+  Test evidence MUST identify the concrete test name, not merely a test file.
+  Visible placeholders, "coming soon" destinations, and deferred surfaces left
+  in navigation fail the target-surface gate.
+- Stage 9 MUST exercise every visible destination for every applicable role and
+  demonstrate its useful action, not only authentication and navigation.
+  Stage 10 reviewers receive the target-surface inventory and fail closed when
+  a surface is missing, placeholder-only, or supported only by a title/HTTP
+  status assertion.
 - Starting at Stage 7, deliver iteratively. Select one approved feature or a
   small, tightly related group of features as a delivery slice, then take only
   that slice through Stage 7 build, Stage 8 delivery, Stage 9 live revision,
@@ -123,6 +137,9 @@ no Bank of Z evidence; the filled workbook is the governed project record.
   slices are accepted, run the consolidated Stage 10 final acceptance.
 - Run every automated gate named by the active stage. After any filled-workbook
   edit, run `npm --prefix analysis/tools run audit` and require `AUDIT OK`.
+  After target routes, navigation, roles, or user-facing screens change, run
+  `npm --prefix analysis/tools run audit:target` and require
+  `TARGET SURFACE AUDIT OK`.
 - Update `analysis/migration_status.yaml` when a stage, gate, blocker, or owner
   decision changes. Do not mark approval merely because code was merged.
 - Stop at owner gates. State what was completed, show evidence, and name the

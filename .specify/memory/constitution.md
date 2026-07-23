@@ -1,5 +1,7 @@
 <!--
 Sync Impact Report
+0.7.0: Added target-surface completeness, useful-action evidence, placeholder
+rejection, and role-by-role live click-through as hard acceptance gates.
 0.6.1: Clarified self-contained reviewer packets and scoped retries after
 orchestration-environment failures.
 0.6.0: Added durable progress reporting, mandatory blocked-scope closure, and
@@ -167,6 +169,31 @@ labeled simulated and MUST cite its legacy evidence basis. Neither simulation
 nor waiver verifies the real legacy runtime; affected workbook rows remain
 unverified until a real walkthrough confirms them.
 
+### XIII. Every Shipped Surface Must Be Useful
+
+A route, navigation item, role workspace, screen, API operation, or job is not
+implemented merely because it exists, returns success, enforces authorization,
+or displays the expected title. Every shipped surface MUST be recorded in
+`analysis/target-surface-inventory.json` with at least one concrete useful
+action or observable contract and traceable SDD, code, and automated-test
+evidence. Automated evidence MUST name the concrete test case after `#`; a
+reference to a test file alone is not proof of the action. When a workbook row
+bundles several observable outcomes, every
+outcome MUST be evidenced or explicitly split/deferred before the row becomes
+green.
+
+Every role exposed by the target MUST have at least one owner-approved useful
+action. A target-only role or surface cannot derive business meaning from a
+similarly named legacy file. Visible placeholders, generic empty workspaces,
+"coming soon" text, and future-slice destinations are release-blocking gaps.
+An approved deferred surface MUST be hidden from production navigation.
+
+Stage 9 walks every visible destination for every applicable role and performs
+the listed useful action. Stage 10 independently reconciles deployed
+routes/navigation with the target-surface inventory. Login, `200 OK`, access
+probes, route guards, and heading-only assertions cannot by themselves close a
+surface.
+
 ## Repository Layout and Decisions
 
 - `legacy/`: immutable IBM Bank of Z source snapshot.
@@ -229,6 +256,9 @@ the status without erasing history, and names the next gate. Stages 2, 6, and
 - Database mutation never occurs as a side effect of normal startup.
 - Security deviations from legacy are explicit and tested.
 - A feature is not complete until code, tests, SDD, tasks, and workbook agree.
+- Every visible target surface passes the target-surface audit and has
+  useful-action evidence; no placeholder destination or actionless role is
+  accepted.
 - Each implementation slice receives a fresh read-only external peer review
   after tests pass. Findings are independently validated by the primary agent;
   no more than two discussion rounds are allowed, and unresolved material

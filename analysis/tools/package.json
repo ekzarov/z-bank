@@ -6,7 +6,9 @@
     "audit": "node workbook-audit.js",
     "audit:sdd": "node stage5-sdd-audit.js",
     "audit:evidence": "node verify-legacy-evidence.js",
-    "test:sdd-lifecycle": "node stage5-sdd-audit.test.js"
+    "audit:target": "node target-surface-audit.js",
+    "test:sdd-lifecycle": "node stage5-sdd-audit.test.js",
+    "test:target-audit": "node target-surface-audit.test.js"
   },
   "dependencies": {
     "exceljs": "^4.4.0"

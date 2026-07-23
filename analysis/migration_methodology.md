@@ -103,7 +103,10 @@ and repeat this loop:
    every finding and use at most two evidence-based discussion rounds.
 2. **Stage 8 — Delivery:** deploy that slice and close its smoke test.
 3. **Stage 9 — Live revision:** compare that slice with the legacy baseline and
-   map through every affected channel.
+   map through every affected channel. For every role, open every visible
+   destination and complete at least one useful action or observable contract;
+   a successful login, HTTP status, route, or heading alone is not evidence of
+   a completed surface.
 4. **Stage 10 — Slice acceptance:** an eligible independent agent checks the
    delivered slice. Findings return to Stage 5 (or Stage 1 for a map error),
    then the corrected slice repeats the loop. A clean accepted slice releases
@@ -223,6 +226,17 @@ or environment.
   under `specs/NNN-*`.
 - The map and SDD are linked through the coverage columns and must never
   disagree.
+- Build or update `analysis/target-surface-inventory.json`. Every target route,
+  menu item, role workspace, screen, API operation, and job in the slice maps
+  to a concrete user-visible action or observable contract plus its SDD
+  requirement. A target-only role or screen with no legacy predecessor needs
+  an explicit owner-approved target requirement; it cannot inherit completion
+  from a similarly named legacy file or page. Automated evidence names the
+  concrete test case after `#`; a test-file reference alone is insufficient.
+- Decompose bundled workbook outcomes before claiming coverage. If one row says
+  that a control panel exposes seven actions, navigation-shell evidence does
+  not cover the row: each action must be traceable to SDD and planned
+  verification, or the row must be split/deferred explicitly.
 - **Not a single line of implementation code before the owner approves the
   SDD.**
 
@@ -234,6 +248,9 @@ or environment.
   - map ↔ decisions: are the requirements-revision decisions reflected?
   - map ↔ SDD: is every row covered by the specs or explicitly deferred with
     a written reason?
+  - target surface ↔ SDD: does every declared role and destination have a
+    concrete useful action and acceptance evidence, rather than a placeholder
+    heading or access probe?
 - The check is not paper-only: following the **source code evidence** columns,
   the agent goes back into the legacy sources row by row — opening the cited
   files and lines and verifying that the requirement and the spec really match
@@ -259,6 +276,11 @@ or environment.
   pull the entire approved backlog into one implementation batch.
 - Branch first (`main` stays stable) → implement on the target stack.
 - **Automated tests are a hard gate**: no PR ships on red.
+- A new visible route or role destination ships only with a completed
+  target-surface inventory entry and an automated test that performs or
+  observes its useful action. Route existence, `200 OK`, authorization success,
+  and heading-only assertions are necessary checks but never sufficient
+  acceptance evidence.
 - After tests pass, the primary agent sends the slice requirements and diff to
   a fresh read-only external reviewer. It validates every response rather than
   accepting it automatically. Confirmed findings are fixed and tests rerun;
@@ -277,6 +299,8 @@ or environment.
   stand once** and then simply lives there as the comparison baseline, while
   **the new system is redeployed after every delivered feature**.
 - A smoke test closes every delivery.
+- The smoke must fail on visible placeholders and must execute one meaningful
+  action for each changed role-visible destination.
 
 ### Stage 9 — Live revision (map vs the living systems, every channel)
 
@@ -285,6 +309,16 @@ or environment.
   system has**: pages, links, and forms in a web UI; screens and transactions
   in a terminal (3270/COBOL/IMS); API routes; batch jobs — and compares what
   it sees against the map.
+- Before walking, enumerate routes, navigation items, roles, screens, API
+  operations, and jobs from the deployed target and reconcile that inventory
+  with `analysis/target-surface-inventory.json`. For every applicable role,
+  click every visible navigation item and complete the listed useful action.
+  A page that only authenticates, loads, returns `200`, or displays its title is
+  recorded as a gap when the inventory or SDD promises functionality.
+- Scan the deployed and source UI for placeholder destinations (for example
+  "next migration slice", "coming soon", "not implemented", or an empty generic
+  workspace). A deferred surface may remain only when it is explicitly
+  owner-approved and hidden from production navigation.
 - Every finding updates the map **and** the SDD in the same change set.
 - **Unverified = not done (red).** Every gap records its provenance:
   confirmed by observation, or not-checked (the check is then the first step
@@ -298,6 +332,9 @@ or environment.
     acceptance backlog.
 - The workbook audit script (`node analysis/tools/workbook-audit.js`) must
   pass before any workbook commit.
+- The target-surface audit
+  (`npm --prefix analysis/tools run audit:target`) must pass before Stage 9 can
+  close.
 - Stage 9 closes for a delivered slice only when every observed difference is
   represented in the workbook and SDD, all gaps have looped back to Stage 5 or
   have an explicit owner decision, and the workbook audit passes. Stage 9 does
@@ -314,14 +351,20 @@ or environment.
   other vendors** (e.g. Google Antigravity, OpenAI Codex or equivalent): the
   agent that wrote the code never signs off on itself.
 - The third-party agent receives only the instruction, the workbook, and the
-  stand URL. When its results match the map, the acceptance is signed by the
-  owner.
+  stand URL, plus the target-surface inventory. The reviewer independently
+  enumerates deployed navigation/routes and compares them with that inventory.
+  It must exercise useful actions for every role-visible destination; title,
+  route, access-probe, and HTTP-status-only checks cannot close a surface. When
+  its results match the map and surface inventory, the acceptance is signed by
+  the owner.
 - Every acceptance attempt is recorded as
   `analysis/reviews/stage-10-pass-NNN.md`. A finding returns to Stage 5 and the
   next attempt requires another eligible fresh agent. Final acceptance requires
-  a clean report, a complete consolidated backlog, passing automated gates, and
-  the owner's recorded signature. After all slices are accepted, repeat this
-  stage once across the complete system for final consolidated acceptance.
+  a clean report, a complete consolidated backlog, passing workbook, SDD, and
+  target-surface audits, and the owner's recorded signature. No visible
+  placeholder or role without a useful accepted action may remain. After all
+  slices are accepted, repeat this stage once across the complete system for
+  final consolidated acceptance.
 
 ## Loops (return arrows)
 
