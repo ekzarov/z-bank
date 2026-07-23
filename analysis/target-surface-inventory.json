@@ -288,7 +288,19 @@
       "visibility": "navigation",
       "status": "gap",
       "actions": [],
-      "finding": "The target-only Administrator role is visible but has no owner-approved useful action; the page is a placeholder."
+      "plannedActions": [
+        {
+          "name": "Manage users, governed roles, and lockout state",
+          "roles": ["Administrator"],
+          "requirements": ["specs/010-access-administration/spec.md#FR-001"]
+        },
+        {
+          "name": "Filter and inspect immutable security-audit events",
+          "roles": ["Administrator"],
+          "requirements": ["specs/010-access-administration/spec.md#FR-013"]
+        }
+      ],
+      "finding": "Owner approved target-only Access Administration on 2026-07-23; Feature 010 is designed but not yet implemented."
     },
     {
       "id": "not-found",

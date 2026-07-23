@@ -74,3 +74,11 @@ SDD. A fresh independent agent must verify every workbook row against its cited
 legacy source, the Stage 4 decision, and the SDD requirement; sampling is not
 allowed. Findings return to Stage 5. A clean immutable Stage 6 report and
 explicit owner implementation approval are required before any Stage 7 code.
+
+## 2026-07-23 Target-Only Addendum
+
+Owner-approved Feature 010 adds Access Administration as a tenth target-only
+slice with no legacy workbook rows. Its separate Stage 5 report is
+`analysis/stage-05-access-administration-report.md`. The original Pass 012 does
+not verify this new scope; Feature 010 requires a fresh independent Stage 6
+review before implementation.

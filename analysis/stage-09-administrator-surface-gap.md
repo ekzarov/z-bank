@@ -57,16 +57,9 @@ surface.
 
 The new audit fails correctly on the current target with four violations.
 
-## Owner Decision Required
+## Owner Decision
 
-Choose one:
-
-1. **Strict legacy parity:** remove the target Administrator persona, route,
-   navigation, and access probe because legacy has no separate Administrator
-   role. Staff banking operations remain under `Operator`.
-2. **Target-only modernization:** define a new owner-approved Administrator
-   feature, for example user/role/lockout management and security-audit review,
-   then take it through Stages 5-10.
-
-Until that decision and its resulting slice are accepted, the migration is not
-100% complete.
+On 2026-07-23 the project owner selected **target-only modernization**.
+Feature 010 defines user, role, lockout, and security-audit management and must
+traverse Stages 5-10. Until that slice is accepted, the migration is not 100%
+complete.
