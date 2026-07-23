@@ -1,4 +1,4 @@
-name: Modern Feature 001
+name: Modern Bank of Z
 
 on:
   pull_request:
@@ -49,3 +49,15 @@ jobs:
         working-directory: modern/frontend/bank-of-z-ui
       - run: npm audit --omit=dev
         working-directory: modern/frontend/bank-of-z-ui
+      - run: node modern/scripts/verify-delivery.mjs
+      - run: node modern/scripts/scan-secrets.mjs
+      - run: docker compose -f modern/compose.yaml config --quiet
+        env:
+          BANKOFZ_SA_PASSWORD: Validation-Sa-Password-2026!
+          BANKOFZ_API_DB_PASSWORD: Validation-Api-Password-2026!
+          BANKOFZ_OPERATOR_DB_PASSWORD: Validation-Operator-Password-2026!
+      - run: docker compose -f modern/compose.yaml --profile tools build api ui setup
+        env:
+          BANKOFZ_SA_PASSWORD: Validation-Sa-Password-2026!
+          BANKOFZ_API_DB_PASSWORD: Validation-Api-Password-2026!
+          BANKOFZ_OPERATOR_DB_PASSWORD: Validation-Operator-Password-2026!

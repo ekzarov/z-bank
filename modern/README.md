@@ -4,6 +4,9 @@ The modern system is delivered as an Angular 22 UI, a .NET 10 API, and SQL
 Server. Normal API startup never creates or changes schema, data, roles, or
 users.
 
+The complete deployment, backup, rollback, troubleshooting, and secret-safe
+persona handoff is in [`OPERATIONS.md`](OPERATIONS.md).
+
 Copy `.env.example` to `.env` and replace every placeholder with a distinct
 secret. Database access is deliberately separated:
 
@@ -25,6 +28,14 @@ docker compose up -d --build api ui
 
 Open `http://localhost:8088/z-bank-new/`. Demo users are `customer`, `operator`,
 and `administrator`; all use the operator-supplied `BANKOFZ_DEMO_PASSWORD`.
+The web edge publishes `/health/live` and `/health/ready`; only readiness checks
+required SQL connectivity.
+
+Run the role and read-only business smoke:
+
+```bash
+BANKOFZ_BASE_URL=http://localhost:8088 BANKOFZ_DEMO_PASSWORD=... ./scripts/smoke-demo.sh
+```
 
 ## Legacy import
 
