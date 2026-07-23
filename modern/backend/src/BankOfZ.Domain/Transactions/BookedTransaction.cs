@@ -21,6 +21,7 @@ public sealed class BookedTransaction
     public string RequestFingerprint { get; private set; } = null!;
     public string? TransferCorrelationId { get; private set; }
     public SourceSystem SourceSystem { get; private set; }
+    public string? SourceIdentifier { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
 
     public static BookedTransaction Create(
@@ -35,7 +36,18 @@ public sealed class BookedTransaction
         string idempotencyKey,
         string requestFingerprint,
         DateTimeOffset createdAt,
-        string? transferCorrelationId = null) => new()
+        string? transferCorrelationId = null,
+        SourceSystem sourceSystem = SourceSystem.Modern,
+        string? sourceIdentifier = null)
+    {
+        if (sourceIdentifier?.Length > CashTransactionRules.SourceIdentifierMaxLength)
+        {
+            throw new ArgumentException(
+                $"Source identifier cannot exceed {CashTransactionRules.SourceIdentifierMaxLength} characters.",
+                nameof(sourceIdentifier));
+        }
+
+        return new()
         {
             Id = Guid.NewGuid(),
             Reference = reference,
@@ -49,7 +61,9 @@ public sealed class BookedTransaction
             IdempotencyKey = idempotencyKey,
             RequestFingerprint = requestFingerprint,
             TransferCorrelationId = transferCorrelationId,
-            SourceSystem = SourceSystem.Modern,
+            SourceSystem = sourceSystem,
+            SourceIdentifier = string.IsNullOrWhiteSpace(sourceIdentifier) ? null : sourceIdentifier.Trim(),
             CreatedAt = createdAt
         };
+    }
 }

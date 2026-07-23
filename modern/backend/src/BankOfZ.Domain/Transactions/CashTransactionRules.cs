@@ -6,5 +6,6 @@ public static class CashTransactionRules
     public const int IdempotencyKeyMaxLength = 64;
     public const int RequestFingerprintMaxLength = 128;
     public const int TransferCorrelationIdLength = 32;
+    public const int SourceIdentifierMaxLength = 128;
     public const decimal MaximumAmount = 9999999999999999.99m;
 }

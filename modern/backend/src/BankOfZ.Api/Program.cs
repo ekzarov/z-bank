@@ -103,6 +103,9 @@ builder.Services.AddScoped<ICashTransactionRepository, CashTransactionRepository
 builder.Services.AddScoped<CashTransactionService>();
 builder.Services.AddScoped<IInternalTransferRepository, InternalTransferRepository>();
 builder.Services.AddScoped<InternalTransferService>();
+builder.Services.AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>();
+builder.Services.AddScoped<TransactionHistoryService>();
+builder.Services.AddSingleton<HistoryCursorCodec>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICustomerAuditWriter, CustomerAuditWriter>();
 builder.Services.AddScoped<ICustomerAccountStatusReader, CustomerAccountStatusReader>();
@@ -113,6 +116,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<CustomerExceptionHandler>();
 builder.Services.AddExceptionHandler<AccountExceptionHandler>();
 builder.Services.AddExceptionHandler<CashTransactionExceptionHandler>();
+builder.Services.AddExceptionHandler<TransactionHistoryExceptionHandler>();
 builder.Services.AddHealthChecks();
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {

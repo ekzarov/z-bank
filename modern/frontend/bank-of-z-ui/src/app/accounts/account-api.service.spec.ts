@@ -42,4 +42,20 @@ describe('AccountApiService', () => {
     expect(request.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/);
     request.flush({ reference });
   });
+
+  it('requests bounded history with normalized filters and cursor', () => {
+    service.history(
+      '10000001',
+      '2026-07-01T00:00:00Z',
+      '2026-08-01T00:00:00Z',
+      'opaque').subscribe();
+
+    const request = http.expectOne(request => request.url.endsWith('/transactions'));
+    expect(request.request.method).toBe('GET');
+    expect(request.request.params.get('pageSize')).toBe('50');
+    expect(request.request.params.get('from')).toBe('2026-07-01T00:00:00Z');
+    expect(request.request.params.get('to')).toBe('2026-08-01T00:00:00Z');
+    expect(request.request.params.get('cursor')).toBe('opaque');
+    request.flush({ items: [], pageSize: 50, nextCursor: null });
+  });
 });

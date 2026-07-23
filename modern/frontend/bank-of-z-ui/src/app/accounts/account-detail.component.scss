@@ -2,6 +2,7 @@
 .back { display:inline-block; margin-bottom:20px; color:#176b79; }
 .account-detail { padding:28px; border:1px solid #cbd8de; border-radius:6px; background:#fff; }
 header { display:flex; justify-content:space-between; gap:20px; }
+.history-link { display:inline-block; margin-top:14px; color:#126d74; font-weight:700; }
 .status { align-self:start; padding:5px 9px; color:#285c3c; background:#e2f2e7; border-radius:4px; text-transform:capitalize; }
 .balance-band { display:grid; grid-template-columns:1fr 1fr; gap:1px; margin:18px 0; background:#d4e0e4; border:1px solid #d4e0e4; }
 .balance-band div { padding:22px; background:#f1f7f8; }.balance-band span,.balance-band strong{display:block}.balance-band strong{margin-top:6px;font-size:1.65rem}

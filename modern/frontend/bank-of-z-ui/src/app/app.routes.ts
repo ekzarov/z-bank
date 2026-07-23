@@ -9,6 +9,8 @@ import { UnavailableComponent } from './pages/unavailable.component';
 import { CustomerProfileComponent } from './customers/customer-profile.component';
 import { CustomerWorkspaceComponent } from './customers/customer-workspace.component';
 import { AccountDetailComponent } from './accounts/account-detail.component';
+import { TransactionHistoryComponent } from './accounts/transaction-history.component';
+import { TransactionHistoryDetailComponent } from './accounts/transaction-history-detail.component';
 
 export const routes: Routes = [
   { path: 'sign-in', component: SignInComponent },
@@ -16,6 +18,8 @@ export const routes: Routes = [
   { path: '', component: DashboardComponent, canActivate: [authGuard] },
   { path: 'customer', component: CustomerProfileComponent, canActivate: [authGuard, roleGuard], data: { role: 'Customer' } },
   { path: 'operations', component: CustomerWorkspaceComponent, canActivate: [authGuard, roleGuard], data: { role: 'Operator' } },
+  { path: 'accounts/:id/transactions/:reference', component: TransactionHistoryDetailComponent, canActivate: [authGuard] },
+  { path: 'accounts/:id/transactions', component: TransactionHistoryComponent, canActivate: [authGuard] },
   { path: 'accounts/:id', component: AccountDetailComponent, canActivate: [authGuard] },
   { path: 'administration', component: RoleWorkspaceComponent, canActivate: [authGuard, roleGuard], data: { role: 'Administrator', title: 'Access administration' } },
   { path: '**', component: NotFoundComponent }

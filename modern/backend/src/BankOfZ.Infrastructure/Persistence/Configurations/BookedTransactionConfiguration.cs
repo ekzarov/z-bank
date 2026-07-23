@@ -34,6 +34,8 @@ public sealed class BookedTransactionConfiguration : IEntityTypeConfiguration<Bo
             .HasMaxLength(CashTransactionRules.RequestFingerprintMaxLength).IsUnicode(false);
         builder.Property(transaction => transaction.TransferCorrelationId)
             .HasMaxLength(CashTransactionRules.TransferCorrelationIdLength).IsUnicode(false);
+        builder.Property(transaction => transaction.SourceIdentifier)
+            .HasMaxLength(CashTransactionRules.SourceIdentifierMaxLength);
         builder.HasOne<Account>()
             .WithMany()
             .HasForeignKey(transaction => transaction.AccountId)
