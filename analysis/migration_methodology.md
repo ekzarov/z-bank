@@ -232,7 +232,10 @@ or environment.
   requirement. A target-only role or screen with no legacy predecessor needs
   an explicit owner-approved target requirement; it cannot inherit completion
   from a similarly named legacy file or page. Automated evidence names the
-  concrete test case after `#`; a test-file reference alone is insufficient.
+  concrete test case after `#` and binds the test title to the surface and role
+  with `@surface:<id>` and `@role:<role>`. The binding is structurally audited;
+  Stage 9/10 must still execute the action because metadata cannot prove test
+  semantics.
 - Decompose bundled workbook outcomes before claiming coverage. If one row says
   that a control panel exposes seven actions, navigation-shell evidence does
   not cover the row: each action must be traceable to SDD and planned

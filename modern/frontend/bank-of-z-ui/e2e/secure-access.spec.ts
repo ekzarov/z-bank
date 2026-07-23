@@ -14,7 +14,7 @@ const roleCases = [
   { userName: 'administrator', link: 'Administration', heading: 'Access administration', hiddenLinks: ['My banking', 'Customer operations'] }
 ];
 
-test('customer can sign in, use a protected route, and sign out @e2e', async ({ page }) => {
+test('customer can sign in, use a protected route, and sign out @e2e @surface:sign-in @role:Anonymous', async ({ page }) => {
   const password = requiredDemoPassword();
 
   await page.goto('customer');
@@ -33,7 +33,7 @@ test('customer can sign in, use a protected route, and sign out @e2e', async ({ 
   await expect(page).toHaveURL(/\/z-bank-new\/sign-in$/);
 });
 
-test('API outage opens the recoverable unavailable page @e2e', async ({ page }) => {
+test('API outage opens the recoverable unavailable page @e2e @surface:unavailable @role:Shared', async ({ page }) => {
   await page.route('**/api/session', route => route.fulfill({
     status: 503,
     contentType: 'application/problem+json',
@@ -46,7 +46,7 @@ test('API outage opens the recoverable unavailable page @e2e', async ({ page }) 
   await expect(page.getByRole('heading', { name: 'We could not complete that request' })).toBeVisible();
 });
 
-test('customer can transfer between owned demo accounts and see a rejected transfer @e2e @funds-transfers', async ({ page }) => {
+test('customer can transfer between owned demo accounts and see a rejected transfer @e2e @funds-transfers @surface:account-detail @role:Customer', async ({ page }) => {
   const password = requiredDemoPassword();
   await page.goto('sign-in');
   await page.getByLabel('User name').fill('customer');
@@ -71,7 +71,7 @@ test('customer can transfer between owned demo accounts and see a rejected trans
   await expect(page.getByRole('alert')).toContainText('exceeds the available balance');
 });
 
-test('customer can filter transaction history and open a transaction @e2e @transaction-history', async ({ page }) => {
+test('customer can filter transaction history and open a transaction @e2e @transaction-history @surface:transaction-history @surface:transaction-detail @role:Customer', async ({ page }) => {
   const password = requiredDemoPassword();
   await page.goto('sign-in');
   await page.getByLabel('User name').fill('customer');
@@ -97,24 +97,36 @@ test('customer can filter transaction history and open a transaction @e2e @trans
   await expect(page.getByText('Resulting balance', { exact: true })).toBeVisible();
 });
 
-for (const roleCase of roleCases) {
-  test(`${roleCase.userName} sees only authorized navigation @e2e`, async ({ page }) => {
-    const password = requiredDemoPassword();
+async function verifyRoleNavigation(
+  page: import('@playwright/test').Page,
+  roleCase: typeof roleCases[number]
+): Promise<void> {
+  const password = requiredDemoPassword();
+  await page.goto('sign-in');
+  await page.getByLabel('User name').fill(roleCase.userName);
+  await page.getByLabel('Password').fill(password);
+  await page.getByRole('button', { name: 'Sign in' }).click();
 
-    await page.goto('sign-in');
-    await page.getByLabel('User name').fill(roleCase.userName);
-    await page.getByLabel('Password').fill(password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
-
-    await page.getByRole('link', { name: roleCase.link }).click();
-    await expect(page.getByRole('heading', { name: roleCase.heading })).toBeVisible();
-    for (const hiddenLink of roleCase.hiddenLinks) {
-      await expect(page.getByRole('link', { name: hiddenLink })).toHaveCount(0);
-    }
-  });
+  await page.getByRole('link', { name: roleCase.link }).click();
+  await expect(page.getByRole('heading', { name: roleCase.heading })).toBeVisible();
+  for (const hiddenLink of roleCase.hiddenLinks) {
+    await expect(page.getByRole('link', { name: hiddenLink })).toHaveCount(0);
+  }
 }
 
-test('operator can create find update and retire a customer @e2e', async ({ page }) => {
+test('customer sees only authorized navigation @e2e @surface:overview @role:Customer', async ({ page }) => {
+  await verifyRoleNavigation(page, roleCases[0]);
+});
+
+test('operator sees only authorized navigation @e2e @surface:overview @role:Operator', async ({ page }) => {
+  await verifyRoleNavigation(page, roleCases[1]);
+});
+
+test('administrator sees only authorized navigation @e2e @surface:overview @role:Administrator', async ({ page }) => {
+  await verifyRoleNavigation(page, roleCases[2]);
+});
+
+test('operator can create find update and retire a customer @e2e @surface:operator-customers @role:Operator', async ({ page }) => {
   const password = requiredDemoPassword();
 
   await page.goto('sign-in');
@@ -150,7 +162,7 @@ test('operator can create find update and retire a customer @e2e', async ({ page
   await expect(page.getByRole('status')).toContainText(`Customer ${customerId} retired`);
 });
 
-test('operator can manage an account and book cash with insufficient-funds protection @e2e @account-management @cash-transactions', async ({ page }) => {
+test('operator can manage an account and book cash with insufficient-funds protection @e2e @account-management @cash-transactions @surface:operator-customers @surface:account-detail @role:Operator', async ({ page }) => {
   const password = requiredDemoPassword();
 
   await page.goto('sign-in');
@@ -233,7 +245,7 @@ test('operator can transfer between accounts and rejected transfer keeps the bal
   await expect(page.locator('.balance-band')).toHaveText(balanceAfterTransfer!);
 });
 
-test('operator sees empty and populated history while a customer cannot see the foreign account @e2e @transaction-history', async ({ page }) => {
+test('operator sees empty and populated history while a customer cannot see the foreign account @e2e @transaction-history @surface:transaction-history @surface:transaction-detail @role:Operator', async ({ page }) => {
   const password = requiredDemoPassword();
   await page.goto('sign-in');
   await page.getByLabel('User name').fill('operator');

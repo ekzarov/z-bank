@@ -5,7 +5,7 @@ import { CustomerProfileComponent } from './customer-profile.component';
 import { AccountApiService } from '../accounts/account-api.service';
 
 describe('CustomerProfileComponent', () => {
-  it('shows the profile returned by the self endpoint', () => {
+  it('shows the profile returned by the self endpoint @surface:customer-profile @role:Customer', () => {
     TestBed.configureTestingModule({
       imports: [CustomerProfileComponent],
       providers: [

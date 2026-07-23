@@ -121,6 +121,9 @@ no Bank of Z evidence; the filled workbook is the governed project record.
   `analysis/target-surface-inventory.json` with at least one concrete useful
   action or observable contract and SDD, code, and automated-test evidence.
   Test evidence MUST identify the concrete test name, not merely a test file.
+  Its title MUST include `@surface:<id>` and `@role:<role>` bindings. These
+  bindings are structural evidence only; Stage 9/10 still executes and
+  independently checks the useful action.
   Visible placeholders, "coming soon" destinations, and deferred surfaces left
   in navigation fail the target-surface gate.
 - Stage 9 MUST exercise every visible destination for every applicable role and

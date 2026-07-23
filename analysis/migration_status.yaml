@@ -15,15 +15,15 @@ progress:
     remains an explicit external IBM-runtime risk.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 73
-    claude_usable_reports: 54
+    claude_sessions_started: 74
+    claude_usable_reports: 55
     codex_sessions_started: 37
     codex_usable_reports: 30
     deterministic_batches_covered: 23
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T20:18:00+02:00
+  updated_at: 2026-07-23T20:52:45+02:00
 
 methodology_stage:
   number: 4

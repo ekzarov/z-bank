@@ -82,7 +82,9 @@ numbers. The active methodology stage and next action come only from
      screens, API operations, and jobs. Every visible surface needs a concrete
      useful action or observable contract. A target-only role requires an
      explicit owner-approved requirement and must not be inferred from a
-     similarly named legacy page.
+     similarly named legacy page. Acceptance-test titles bind evidence to the
+     exact destination and role with `@surface:<id>` and `@role:<role>`;
+     reviewers still execute the action because tags alone do not prove it.
    - Do not implement code until the user explicitly approves the next
      implementation step.
 

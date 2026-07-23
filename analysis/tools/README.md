@@ -52,6 +52,9 @@ evidence to identify the concrete test name after `#`. It rejects visible
 gap/deferred destinations, rejects roles without a role-specific useful action,
 and scans shipped UI source for governed placeholder markers. Route existence,
 authorization, HTTP success, or a heading-only test cannot satisfy this gate.
+Every referenced test title is bound with `@surface:<id>` and `@role:<role>`;
+the audit checks those structural bindings. Stage 9/10 reviewers still execute
+the action because static tags alone cannot prove test semantics.
 
 ## Writing mutation scripts
 

@@ -177,10 +177,12 @@ or displays the expected title. Every shipped surface MUST be recorded in
 `analysis/target-surface-inventory.json` with at least one concrete useful
 action or observable contract and traceable SDD, code, and automated-test
 evidence. Automated evidence MUST name the concrete test case after `#`; a
-reference to a test file alone is not proof of the action. When a workbook row
-bundles several observable outcomes, every
-outcome MUST be evidenced or explicitly split/deferred before the row becomes
-green.
+reference to a test file alone is not proof of the action. Test titles MUST bind
+their evidence to `@surface:<id>` and `@role:<role>`. These tags provide
+structural traceability but do not prove semantics, so Stage 9/10 MUST still
+execute the action. When a workbook row bundles several observable outcomes,
+every outcome MUST be evidenced or explicitly split/deferred before the row
+becomes green.
 
 Every role exposed by the target MUST have at least one owner-approved useful
 action. A target-only role or surface cannot derive business meaning from a

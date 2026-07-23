@@ -5,9 +5,13 @@
   "navigationFile": "modern/frontend/bank-of-z-ui/src/app/core/navigation-items.ts",
   "forbiddenVisibleMarkers": [
     "next migration slice",
+    "ready for the next",
+    "future slice",
+    "future feature",
     "coming soon",
     "not implemented",
-    "under construction"
+    "under construction",
+    "placeholder"
   ],
   "surfaces": [
     {
@@ -19,9 +23,15 @@
       "actions": [
         {
           "name": "Authenticate a valid persona and reject invalid credentials",
+          "roles": ["Anonymous"],
           "requirements": ["specs/001-secure-access-shell/spec.md#FR-001"],
           "code": ["modern/frontend/bank-of-z-ui/src/app/pages/sign-in.component.ts"],
-          "tests": ["modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#customer can sign in, use a protected route, and sign out"]
+          "tests": [
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#customer can sign in, use a protected route, and sign out",
+              "roles": ["Anonymous"]
+            }
+          ]
         }
       ]
     },
@@ -29,14 +39,21 @@
       "id": "unavailable",
       "path": "/unavailable",
       "roles": ["Customer", "Operator", "Administrator"],
+      "roleInvariant": true,
       "visibility": "error-route",
       "status": "implemented",
       "actions": [
         {
           "name": "Show a recoverable error without exposing diagnostics",
+          "roles": ["Shared"],
           "requirements": ["specs/001-secure-access-shell/spec.md#FR-010"],
           "code": ["modern/frontend/bank-of-z-ui/src/app/pages/unavailable.component.ts"],
-          "tests": ["modern/frontend/bank-of-z-ui/src/app/pages/error-pages.spec.ts#renders a recoverable unavailable view without diagnostics"]
+          "tests": [
+            {
+              "reference": "modern/frontend/bank-of-z-ui/src/app/pages/error-pages.spec.ts#renders a recoverable unavailable view without diagnostics",
+              "roles": ["Shared"]
+            }
+          ]
         }
       ]
     },
@@ -49,9 +66,15 @@
       "actions": [
         {
           "name": "Show only the destinations permitted for the signed-in role",
+          "roles": ["Customer", "Operator", "Administrator"],
           "requirements": ["specs/001-secure-access-shell/spec.md#FR-008"],
           "code": ["modern/frontend/bank-of-z-ui/src/app/core/navigation-items.ts"],
-          "tests": ["modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#sees only authorized navigation"]
+          "tests": [
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#sees only authorized navigation",
+              "roles": ["Customer", "Operator", "Administrator"]
+            }
+          ]
         }
       ]
     },
@@ -64,12 +87,18 @@
       "actions": [
         {
           "name": "View and update the authenticated customer's profile and accounts",
+          "roles": ["Customer"],
           "requirements": [
             "specs/002-customer-management/spec.md#FR-009",
             "specs/003-account-management/spec.md#FR-005A"
           ],
           "code": ["modern/frontend/bank-of-z-ui/src/app/customers/customer-profile.component.ts"],
-          "tests": ["modern/frontend/bank-of-z-ui/src/app/customers/customer-profile.component.spec.ts#shows the profile returned by the self endpoint"]
+          "tests": [
+            {
+              "reference": "modern/frontend/bank-of-z-ui/src/app/customers/customer-profile.component.spec.ts#shows the profile returned by the self endpoint",
+              "roles": ["Customer"]
+            }
+          ]
         }
       ]
     },
@@ -82,15 +111,27 @@
       "actions": [
         {
           "name": "Create, find, update, and retire customers",
+          "roles": ["Operator"],
           "requirements": ["specs/002-customer-management/spec.md#FR-001"],
           "code": ["modern/frontend/bank-of-z-ui/src/app/customers/customer-workspace.component.ts"],
-          "tests": ["modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#operator can create find update and retire a customer"]
+          "tests": [
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#operator can create find update and retire a customer",
+              "roles": ["Operator"]
+            }
+          ]
         },
         {
           "name": "Open customer accounts for account and transaction operations",
+          "roles": ["Operator"],
           "requirements": ["specs/003-account-management/spec.md#FR-005A"],
           "code": ["modern/frontend/bank-of-z-ui/src/app/customers/customer-workspace.component.ts"],
-          "tests": ["modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#operator can manage an account and book cash with insufficient-funds protection"]
+          "tests": [
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#operator can manage an account and book cash with insufficient-funds protection",
+              "roles": ["Operator"]
+            }
+          ]
         }
       ]
     },
@@ -103,9 +144,15 @@
       "actions": [
         {
           "name": "Generate bulk statements and retry failed accounts",
+          "roles": ["Operator"],
           "requirements": ["specs/007-monthly-statements/spec.md#FR-008"],
           "code": ["modern/frontend/bank-of-z-ui/src/app/statements/bulk-statements.component.ts"],
-          "tests": ["modern/frontend/bank-of-z-ui/e2e/monthly-statements.spec.ts#operator sees partial bulk outcomes and retries only failures"]
+          "tests": [
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/monthly-statements.spec.ts#operator sees partial bulk outcomes and retries only failures",
+              "roles": ["Operator"]
+            }
+          ]
         }
       ]
     },
@@ -118,9 +165,19 @@
       "actions": [
         {
           "name": "View an account and perform role-authorized account operations",
+          "roles": ["Customer", "Operator"],
           "requirements": ["specs/003-account-management/spec.md#FR-004"],
           "code": ["modern/frontend/bank-of-z-ui/src/app/accounts/account-detail.component.ts"],
-          "tests": ["modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#operator can manage an account and book cash with insufficient-funds protection"]
+          "tests": [
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#customer can transfer between owned demo accounts and see a rejected transfer",
+              "roles": ["Customer"]
+            },
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#operator can manage an account and book cash with insufficient-funds protection",
+              "roles": ["Operator"]
+            }
+          ]
         }
       ]
     },
@@ -133,9 +190,19 @@
       "actions": [
         {
           "name": "Filter and inspect authorized transaction history",
+          "roles": ["Customer", "Operator"],
           "requirements": ["specs/006-transaction-history/spec.md#FR-001"],
           "code": ["modern/frontend/bank-of-z-ui/src/app/accounts/transaction-history.component.ts"],
-          "tests": ["modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#customer can filter transaction history and open a transaction"]
+          "tests": [
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#customer can filter transaction history and open a transaction",
+              "roles": ["Customer"]
+            },
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#operator sees empty and populated history while a customer cannot see the foreign account",
+              "roles": ["Operator"]
+            }
+          ]
         }
       ]
     },
@@ -148,9 +215,19 @@
       "actions": [
         {
           "name": "Open one authorized transaction and view its details",
+          "roles": ["Customer", "Operator"],
           "requirements": ["specs/006-transaction-history/spec.md#FR-007"],
           "code": ["modern/frontend/bank-of-z-ui/src/app/accounts/transaction-history-detail.component.ts"],
-          "tests": ["modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#customer can filter transaction history and open a transaction"]
+          "tests": [
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#customer can filter transaction history and open a transaction",
+              "roles": ["Customer"]
+            },
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#operator sees empty and populated history while a customer cannot see the foreign account",
+              "roles": ["Operator"]
+            }
+          ]
         }
       ]
     },
@@ -163,9 +240,19 @@
       "actions": [
         {
           "name": "Generate or reuse an authorized monthly statement",
+          "roles": ["Customer", "Operator"],
           "requirements": ["specs/007-monthly-statements/spec.md#FR-001"],
           "code": ["modern/frontend/bank-of-z-ui/src/app/statements/statement.component.ts"],
-          "tests": ["modern/frontend/bank-of-z-ui/e2e/monthly-statements.spec.ts#customer generates and views a populated monthly statement"]
+          "tests": [
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/monthly-statements.spec.ts#customer generates and views a populated monthly statement",
+              "roles": ["Customer"]
+            },
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/monthly-statements.spec.ts#operator generates and views an account statement",
+              "roles": ["Operator"]
+            }
+          ]
         }
       ]
     },
@@ -178,9 +265,19 @@
       "actions": [
         {
           "name": "View a generated statement including empty-period output",
+          "roles": ["Customer", "Operator"],
           "requirements": ["specs/007-monthly-statements/spec.md#FR-005"],
           "code": ["modern/frontend/bank-of-z-ui/src/app/statements/statement.component.ts"],
-          "tests": ["modern/frontend/bank-of-z-ui/e2e/monthly-statements.spec.ts#customer generates and views an empty monthly statement"]
+          "tests": [
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/monthly-statements.spec.ts#customer generates and views an empty monthly statement",
+              "roles": ["Customer"]
+            },
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/monthly-statements.spec.ts#operator generates and views an account statement",
+              "roles": ["Operator"]
+            }
+          ]
         }
       ]
     },
@@ -197,14 +294,21 @@
       "id": "not-found",
       "path": "/**",
       "roles": ["Anonymous", "Customer", "Operator", "Administrator"],
+      "roleInvariant": true,
       "visibility": "error-route",
       "status": "implemented",
       "actions": [
         {
           "name": "Render an explicit not-found page for an unknown route",
+          "roles": ["Shared"],
           "requirements": ["specs/001-secure-access-shell/spec.md#FR-010"],
           "code": ["modern/frontend/bank-of-z-ui/src/app/pages/not-found.component.ts"],
-          "tests": ["modern/frontend/bank-of-z-ui/src/app/pages/error-pages.spec.ts#renders a clear not-found view"]
+          "tests": [
+            {
+              "reference": "modern/frontend/bank-of-z-ui/src/app/pages/error-pages.spec.ts#renders a clear not-found view",
+              "roles": ["Shared"]
+            }
+          ]
         }
       ]
     }

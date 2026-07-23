@@ -16,7 +16,7 @@ async function signIn(page: import('@playwright/test').Page, userName: string): 
   await expect(page.getByRole('heading', { name: 'Welcome to Bank of Z' })).toBeVisible();
 }
 
-test('customer generates and views a populated monthly statement @e2e @monthly-statements', async ({ page }) => {
+test('customer generates and views a populated monthly statement @e2e @monthly-statements @surface:statement-generate @surface:statement-view @role:Customer', async ({ page }) => {
   await signIn(page, 'customer');
   await page.goto('accounts/10000000');
   const cash = page.getByRole('region', { name: 'Deposit or withdraw' });
@@ -37,7 +37,7 @@ test('customer generates and views a populated monthly statement @e2e @monthly-s
   await expect(page.getByRole('button', { name: 'Print statement' })).toBeVisible();
 });
 
-test('customer generates and views an empty monthly statement @e2e @monthly-statements', async ({ page }) => {
+test('customer generates and views an empty monthly statement @e2e @monthly-statements @surface:statement-view @role:Customer', async ({ page }) => {
   await signIn(page, 'customer');
   await page.goto('accounts/10000000/statements');
   await page.getByLabel('Year').fill('2000');
@@ -51,7 +51,19 @@ test('customer generates and views an empty monthly statement @e2e @monthly-stat
   await expect(transactions.locator('tbody tr')).toHaveCount(0);
 });
 
-test('operator sees partial bulk outcomes and retries only failures @e2e @monthly-statements @bulk-statements', async ({ page }) => {
+test('operator generates and views an account statement @e2e @monthly-statements @surface:statement-generate @surface:statement-view @role:Operator', async ({ page }) => {
+  await signIn(page, 'operator');
+  await page.goto('accounts/10000001/statements');
+  await page.getByLabel('Year').fill('2026');
+  await page.getByLabel('Month').selectOption({ label: 'July' });
+  await page.getByRole('button', { name: 'Generate statement' }).click();
+
+  await expect(page).toHaveURL(/\/accounts\/10000001\/statements\/[0-9a-f-]{36}$/);
+  await expect(page.getByRole('heading', { name: 'Monthly account statement' })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Statement summary' })).toContainText('Closing balance');
+});
+
+test('operator sees partial bulk outcomes and retries only failures @e2e @monthly-statements @bulk-statements @surface:operator-statements @role:Operator', async ({ page }) => {
   await signIn(page, 'operator');
   const requests: Array<{ accountIds: string[] | null }> = [];
   let attempt = 0;

@@ -11,6 +11,7 @@
     "test:target-audit": "node target-surface-audit.test.js"
   },
   "dependencies": {
-    "exceljs": "^4.4.0"
+    "exceljs": "^4.4.0",
+    "typescript": "^5.9.3"
   }
 }
