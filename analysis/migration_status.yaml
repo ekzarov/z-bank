@@ -3,30 +3,30 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 0
-  overall_percent_estimate: 93
+  current_stage_percent: 92
+  overall_percent_estimate: 97
   estimate_only: true
   estimate_basis: >-
     Full migration estimate: shared Stages 1-6 and seven of nine iterative
-    slices are accepted. Feature 007 passed implementation, peer review,
-    public delivery, live revision, Pass 010 correction, and clean independent
-    repeat acceptance. Feature 008 is the next delivery slice.
+    slices are accepted. Feature 008 implementation, tests, clean-install
+    Compose smoke, workbook synchronization, and two Claude peer-review rounds
+    are complete. Public delivery, live revision, and Stage 10 acceptance remain.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 63
-    claude_usable_reports: 45
+    claude_sessions_started: 65
+    claude_usable_reports: 47
     codex_sessions_started: 37
     codex_usable_reports: 30
     deterministic_batches_covered: 23
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T15:31:00+02:00
+  updated_at: 2026-07-23T16:41:32+02:00
 
 methodology_stage:
   number: 7
   name: Coding - Feature 008 data initialization
-  status: ready-to-start
+  status: implementation-peer-reviewed
   last_completed_stage: 10
   incomplete_stages:
     - 3
@@ -37,11 +37,11 @@ next_action:
   feature: 008-data-initialization
   stage: 7
   instruction: >-
-    Implement and test the approved Feature 008 explicit migration and import
-    slice, synchronize its SDD/tasks/workbook, and repeat Stages 8-10.
+    Commit the peer-reviewed Feature 008 candidate, deliver it to the public
+    stand, reconcile the live behavior, and run fresh Stage 10 acceptance.
   completion_gate: >-
-    Feature 007 code, tests, SDD/tasks/workbook, public delivery, Pass 010
-    correction, and clean Pass 011 acceptance are complete.
+    Feature 008 code, tests, clean Compose bootstrap, SDD/tasks/workbook
+    synchronization, and two Claude peer-review rounds are complete.
 
 stage_3_fallback_result:
   mode: simulate

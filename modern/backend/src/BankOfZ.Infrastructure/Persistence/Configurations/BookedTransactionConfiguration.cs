@@ -48,5 +48,8 @@ public sealed class BookedTransactionConfiguration : IEntityTypeConfiguration<Bo
         builder.HasIndex(transaction => new { transaction.AccountId, transaction.IdempotencyKey }).IsUnique();
         builder.HasIndex(transaction => transaction.TransferCorrelationId);
         builder.HasIndex(transaction => new { transaction.AccountId, transaction.CreatedAt });
+        builder.HasIndex(transaction => new { transaction.SourceSystem, transaction.SourceIdentifier })
+            .IsUnique()
+            .HasFilter(CatalogModelConstants.Filters.ImportedSourceIdentifier);
     }
 }

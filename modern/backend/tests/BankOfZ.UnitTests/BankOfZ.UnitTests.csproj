@@ -17,6 +17,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\BankOfZ.Application\BankOfZ.Application.csproj" />
     <ProjectReference Include="..\..\src\BankOfZ.Domain\BankOfZ.Domain.csproj" />
+    <ProjectReference Include="..\..\src\BankOfZ.Infrastructure\BankOfZ.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\tools\BankOfZ.Setup\BankOfZ.Setup.csproj" />
   </ItemGroup>
 
   <ItemGroup>

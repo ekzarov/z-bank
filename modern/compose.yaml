@@ -21,7 +21,7 @@ services:
       target: api
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      ConnectionStrings__BankOfZ: "Server=db,1433;Database=BankOfZ;User Id=sa;Password=${BANKOFZ_SA_PASSWORD:?Set BANKOFZ_SA_PASSWORD};Encrypt=False"
+      ConnectionStrings__BankOfZ: "Server=db,1433;Database=BankOfZ;User Id=bankofz_api;Password=${BANKOFZ_API_DB_PASSWORD:?Set BANKOFZ_API_DB_PASSWORD};Encrypt=False"
     depends_on:
       db:
         condition: service_healthy
@@ -47,8 +47,13 @@ services:
       dockerfile: Dockerfile
       target: setup
     environment:
-      ConnectionStrings__BankOfZ: "Server=db,1433;Database=BankOfZ;User Id=sa;Password=${BANKOFZ_SA_PASSWORD:?Set BANKOFZ_SA_PASSWORD};Encrypt=False"
+      ConnectionStrings__BankOfZOperator: "Server=db,1433;Database=BankOfZ;User Id=bankofz_operator;Password=${BANKOFZ_OPERATOR_DB_PASSWORD:?Set BANKOFZ_OPERATOR_DB_PASSWORD};Encrypt=False"
+      ConnectionStrings__BankOfZAdmin: "Server=db,1433;Database=master;User Id=sa;Password=${BANKOFZ_SA_PASSWORD:?Set BANKOFZ_SA_PASSWORD};Encrypt=False"
+      BANKOFZ_API_DB_PASSWORD: "${BANKOFZ_API_DB_PASSWORD:?Set BANKOFZ_API_DB_PASSWORD}"
+      BANKOFZ_OPERATOR_DB_PASSWORD: "${BANKOFZ_OPERATOR_DB_PASSWORD:?Set BANKOFZ_OPERATOR_DB_PASSWORD}"
       BANKOFZ_DEMO_PASSWORD: "${BANKOFZ_DEMO_PASSWORD:-}"
+      BANKOFZ_SETUP_OPERATOR: "${BANKOFZ_SETUP_OPERATOR:-docker-operator}"
+      BANKOFZ_SETUP_ALLOWED_ENVIRONMENTS: "${BANKOFZ_SETUP_ALLOWED_ENVIRONMENTS:-Demo,Development,Test}"
     depends_on:
       db:
         condition: service_healthy

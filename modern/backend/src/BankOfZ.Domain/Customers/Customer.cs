@@ -67,6 +67,41 @@ public sealed class Customer
         return customer;
     }
 
+    public static Customer Import(
+        string id,
+        string sortCode,
+        CustomerDetails details,
+        decimal creditScore,
+        DateOnly creditReviewDate,
+        CustomerStatus status,
+        SourceSystem sourceSystem,
+        string sourceIdentifier,
+        DateTimeOffset createdAt,
+        DateTimeOffset updatedAt)
+    {
+        var customer = Create(
+            id,
+            sortCode,
+            details,
+            creditScore,
+            creditReviewDate,
+            sourceSystem,
+            sourceIdentifier,
+            createdAt);
+        if (!Enum.IsDefined(status))
+        {
+            throw Validation(nameof(status), "Customer status is not supported.");
+        }
+        if (updatedAt < createdAt)
+        {
+            throw Validation(nameof(updatedAt), "Updated timestamp cannot precede creation.");
+        }
+
+        customer.Status = status;
+        customer.UpdatedAt = updatedAt;
+        return customer;
+    }
+
     public void Update(CustomerDetails details, DateTimeOffset now)
     {
         EnsureActive();

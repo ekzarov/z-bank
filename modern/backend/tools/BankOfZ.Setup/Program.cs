@@ -1,21 +1,30 @@
+using System.Text.Json;
 using BankOfZ.Domain.Security;
-using BankOfZ.Domain.Customers;
-using BankOfZ.Domain.Accounts;
+using BankOfZ.Infrastructure.DataInitialization;
 using BankOfZ.Infrastructure.Identity;
 using BankOfZ.Infrastructure.Persistence;
+using BankOfZ.Setup;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-var command = args.SingleOrDefault()
-    ?? throw new ArgumentException("Use 'migrate' or 'provision-demo'.");
+var options = SetupCommandOptions.Parse(args);
+var builder = Host.CreateApplicationBuilder();
+var operatorId = Environment.GetEnvironmentVariable("BANKOFZ_SETUP_OPERATOR")
+    ?? throw new InvalidOperationException("BANKOFZ_SETUP_OPERATOR is required.");
+var connectionName = options.Command == "provision-access" ? "BankOfZAdmin" : "BankOfZOperator";
+var connectionString = builder.Configuration.GetSection("ConnectionStrings")[connectionName]
+    ?? throw new InvalidOperationException($"Connection string '{connectionName}' is required.");
 
-var builder = Host.CreateApplicationBuilder(args);
-var connectionString = builder.Configuration.GetSection("ConnectionStrings")["BankOfZ"]
-    ?? throw new InvalidOperationException("Connection string 'BankOfZ' is required.");
+if (options.Command == "provision-access")
+{
+    await DatabaseAccessProvisioner.ProvisionAsync(connectionString);
+    Console.WriteLine("""{"status":"succeeded","operation":"provision-access"}""");
+    return;
+}
 
-builder.Services.AddDbContext<BankOfZIdentityContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<BankOfZIdentityContext>(db => db.UseSqlServer(connectionString));
 builder.Services
     .AddIdentityCore<ApplicationUser>()
     .AddRoles<IdentityRole<Guid>>()
@@ -23,152 +32,128 @@ builder.Services
 
 using var host = builder.Build();
 await using var scope = host.Services.CreateAsyncScope();
-
-if (string.Equals(command, "migrate", StringComparison.OrdinalIgnoreCase))
-{
-    await scope.ServiceProvider.GetRequiredService<BankOfZIdentityContext>().Database.MigrateAsync();
-    Console.WriteLine("Database migrations applied.");
-    return;
-}
-
-if (!string.Equals(command, "provision-demo", StringComparison.OrdinalIgnoreCase))
-{
-    throw new ArgumentException($"Unknown setup command '{command}'.");
-}
-
-var password = Environment.GetEnvironmentVariable("BANKOFZ_DEMO_PASSWORD")
-    ?? throw new InvalidOperationException("BANKOFZ_DEMO_PASSWORD is required for demo provisioning.");
-var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 var database = scope.ServiceProvider.GetRequiredService<BankOfZIdentityContext>();
 
-await EnsureDemoCustomerAsync(database);
-await EnsureDemoAccountsAsync(database);
-
-foreach (var role in BankRoles.All)
+switch (options.Command)
 {
-    if (!await roleManager.RoleExistsAsync(role))
-    {
-        EnsureSucceeded(await roleManager.CreateAsync(new IdentityRole<Guid>(role)));
-    }
+    case "inspect-migrations":
+        await InspectMigrationsAsync(database);
+        break;
+    case "migrate":
+        var migrationStartedAt = DateTimeOffset.UtcNow;
+        var migrationEnvironment = options.Required("environment");
+        await database.Database.MigrateAsync();
+        var migration = (await database.Database.GetAppliedMigrationsAsync()).LastOrDefault() ?? "none";
+        database.SetupOperationAudits.Add(SetupOperationAudit.Succeeded(
+            "migrate",
+            operatorId,
+            migrationEnvironment,
+            migration,
+            migrationStartedAt,
+            DateTimeOffset.UtcNow));
+        await database.SaveChangesAsync();
+        Console.WriteLine(JsonSerializer.Serialize(new
+        {
+            status = "succeeded",
+            migration,
+            @operator = operatorId
+        }));
+        break;
+    case "import":
+        await ImportAsync(database, options, operatorId);
+        break;
+    case "verify-import":
+        await VerifyImportAsync(database, options);
+        break;
+    case "reset-demo":
+        await ResetDemoAsync(scope.ServiceProvider, database, options, operatorId);
+        break;
+    default:
+        throw new ArgumentException($"Unknown setup command '{options.Command}'.");
 }
 
-await EnsureUserAsync(userManager, "customer", "customer@bankofz.demo", BankRoles.Customer, "1000000001", password);
-await EnsureUserAsync(userManager, "operator", "operator@bankofz.demo", BankRoles.Operator, null, password);
-await EnsureUserAsync(userManager, "administrator", "administrator@bankofz.demo", BankRoles.Administrator, null, password);
-Console.WriteLine("Demo identities provisioned explicitly.");
-
-static async Task EnsureUserAsync(
-    UserManager<ApplicationUser> users,
-    string userName,
-    string email,
-    string role,
-    string? customerId,
-    string password)
+static async Task InspectMigrationsAsync(BankOfZIdentityContext database)
 {
-    if (await users.FindByNameAsync(userName) is { } existing)
+    Console.WriteLine(JsonSerializer.Serialize(new
     {
-        foreach (var validator in users.PasswordValidators)
-        {
-            EnsureSucceeded(await validator.ValidateAsync(users, existing, password));
-        }
-        existing.CustomerId = customerId;
-        existing.PasswordHash = users.PasswordHasher.HashPassword(existing, password);
-        existing.SecurityStamp = Guid.NewGuid().ToString();
-        EnsureSucceeded(await users.UpdateAsync(existing));
-        if (!await users.IsInRoleAsync(existing, role))
-        {
-            EnsureSucceeded(await users.AddToRoleAsync(existing, role));
-        }
+        applied = await database.Database.GetAppliedMigrationsAsync(),
+        pending = await database.Database.GetPendingMigrationsAsync()
+    }, ImportPackageJson.Options));
+}
+
+static async Task ImportAsync(
+    BankOfZIdentityContext database,
+    SetupCommandOptions options,
+    string operatorId)
+{
+    var file = options.Required("file");
+    var environment = options.Required("environment");
+    var bytes = await File.ReadAllBytesAsync(file);
+    var result = await new DataImportService(database).ImportAsync(bytes, operatorId, environment);
+    Console.WriteLine(JsonSerializer.Serialize(result, ImportPackageJson.Options));
+}
+
+static async Task VerifyImportAsync(BankOfZIdentityContext database, SetupCommandOptions options)
+{
+    var fingerprint = options.Required("fingerprint");
+    var result = await new DataImportService(database).VerifyAsync(fingerprint);
+    if (result is null)
+    {
+        Environment.ExitCode = 2;
+        Console.WriteLine("""{"status":"not_found"}""");
         return;
     }
 
-    var user = new ApplicationUser
+    Console.WriteLine(JsonSerializer.Serialize(result, ImportPackageJson.Options));
+    if (result.Status != ImportRunStatus.Succeeded)
     {
-        Id = Guid.NewGuid(),
-        UserName = userName,
-        Email = email,
-        EmailConfirmed = true,
-        CustomerId = customerId
-    };
-    EnsureSucceeded(await users.CreateAsync(user, password));
-    EnsureSucceeded(await users.AddToRoleAsync(user, role));
+        Environment.ExitCode = 3;
+    }
 }
 
-static async Task EnsureDemoCustomerAsync(BankOfZIdentityContext context)
+static async Task ResetDemoAsync(
+    IServiceProvider services,
+    BankOfZIdentityContext database,
+    SetupCommandOptions options,
+    string operatorId)
 {
-    if (await context.Customers.AnyAsync(customer => customer.Id == "1000000001"))
+    var resetStartedAt = DateTimeOffset.UtcNow;
+    var environment = options.Required("environment");
+    SetupAuthorization.EnsureResetAllowed(environment, options.Required("confirm"));
+    var start = DateOnly.ParseExact(options.Required("start"), "yyyy-MM-dd");
+    var end = DateOnly.ParseExact(options.Required("end"), "yyyy-MM-dd");
+    var stepDays = int.Parse(options.Required("step-days"));
+    var seed = int.Parse(options.Required("seed"));
+    var password = Environment.GetEnvironmentVariable("BANKOFZ_DEMO_PASSWORD")
+        ?? throw new InvalidOperationException("BANKOFZ_DEMO_PASSWORD is required for demo reset.");
+
+    var package = DemoPackageFactory.Create(start, end, stepDays, seed);
+    var bytes = JsonSerializer.SerializeToUtf8Bytes(package, ImportPackageJson.Options);
+
+    if ((await database.Database.GetPendingMigrationsAsync()).Any())
     {
-        return;
+        throw new InvalidOperationException("Apply all migrations explicitly before demo reset.");
     }
-
-    context.Customers.Add(Customer.Create(
-        "1000000001",
-        "100000",
-        new CustomerDetails(
-            "Ms",
-            "Jamie",
-            "Customer",
-            new DateOnly(1990, 5, 12),
-            "1 Demo Street",
-            null,
-            "London",
-            null,
-            "EC1A 1AA",
-            "GB",
-            "customer@bankofz.demo",
-            "+44 20 0000 0000"),
-        720,
-        new DateOnly(2026, 8, 12),
-        SourceSystem.Modern,
-        "demo-provisioning",
-        DateTimeOffset.UtcNow));
-    await context.SaveChangesAsync();
-}
-
-static async Task EnsureDemoAccountsAsync(BankOfZIdentityContext context)
-{
-    var demoAccounts = new[]
+    await DemoResetService.ClearAsync(database);
+    var import = await new DataImportService(database).ImportAsync(bytes, operatorId, environment);
+    await DemoIdentityProvisioner.ProvisionAsync(
+        services.GetRequiredService<RoleManager<IdentityRole<Guid>>>(),
+        services.GetRequiredService<UserManager<ApplicationUser>>(),
+        password);
+    var completedAt = DateTimeOffset.UtcNow;
+    database.SetupOperationAudits.Add(SetupOperationAudit.Succeeded(
+        "reset-demo",
+        operatorId,
+        environment,
+        import.MigrationVersion,
+        resetStartedAt,
+        completedAt));
+    await database.SaveChangesAsync();
+    Console.WriteLine(JsonSerializer.Serialize(new
     {
-        (Id: "10000000", Type: AccountType.Current, Interest: 0.25m, Overdraft: 500, RawType: "CURRENT"),
-        (Id: "10000099", Type: AccountType.Saving, Interest: 1.50m, Overdraft: 0, RawType: "SAVING")
-    };
-
-    var now = DateTimeOffset.UtcNow;
-    foreach (var demo in demoAccounts)
-    {
-        if (await context.Accounts.AnyAsync(account => account.Id == demo.Id))
-        {
-            continue;
-        }
-
-        context.Accounts.Add(Account.Create(
-            demo.Id,
-            "1000000001",
-            "100000",
-            new AccountMetadata(demo.Type, demo.Interest, demo.Overdraft, "GBP"),
-            SourceSystem.Modern,
-            "demo-provisioning",
-            demo.RawType,
-            now));
-        context.AccountAuditEntries.Add(new AccountAuditRecord
-        {
-            Actor = "setup",
-            Timestamp = now,
-            Action = "AccountCreated",
-            AccountId = demo.Id,
-            CustomerId = "1000000001",
-            Result = "Succeeded",
-            CorrelationId = "demo-provisioning"
-        });
-    }
-    await context.SaveChangesAsync();
-}
-
-static void EnsureSucceeded(IdentityResult result)
-{
-    if (!result.Succeeded)
-    {
-        throw new InvalidOperationException(string.Join("; ", result.Errors.Select(error => error.Description)));
-    }
+        status = "succeeded",
+        package = ImportPackageJson.CurrentSchemaVersion,
+        parameters = new { start, end, stepDays, seed },
+        import
+    }, ImportPackageJson.Options));
 }

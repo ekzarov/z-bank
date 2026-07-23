@@ -57,6 +57,34 @@ history, and required reference/status data using an explicit idempotent command
 - **FR-012** Migration/import/reset execution SHALL require an authorized
   operator and least-privilege database credentials distinct from API runtime
   credentials; production reset SHALL be disabled by default.
+- **FR-013** The v1 import command SHALL reject packages larger than 10 MiB
+  before JSON parsing or trusted-data mutation. Streaming import is outside the
+  v1 scope.
+
+## Clarifications
+
+- The canonical interchange format is UTF-8 JSON with schema identifier
+  `bank-of-z-import/v1`. Account ownership is represented by the required
+  `account.customerId` relationship; no separate many-owner legacy structure
+  exists in the current target domain.
+- Imported records are immutable by source key in this feature. An identical
+  source record is skipped; any material mismatch fails the whole promotion.
+- A fingerprint identifies one logical import run. Every invocation creates an
+  immutable attempt record. Failed or lease-expired validation/promotion may be
+  retried under the same logical run; an unexpired active lease rejects a
+  concurrent invocation cleanly.
+- Staging persists source type/key and a content hash, never the source payload
+  or personal values. The original operator-controlled package is required for
+  retry. Promotion remains one SQL transaction.
+- Version 1 validates a bounded package of at most 10 MiB in memory. This keeps
+  memory use explicit and testable; larger or streaming imports require a later
+  format/version and design review.
+- Audit counts have explicit meanings: input records, promoted records, and
+  rejected records. A failed promotion reports zero promoted records.
+- The reset phrase is `RESET-BANK-OF-Z`; allowed environments come from
+  operator policy, and production remains denied unless separately enabled.
+  Identity roles/users are demo-reset concerns and are not part of legacy data
+  import.
 
 ## Success Criteria
 
