@@ -19,6 +19,7 @@ public sealed class BookedTransaction
     public decimal ResultingAvailableBalance { get; private set; }
     public string IdempotencyKey { get; private set; } = null!;
     public string RequestFingerprint { get; private set; } = null!;
+    public string? TransferCorrelationId { get; private set; }
     public SourceSystem SourceSystem { get; private set; }
     public DateTimeOffset CreatedAt { get; private set; }
 
@@ -33,7 +34,8 @@ public sealed class BookedTransaction
         decimal resultingAvailableBalance,
         string idempotencyKey,
         string requestFingerprint,
-        DateTimeOffset createdAt) => new()
+        DateTimeOffset createdAt,
+        string? transferCorrelationId = null) => new()
         {
             Id = Guid.NewGuid(),
             Reference = reference,
@@ -46,6 +48,7 @@ public sealed class BookedTransaction
             ResultingAvailableBalance = resultingAvailableBalance,
             IdempotencyKey = idempotencyKey,
             RequestFingerprint = requestFingerprint,
+            TransferCorrelationId = transferCorrelationId,
             SourceSystem = SourceSystem.Modern,
             CreatedAt = createdAt
         };

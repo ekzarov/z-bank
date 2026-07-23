@@ -8,7 +8,7 @@ import { AccountDetailComponent } from './account-detail.component';
 
 describe('AccountDetailComponent', () => {
   const parameters = new BehaviorSubject(convertToParamMap({ id: '10000001' }));
-  const api = { find: vi.fn(), update: vi.fn(), close: vi.fn(), bookCash: vi.fn() };
+  const api = { find: vi.fn(), update: vi.fn(), close: vi.fn(), bookCash: vi.fn(), transfer: vi.fn() };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -61,6 +61,49 @@ describe('AccountDetailComponent', () => {
     expect(api.bookCash).toHaveBeenCalledWith('10000001', 'deposit', 125);
     expect(api.find).toHaveBeenCalledTimes(2);
     expect(fixture.nativeElement.querySelector('[role="status"]').textContent).toContain('0123456789abcdef0123456789abcdef');
+  });
+
+  it('books an internal transfer and reloads the source balance', () => {
+    api.transfer.mockReturnValue(of({
+      correlationId: 'abcdef0123456789abcdef0123456789',
+      source: { availableBalance: 75, currency: 'GBP' },
+      destination: { availableBalance: 25, currency: 'GBP' }
+    }));
+    const fixture = TestBed.createComponent(AccountDetailComponent);
+    fixture.detectChanges();
+
+    const destination = fixture.nativeElement.querySelector('input[formControlName="destinationAccountId"]');
+    destination.value = '10000002';
+    destination.dispatchEvent(new Event('input'));
+    const amount = fixture.nativeElement.querySelector('.transfer-panel input[formControlName="amount"]');
+    amount.value = '25';
+    amount.dispatchEvent(new Event('input'));
+    fixture.nativeElement.querySelector('.transfer-panel form').dispatchEvent(new Event('submit'));
+    fixture.detectChanges();
+
+    expect(api.transfer).toHaveBeenCalledWith('10000001', '10000002', 25);
+    expect(api.find).toHaveBeenCalledTimes(2);
+    expect(fixture.nativeElement.querySelector('[role="status"]').textContent)
+      .toContain('abcdef0123456789abcdef0123456789');
+  });
+
+  it('keeps cash and transfer submission disabled for sub-cent amounts', () => {
+    const fixture = TestBed.createComponent(AccountDetailComponent);
+    fixture.detectChanges();
+
+    const cashAmount = fixture.nativeElement.querySelector('.cash-panel input[formControlName="amount"]');
+    cashAmount.value = '10.001';
+    cashAmount.dispatchEvent(new Event('input'));
+    const destination = fixture.nativeElement.querySelector('input[formControlName="destinationAccountId"]');
+    destination.value = '10000002';
+    destination.dispatchEvent(new Event('input'));
+    const transferAmount = fixture.nativeElement.querySelector('.transfer-panel input[formControlName="amount"]');
+    transferAmount.value = '10.001';
+    transferAmount.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.cash-panel button').disabled).toBe(true);
+    expect(fixture.nativeElement.querySelector('.transfer-panel button').disabled).toBe(true);
   });
 });
 

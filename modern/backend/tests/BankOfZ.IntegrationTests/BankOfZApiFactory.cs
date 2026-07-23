@@ -1,4 +1,5 @@
 using BankOfZ.Application.Customers;
+using BankOfZ.Application.Common;
 using BankOfZ.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -31,11 +32,21 @@ public sealed class BankOfZApiFactory(
                 service.ServiceType == typeof(DbContextOptions<BankOfZIdentityContext>));
             services.Remove(descriptor);
             services.AddDbContext<BankOfZIdentityContext>(options => options.UseSqlServer(connectionString));
+            services.RemoveAll<IClock>();
+            services.AddSingleton<IClock>(new FixedTestClock());
             if (customerOptions is not null)
             {
                 services.RemoveAll<CustomerOptions>();
                 services.AddSingleton(customerOptions);
             }
         });
+    }
+
+    private sealed class FixedTestClock : IClock
+    {
+        private long tick;
+        public DateTimeOffset UtcNow =>
+            new DateTimeOffset(2026, 7, 22, 12, 0, 0, TimeSpan.Zero)
+                .AddMilliseconds(Interlocked.Increment(ref tick));
     }
 }

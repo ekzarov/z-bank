@@ -16,6 +16,14 @@
             <button class="primary" type="submit" [disabled]="booking() || cashForm.invalid">{{ booking() ? 'Booking...' : 'Book operation' }}</button>
           </form>
         </section>
+        <section class="transfer-panel" aria-labelledby="transfer-heading">
+          <div><p class="eyebrow">Internal transfer</p><h2 id="transfer-heading">Move money between accounts</h2></div>
+          <form [formGroup]="transferForm" (ngSubmit)="transfer()">
+            <label>Destination account<input type="text" inputmode="numeric" maxlength="8" autocomplete="off" formControlName="destinationAccountId"></label>
+            <label>Amount<input type="number" min="0.01" step="0.01" inputmode="decimal" formControlName="amount"></label>
+            <button class="primary" type="submit" [disabled]="transferring() || transferForm.invalid">{{ transferring() ? 'Transferring...' : 'Transfer' }}</button>
+          </form>
+        </section>
       }
       @if (isOperator() && value.status === 'active') {
         <div class="actions"><button type="button" (click)="startEdit()">Edit terms</button><button type="button" class="danger" (click)="close()" [disabled]="saving()">Close account</button></div>
