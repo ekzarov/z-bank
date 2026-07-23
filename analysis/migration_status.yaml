@@ -4,7 +4,7 @@ updated: 2026-07-23
 
 progress:
   current_stage_percent: 100
-  overall_percent_estimate: 99
+  overall_percent_estimate: 100
   estimate_only: true
   estimate_basis: >-
     The project owner's live role walkthrough found a visible Administrator
@@ -14,13 +14,13 @@ progress:
     Administration correction slice. Stage 6 design review is clean and the
     backend, migration, Angular workspace, and automated tests are implemented.
     Full deterministic gates, two Claude review rounds, explicit migration,
-    delivery, and live acceptance are complete. Fresh Stage 10 review remains. The
+    delivery, live acceptance, and fresh Stage 10 review are complete. The
     approved Stage 3 simulation fallback remains an explicit external IBM-runtime
     risk.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 79
-    claude_usable_reports: 59
+    claude_sessions_started: 80
+    claude_usable_reports: 60
     codex_sessions_started: 37
     codex_usable_reports: 30
     deterministic_batches_covered: 23
@@ -31,24 +31,24 @@ progress:
 
 methodology_stage:
   number: 10
-  name: Independent acceptance - Access Administration target-only correction
-  status: ready-for-fresh-independent-review
-  last_completed_stage: 9
+  name: Independent acceptance complete
+  status: complete-under-approved-stage-3-simulation-fallback
+  last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: Fresh independent read-only agent
-  feature: 010-access-administration
-  stage: 10
+  actor: Project owner or infrastructure provider
+  feature: cross-cutting-legacy-runtime
+  stage: 3
   instruction: >-
-    Review the immutable Feature 010 revision, SDD, target-surface inventory,
-    deterministic gates, deployment evidence, and live useful-action evidence.
+    Keep the accepted modern application available. If authorized IBM
+    CICS/IMS/DB2 infrastructure becomes available, run the real legacy
+    walkthrough and reconcile any observed differences.
   completion_gate: >-
-    A fresh eligible reviewer returns clean, every finding is resolved and
-    rechecked, the owner-approved target-only surface is added to accepted
-    slices, and T012 is closed.
+    The currently approved migration flow is complete. The external legacy
+    runtime risk closes only after a real authorized IBM walkthrough.
 
 stage_3_fallback_result:
   mode: simulate
@@ -280,6 +280,12 @@ review_passes:
     agent: Claude Code CLI fresh read-only reviewer, orchestrated by OpenAI Codex
     result: clean
     report: analysis/reviews/stage-10-pass-014.md
+  - stage: 10
+    pass: 15
+    date: 2026-07-23
+    agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: clean
+    report: analysis/reviews/stage-10-pass-015.md
 
 accepted_slices:
   - feature: 001-secure-access-shell
@@ -327,14 +333,20 @@ accepted_slices:
     stage_10_pass: 14
     report: analysis/reviews/stage-10-pass-014.md
     workbook_rows: 26
+  - feature: 010-access-administration
+    accepted_on: 2026-07-23
+    stage_10_pass: 15
+    report: analysis/reviews/stage-10-pass-015.md
+    workbook_rows: 0
+    target_only: true
 
 reopened_slices:
   - feature: 010-access-administration
     discovered_on: 2026-07-23
     source: project-owner-live-walkthrough
-    status: stage-9-complete-pending-independent-acceptance
+    status: accepted-stage-10-pass-015
     report: analysis/stage-09-administrator-surface-gap.md
-    failing_gate: pending-stage-10
+    failing_gate: none
 
 owner_gates:
   constitution_ratification:
@@ -399,13 +411,13 @@ owner_gates:
 known_blockers:
   - id: target-administrator-surface-gap
     affects_stage: 10
-    status: stage-9-complete-pending-independent-acceptance
+    status: resolved-stage-10-pass-015
     detail: >-
       The owner selected target-only Access Administration. Feature 010 defines
       useful actions and its implementation passed full deterministic gates and
-      peer review. Explicit migration, deployment, and live useful-action
-      acceptance passed; only fresh Stage 10 acceptance remains.
-    evidence: analysis/stage-08-feature-010-delivery.md; analysis/stage-09-feature-010-live-acceptance.md; specs/010-access-administration/spec.md
+      peer review. Explicit migration, deployment, live useful-action
+      acceptance, and fresh Stage 10 Pass 015 passed.
+    evidence: analysis/stage-08-feature-010-delivery.md; analysis/stage-09-feature-010-live-acceptance.md; analysis/reviews/stage-10-pass-015.md
   - id: stage-06-pass-012-clean
     affects_stage: 6
     status: resolved-stage-6-complete

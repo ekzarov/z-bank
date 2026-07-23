@@ -4,7 +4,7 @@
 
 - Feature: `010-access-administration`
 - Date: 2026-07-23
-- Delivered revision: `8e9ac55`
+- Delivered revision: `5a23b35`
 - Target stand: `https://legacy-transformation-demo.olsys.dev/`
 - Legacy path: `/z-bank/`
 - Modern path: `/z-bank-new/`
@@ -36,6 +36,8 @@ performs no schema or data mutation.
   passed.
 - Public HTTPS Playwright: 18 passed, 0 failed.
 - Desktop visual walkthrough: passed after correcting user-name/role spacing.
+- Post-review search-label correction and focused Administrator Playwright:
+  passed.
 - Existing banking data and credentials remained usable.
 
 Credentials were loaded in process memory from the protected server environment

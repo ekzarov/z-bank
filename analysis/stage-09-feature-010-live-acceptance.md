@@ -4,7 +4,7 @@
 
 - Feature: `010-access-administration`
 - Date: 2026-07-23
-- Deployed revision: `8e9ac55`
+- Deployed revision: `5a23b35`
 - Public route: `/z-bank-new/administration`
 - Applicable role: `Administrator`
 
@@ -37,7 +37,7 @@ overlap or clipping.
 
 ## Result
 
-`clean-pending-independent-stage-10`
+`clean-accepted-stage-10-pass-015`
 
 Stage 9 confirms the target-only Administrator surface has useful deployed
-behavior. Final acceptance remains gated by a fresh read-only Stage 10 review.
+behavior. Fresh read-only Stage 10 Pass 015 accepted the feature.

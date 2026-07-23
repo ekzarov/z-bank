@@ -39,6 +39,6 @@
 
 - [x] T011 Implement the Users and Security audit administration workspace and
   responsive styles, replacing the placeholder component.
-- [ ] T012 Run build/unit/integration/Playwright/SDD/workbook/target-surface
+- [x] T012 Run build/unit/integration/Playwright/SDD/workbook/target-surface
   gates, explicitly apply the migration, deploy the slice, and complete Stage
   9/10 evidence before marking the feature accepted.
