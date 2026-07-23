@@ -16,7 +16,7 @@
 
   @if (activeTab() === 'users') {
     <form class="filter-bar" (submit)="$event.preventDefault(); searchUsers()">
-      <label for="user-search">User name, email, or customer ID</label>
+      <label for="user-search">User name or email</label>
       <div>
         <input id="user-search" [value]="query()" (input)="query.set($any($event.target).value)" autocomplete="off">
         <button type="submit" [disabled]="loading()">Search</button>

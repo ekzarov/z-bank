@@ -134,7 +134,7 @@ test('administrator manages lockout and views security audit @e2e @surface:admin
   await page.getByRole('button', { name: 'Sign in' }).click();
   await page.getByRole('link', { name: 'Administration' }).click();
 
-  await page.getByLabel('User name, email, or customer ID').fill('operator');
+  await page.getByLabel('User name or email').fill('operator');
   await page.getByRole('button', { name: 'Search' }).click();
   await page.locator('.result', { hasText: 'operator' }).click();
 
