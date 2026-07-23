@@ -5,7 +5,7 @@ RUN npm ci
 COPY . .
 RUN npm run build -- --base-href /z-bank-new/
 
-FROM nginx:1.29-alpine
+FROM nginxinc/nginx-unprivileged:1.29-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist/bank-of-z-ui/browser /usr/share/nginx/html
-EXPOSE 80
+EXPOSE 8080

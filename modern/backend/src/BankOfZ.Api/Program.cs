@@ -17,12 +17,24 @@ using BankOfZ.Application.Transactions;
 using BankOfZ.Infrastructure.Transactions;
 using BankOfZ.Application.Statements;
 using BankOfZ.Infrastructure.Statements;
+using BankOfZ.Api.Configuration;
+using BankOfZ.Api.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+builder.Logging.AddJsonConsole(options => options.TimestampFormat = "yyyy-MM-ddTHH:mm:ss.fffZ");
+
+builder.Services.AddOptions<BankIdentityOptions>()
+    .Bind(builder.Configuration.GetSection(BankIdentityOptions.SectionName))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
 
 builder.Services.AddDbContext<BankOfZIdentityContext>((services, options) =>
 {
@@ -125,7 +137,8 @@ builder.Services.AddExceptionHandler<AccountExceptionHandler>();
 builder.Services.AddExceptionHandler<CashTransactionExceptionHandler>();
 builder.Services.AddExceptionHandler<TransactionHistoryExceptionHandler>();
 builder.Services.AddExceptionHandler<StatementExceptionHandler>();
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddCheck<SqlReadinessHealthCheck>("sql", tags: ["ready"]);
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
@@ -139,11 +152,19 @@ builder.Services.AddControllersWithViews(options =>
 var app = builder.Build();
 
 app.UseForwardedHeaders();
+app.UseMiddleware<CorrelationMiddleware>();
 app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.MapHealthChecks("/health");
+app.MapHealthChecks("/health/live", new HealthCheckOptions
+{
+    Predicate = registration => registration.Tags.Contains("live")
+});
+app.MapHealthChecks("/health/ready", new HealthCheckOptions
+{
+    Predicate = registration => registration.Tags.Contains("ready")
+});
 
 app.Run();
 

@@ -3,6 +3,8 @@ name: bank-of-z
 services:
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: unless-stopped
+    stop_grace_period: 30s
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: "${BANKOFZ_SA_PASSWORD:?Set BANKOFZ_SA_PASSWORD}"
@@ -13,34 +15,81 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+    networks: [data]
+    deploy:
+      resources:
+        limits:
+          cpus: "1.50"
+          memory: 2G
+        reservations:
+          memory: 768M
 
   api:
+    image: bank-of-z-api:0.9
     build:
       context: .
       dockerfile: Dockerfile
       target: api
     environment:
       ASPNETCORE_ENVIRONMENT: Production
+      Bank__DisplayName: "${BANKOFZ_DISPLAY_NAME:-Bank of Z}"
+      Bank__SortCode: "${BANKOFZ_SORT_CODE:-100000}"
       ConnectionStrings__BankOfZ: "Server=db,1433;Database=BankOfZ;User Id=bankofz_api;Password=${BANKOFZ_API_DB_PASSWORD:?Set BANKOFZ_API_DB_PASSWORD};Encrypt=False"
     depends_on:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080' || exit 1"]
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080; printf \"GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n\" >&3; grep -q \"200 OK\" <&3'"]
       interval: 5s
       timeout: 5s
       retries: 20
+    init: true
+    read_only: true
+    tmpfs: ["/tmp"]
+    restart: unless-stopped
+    stop_grace_period: 20s
+    networks: [data]
+    deploy:
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 512M
+        reservations:
+          memory: 128M
 
   ui:
+    image: bank-of-z-ui:0.9
     build:
       context: frontend/bank-of-z-ui
     ports:
-      - "127.0.0.1:8088:80"
+      - "127.0.0.1:8088:8080"
     depends_on:
       api:
         condition: service_healthy
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/run
+    restart: unless-stopped
+    stop_grace_period: 10s
+    networks: [edge, data]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/z-bank-new/"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 128M
+        reservations:
+          memory: 32M
 
   setup:
+    image: bank-of-z-setup:0.9
     profiles: ["tools"]
     build:
       context: .
@@ -57,6 +106,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    init: true
+    networks: [data]
 
 volumes:
   bankofz-sql:
+
+networks:
+  edge:
+  data:
+    internal: true

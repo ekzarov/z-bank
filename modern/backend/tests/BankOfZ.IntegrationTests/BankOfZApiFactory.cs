@@ -12,7 +12,8 @@ namespace BankOfZ.IntegrationTests;
 
 public sealed class BankOfZApiFactory(
     string connectionString,
-    CustomerOptions? customerOptions = null) : WebApplicationFactory<Program>
+    CustomerOptions? customerOptions = null,
+    Action<IServiceCollection>? configureServices = null) : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -39,6 +40,7 @@ public sealed class BankOfZApiFactory(
                 services.RemoveAll<CustomerOptions>();
                 services.AddSingleton(customerOptions);
             }
+            configureServices?.Invoke(services);
         });
     }
 

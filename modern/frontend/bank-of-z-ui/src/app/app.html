@@ -1,5 +1,8 @@
 <header class="topbar">
-  <a class="brand" routerLink="/">Bank of Z</a>
+  <div class="bank-identity">
+    <a class="brand" routerLink="/">{{ bankIdentity.displayName() }}</a>
+    <span>Sort code {{ bankIdentity.sortCode() }}</span>
+  </div>
   @if (sessionService.session(); as session) {
     <nav aria-label="Primary navigation">
       @for (item of navigation(); track item.path) {

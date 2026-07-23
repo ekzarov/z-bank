@@ -1,6 +1,8 @@
 :host { display: block; min-height: 100vh; }
 .topbar { min-height: 64px; padding: 0 32px; display: flex; align-items: center; gap: 32px; color: #f8fbff; background: #153c55; border-bottom: 4px solid #e8b44a; }
 .brand { color: inherit; font-size: 1.25rem; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.bank-identity { display: grid; gap: 2px; }
+.bank-identity span { color: #d5e3eb; font-size: .72rem; }
 nav { display: flex; gap: 20px; flex: 1; }
 nav a { color: #f8fbff; }
 .identity { display: flex; align-items: center; gap: 16px; }

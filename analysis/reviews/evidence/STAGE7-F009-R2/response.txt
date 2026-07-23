@@ -1,0 +1,43 @@
+﻿The Write and ExitPlanMode tools aren't available in this session, so I'll deliver the review directly as my response (which is the intended read-only deliverable anyway).
+
+---
+
+# Feature 009 Peer Review — Packet `STAGE7-F009-R2`
+
+## Acknowledgement
+- **Packet:** `STAGE7-F009-R2`
+- **Head (immutable):** `e2a2683` — "Address Feature 009 peer review findings"
+- **Base:** `f0f3ed8` — "Implement delivery and operations hardening"
+- **Scope:** the Round 1 correction diff — FR-014 fault-injection/diagnostics, delivery-audit regex, secret scanner, and supporting SDD/OPERATIONS updates.
+- **Eligibility:** Fresh read-only reviewer, not an author of the diff. I obtained `git diff f0f3ed8 e2a2683` independently and mutated nothing.
+- **Worktree integrity:** The only delta is the untracked `analysis/reviews/evidence/STAGE7-F009-R2/` request packet; head is `e2a2683`. The 11-file diff matches the declared correction set.
+
+## Round 1 finding verification
+
+**R1‑F1 — FR‑014 infrastructure-failure rollback + correlated diagnostic — RESOLVED.**
+`FinancialFailureDiagnosticsTests.cs` injects `SaveThenFailTransferRepository`, whose `SaveChangesAsync` (`:166-170`) calls `inner.SaveChangesAsync` **then** throws. Because the writes are added *before* the save (`InternalTransferService.cs:87-92`: `AddRange` booked rows, two `AccountAuditEntry`, balance mutations) and the save runs inside `ExecuteSerializableAsync` (`:36`), the rows are genuinely persisted within the serializable transaction and then rolled back on throw. The test proves all three: account balances (`100`/`0`, `:61-62`), no `TransferCorrelationId` booked rows (`:63-65`), no `InternalTransferDebited`/`Credited` audit rows (`:66-69`). Write-then-fail ordering is correct.
+
+**R1‑F2 — delivery-audit regex — RESOLVED.**
+`verify-delivery.mjs:20` corrected `\\s\\S` → `\s\S`. Compose `depends_on` is map-form (`db:` / `condition: service_healthy`), so a future `api → setup:` dependency would match `depends_on:[\s\S]*?setup:` and fail the gate. (Residual: an inline-list `depends_on: [setup]` has no colon and would still be missed — minor, off the current convention.)
+
+**R1‑F3 — secret scanner — RESOLVED.**
+`.github/workflows/` exclusion removed; added connection-string `Password=` and PEM private-key patterns; scope documented in `OPERATIONS.md`. The expanded allowlist values are all non-production: `ci-sql-password-123` and `validation-*-password-2026` appear only in `.github/workflows/modern-feature-001.yml` (ephemeral CI SQL container), and `requesttoken` matches the `tokens.RequestToken` antiforgery identifier in `SessionController.cs`. Real production secrets remain `${...}` env references (`BANKOFZ_SA_PASSWORD`, `BANKOFZ_API_DB_PASSWORD`) and stay covered. No usable production secret is silently exempted. The self-exemption is narrow (only `scan-secrets.mjs` lines containing `expression:`).
+
+**5xx correlation/redaction (cross-cutting) — RESOLVED.**
+`CorrelationMiddleware.cs`: the response header moved into `Response.OnStarting` (survives an exception handler resetting the response), and completion logging elevates to `Error` for ≥500 with the `CorrelationId`. Only `Method`, `Path.Value`, `StatusCode`, elapsed, and correlation are logged — query string, body, credentials, idempotency key, and amount are excluded. The test corroborates: header equals the supplied id, one `Error` log correlated to it, `Path` carries no query, and the message excludes `must-not-be-logged` (query/credential), `transfer-failure` (idempotency key), and the amount.
+
+**No security/reliability/isolation/SDD regression:** `configureServices` factory param is additive/optional; `OnStarting` is strictly safer than the prior inline set; the DB test collection is serial and the `Single` log assertion is unambiguous; `migration_status.yaml` updates are consistent with a corrections-ready-for-repeat-review state.
+
+## Findings (by severity)
+
+### Low — brittle amount-exclusion assertion (new, actionable; test-only)
+`FinancialFailureDiagnosticsTests.cs:78` — `Assert.DoesNotContain("40", failure.Message, StringComparison.Ordinal)`. The log template is `"HTTP {Method} {Path} completed with {StatusCode} in {ElapsedMilliseconds} ms; correlation {CorrelationId}"`. Every fixed token is `40`-free (`500`, `/api/accounts/10000001/transfers`, `infra-failure-001`), so the **only** dynamic source of the substring `40` is `ElapsedMilliseconds`, a `double` (e.g. `1.40`, `40.x`, `x.409`). Elapsed values whose rendering contains `40` will fail this assertion intermittently in CI. It does not affect production redaction (the middleware never logs the amount), but it is a real test-reliability defect introduced by the correction diff. **Fix:** probe with a distinctive amount (e.g. `1234.56`) or assert on the amount value specifically rather than the substring `"40"`.
+
+### Accepted / non-blocking
+- Delivery regex catches only map-form `setup:` (inline-list residual).
+- `OnStarting` header registration is an improvement, not a regression.
+
+## Conclusion
+All three Round 1 findings — plus the correlated 5xx diagnostic/redaction requirement — are genuinely resolved with strong, non-tautological evidence, and production behavior is sound. The correction diff introduces one Low, actionable test-reliability defect (the brittle `"40"` assertion). Because the criterion for sign-off is "no new actionable defect," I am withholding `CLEAN`; the remediation is a single-line assertion change and there are no other blocking issues.
+
+**Not `CLEAN`** — remediate the Low brittle-assertion finding.
