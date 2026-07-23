@@ -4,7 +4,7 @@ updated: 2026-07-23
 
 progress:
   current_stage_percent: 100
-  overall_percent_estimate: 98
+  overall_percent_estimate: 99
   estimate_only: true
   estimate_basis: >-
     The project owner's live role walkthrough found a visible Administrator
@@ -13,8 +13,8 @@ progress:
     target-only Administrator surface is now an owner-approved Access
     Administration correction slice. Stage 6 design review is clean and the
     backend, migration, Angular workspace, and automated tests are implemented.
-    Full deterministic gates and two Claude review rounds are complete. Explicit
-    migration, delivery, live acceptance, and fresh Stage 10 review remain. The
+    Full deterministic gates, two Claude review rounds, explicit migration,
+    delivery, and live acceptance are complete. Fresh Stage 10 review remains. The
     approved Stage 3 simulation fallback remains an explicit external IBM-runtime
     risk.
   external_review:
@@ -30,25 +30,25 @@ progress:
   updated_at: 2026-07-23T21:32:00+02:00
 
 methodology_stage:
-  number: 8
-  name: Deliver - Access Administration target-only correction
-  status: ready-for-explicit-migration-and-deployment
-  last_completed_stage: 10
+  number: 10
+  name: Independent acceptance - Access Administration target-only correction
+  status: ready-for-fresh-independent-review
+  last_completed_stage: 9
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: Primary delivery agent
+  actor: Fresh independent read-only agent
   feature: 010-access-administration
-  stage: 8
+  stage: 10
   instruction: >-
-    Apply the Feature 010 migration explicitly, deploy the immutable application
-    revision, then run role-bound Playwright and live useful-action smoke checks.
+    Review the immutable Feature 010 revision, SDD, target-surface inventory,
+    deterministic gates, deployment evidence, and live useful-action evidence.
   completion_gate: >-
-    Migration is recorded as applied, deployment is healthy, Administrator
-    lock/unlock and security-audit behavior pass live, and Stage 9 evidence is
-    ready for fresh Stage 10 review.
+    A fresh eligible reviewer returns clean, every finding is resolved and
+    rechecked, the owner-approved target-only surface is added to accepted
+    slices, and T012 is closed.
 
 stage_3_fallback_result:
   mode: simulate
@@ -332,9 +332,9 @@ reopened_slices:
   - feature: 010-access-administration
     discovered_on: 2026-07-23
     source: project-owner-live-walkthrough
-    status: stage-7-complete-pending-delivery
+    status: stage-9-complete-pending-independent-acceptance
     report: analysis/stage-09-administrator-surface-gap.md
-    failing_gate: pending-live-playwright-and-stage-10
+    failing_gate: pending-stage-10
 
 owner_gates:
   constitution_ratification:
@@ -398,14 +398,14 @@ owner_gates:
 
 known_blockers:
   - id: target-administrator-surface-gap
-    affects_stage: 7
-    status: stage-7-complete-pending-delivery
+    affects_stage: 10
+    status: stage-9-complete-pending-independent-acceptance
     detail: >-
       The owner selected target-only Access Administration. Feature 010 defines
       useful actions and its implementation passed full deterministic gates and
-      peer review. Explicit migration, delivery, live acceptance, and Stage 10
-      remain.
-    evidence: analysis/stage-09-administrator-surface-gap.md; analysis/stage-05-access-administration-report.md; specs/010-access-administration/spec.md
+      peer review. Explicit migration, deployment, and live useful-action
+      acceptance passed; only fresh Stage 10 acceptance remains.
+    evidence: analysis/stage-08-feature-010-delivery.md; analysis/stage-09-feature-010-live-acceptance.md; specs/010-access-administration/spec.md
   - id: stage-06-pass-012-clean
     affects_stage: 6
     status: resolved-stage-6-complete
