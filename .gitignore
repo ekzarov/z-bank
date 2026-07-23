@@ -10,6 +10,7 @@ modern/**/obj/
 modern/**/dist/
 modern/**/.angular/
 modern/**/test-results/
+modern/artifacts/
 
 # IDE and OS files
 .vs/

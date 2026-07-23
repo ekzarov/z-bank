@@ -66,4 +66,35 @@ public sealed class BookedTransaction
             CreatedAt = createdAt
         };
     }
+
+    public static BookedTransaction Import(
+        Guid id,
+        string reference,
+        string accountId,
+        string customerId,
+        CashTransactionDirection direction,
+        decimal amount,
+        string currency,
+        decimal resultingActualBalance,
+        decimal resultingAvailableBalance,
+        string sourceIdentifier,
+        DateTimeOffset createdAt)
+    {
+        var transaction = Create(
+            reference,
+            accountId,
+            customerId,
+            direction,
+            amount,
+            currency,
+            resultingActualBalance,
+            resultingAvailableBalance,
+            $"legacy:{sourceIdentifier}",
+            sourceIdentifier,
+            createdAt,
+            sourceSystem: SourceSystem.Ims,
+            sourceIdentifier: sourceIdentifier);
+        transaction.Id = id;
+        return transaction;
+    }
 }

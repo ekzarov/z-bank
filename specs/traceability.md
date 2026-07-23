@@ -85,6 +85,7 @@ than being falsely attached to source evidence.
 | Target control | Basis |
 |---|---|
 | Feature 001 FR-013, FR-014 | No startup provisioning and security-event audit are target operational controls. |
+| Feature 008 FR-013 | The 10 MiB v1 package limit is a target resource-safety control; legacy loaders do not define this boundary. |
 | Feature 009 FR-015 | Secret-safe demo-persona handoff is a target operational usability control discovered during the Feature 004 live walkthrough. |
 
 ## Coverage Summary

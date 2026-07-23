@@ -3,6 +3,7 @@ using BankOfZ.Domain.Customers;
 using BankOfZ.Domain.Transactions;
 using BankOfZ.Domain.Statements;
 using BankOfZ.Infrastructure.Identity;
+using BankOfZ.Infrastructure.DataInitialization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,12 @@ public sealed class BankOfZIdentityContext(DbContextOptions<BankOfZIdentityConte
     public DbSet<StatementSnapshot> StatementSnapshots => Set<StatementSnapshot>();
     public DbSet<StatementTransactionSnapshot> StatementTransactionSnapshots => Set<StatementTransactionSnapshot>();
     public DbSet<StatementAuditRecord> StatementAuditEntries => Set<StatementAuditRecord>();
+    public DbSet<ImportRun> ImportRuns => Set<ImportRun>();
+    public DbSet<LegacyTransactionRun> LegacyTransactionRuns => Set<LegacyTransactionRun>();
+    public DbSet<ImportReferenceValue> ImportReferenceValues => Set<ImportReferenceValue>();
+    public DbSet<ImportAttempt> ImportAttempts => Set<ImportAttempt>();
+    public DbSet<ImportStagedRecord> ImportStagedRecords => Set<ImportStagedRecord>();
+    public DbSet<SetupOperationAudit> SetupOperationAudits => Set<SetupOperationAudit>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

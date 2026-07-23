@@ -40,5 +40,8 @@ public sealed class AccountConfiguration : IEntityTypeConfiguration<Account>
             .HasForeignKey(account => account.CustomerId)
             .OnDelete(DeleteBehavior.Restrict);
         builder.HasIndex(account => new { account.CustomerId, account.Status, account.Id });
+        builder.HasIndex(account => new { account.SourceSystem, account.SourceIdentifier })
+            .IsUnique()
+            .HasFilter(CatalogModelConstants.Filters.ImportedSourceIdentifier);
     }
 }

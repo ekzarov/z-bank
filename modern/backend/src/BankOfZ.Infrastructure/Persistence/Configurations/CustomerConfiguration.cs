@@ -30,5 +30,8 @@ public sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.HasIndex(customer => customer.NormalizedName)
             .HasDatabaseName("IX_Customers_NormalizedName_Active")
             .HasFilter("[Status] = 0");
+        builder.HasIndex(customer => new { customer.SourceSystem, customer.SourceIdentifier })
+            .IsUnique()
+            .HasFilter(CatalogModelConstants.Filters.ImportedSourceIdentifier);
     }
 }

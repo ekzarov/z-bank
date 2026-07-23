@@ -72,6 +72,70 @@ public sealed class Account
         };
     }
 
+    public static Account Import(
+        string id,
+        string customerId,
+        string sortCode,
+        AccountMetadata metadata,
+        decimal actualBalance,
+        decimal availableBalance,
+        DateOnly openedOn,
+        DateOnly lastStatementOn,
+        DateOnly nextStatementOn,
+        AccountStatus status,
+        bool hasPendingWork,
+        SourceSystem sourceSystem,
+        string sourceIdentifier,
+        string? rawSourceType,
+        string? lastTransactionReference,
+        DateTimeOffset createdAt,
+        DateTimeOffset updatedAt)
+    {
+        var account = Create(
+            id,
+            customerId,
+            sortCode,
+            metadata,
+            sourceSystem,
+            sourceIdentifier,
+            rawSourceType,
+            createdAt);
+        if (!Enum.IsDefined(status))
+        {
+            throw Validation(nameof(status), "Account status is not supported.");
+        }
+        if (decimal.Round(actualBalance, 2) != actualBalance ||
+            decimal.Round(availableBalance, 2) != availableBalance)
+        {
+            throw Validation(nameof(actualBalance), "Imported balances may have at most two decimal places.");
+        }
+        if (lastStatementOn < openedOn || nextStatementOn < lastStatementOn)
+        {
+            throw Validation(nameof(lastStatementOn), "Statement dates are inconsistent with the account opening date.");
+        }
+        if (updatedAt < createdAt)
+        {
+            throw Validation(nameof(updatedAt), "Updated timestamp cannot precede creation.");
+        }
+        if (lastTransactionReference is not null &&
+            (lastTransactionReference.Length != CashTransactionRules.ReferenceLength ||
+             lastTransactionReference.Any(character => !char.IsAsciiHexDigit(character))))
+        {
+            throw Validation(nameof(lastTransactionReference), "Last transaction reference is invalid.");
+        }
+
+        account.ActualBalance = actualBalance;
+        account.AvailableBalance = availableBalance;
+        account.OpenedOn = openedOn;
+        account.LastStatementOn = lastStatementOn;
+        account.NextStatementOn = nextStatementOn;
+        account.Status = status;
+        account.HasPendingWork = hasPendingWork;
+        account.LastTransactionReference = lastTransactionReference;
+        account.UpdatedAt = updatedAt;
+        return account;
+    }
+
     public void UpdateMetadata(AccountMetadata metadata, DateTimeOffset now)
     {
         EnsureActive();
