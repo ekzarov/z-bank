@@ -70,7 +70,7 @@
     "81": "Decision D-005: generic transfers allow transactional products only; loan and mortgage movements use dedicated operations.",
     "84": "Deviation D-004: enforce available-funds/overdraft policy before transfer.",
     "85": "Deviation D-011: non-deployed bank-to-bank surface is not ported.",
-    "100-107": "Decision D-012: preserve statement behavior through an explicit modern job/API without JCL or fixed-width pagination.",
+    "101,106": "Decision D-012: replace missing-input JCL defaults and fixed-width printer pagination with explicit API/configuration and responsive print behavior.",
     "109": "Deviation D-002: placeholder OAuth endpoints are not advertised; target uses secure same-origin sessions.",
     "110-112": "Deviation D-007: normalize all legacy account types to one target enum.",
     "113-117": "Deviation D-001/D-002/D-014: secure same-origin Angular/API shell replaces the unauthenticated proxy panel.",

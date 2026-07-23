@@ -3,6 +3,7 @@
 .account-detail { padding:28px; border:1px solid #cbd8de; border-radius:6px; background:#fff; }
 header { display:flex; justify-content:space-between; gap:20px; }
 .history-link { display:inline-block; margin-top:14px; color:#126d74; font-weight:700; }
+.statement-link { margin-left:18px; }
 .status { align-self:start; padding:5px 9px; color:#285c3c; background:#e2f2e7; border-radius:4px; text-transform:capitalize; }
 .balance-band { display:grid; grid-template-columns:1fr 1fr; gap:1px; margin:18px 0; background:#d4e0e4; border:1px solid #d4e0e4; }
 .balance-band div { padding:22px; background:#f1f7f8; }.balance-band span,.balance-band strong{display:block}.balance-band strong{margin-top:6px;font-size:1.65rem}
@@ -13,4 +14,4 @@ button{min-height:40px;padding:8px 14px;border:1px solid #2b697d;border-radius:4
 .cash-panel,.transfer-panel{margin-top:24px;padding:20px;border-top:1px solid #dce4e8;background:#f7fafb}.cash-panel h2,.transfer-panel h2{margin:2px 0 14px;font-size:1.15rem}.cash-panel form,.transfer-panel form{display:grid;grid-template-columns:minmax(150px,1fr) minmax(150px,1fr) auto;gap:12px;align-items:end}.cash-panel button,.transfer-panel button{min-width:150px}
 .transfer-panel{background:#f5f8f3}
 .notice,.error{padding:12px 14px;border-left:4px solid #2d7f91;background:#fff}.error{border-color:#b54840;color:#862922}
-@media(max-width:650px){.balance-band,dl,.terms-form,.cash-panel form,.transfer-panel form{grid-template-columns:1fr}.cash-panel button,.transfer-panel button{width:100%}}
+@media(max-width:650px){.balance-band,dl,.terms-form,.cash-panel form,.transfer-panel form{grid-template-columns:1fr}.cash-panel button,.transfer-panel button{width:100%}.statement-link{display:block;margin-left:0}}
