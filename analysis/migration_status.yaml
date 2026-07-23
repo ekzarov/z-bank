@@ -3,42 +3,42 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 75
-  overall_percent_estimate: 76
+  current_stage_percent: 0
+  overall_percent_estimate: 79
   estimate_only: true
   estimate_basis: >-
-    Full migration estimate: shared Stages 1-6 and four of nine iterative
-    implementation/delivery/acceptance slices are complete. Feature 005 code,
-    tests, workbook closure, two-round backend/UI peer review, explicit public
-    delivery, and live revision are complete; independent acceptance remains.
+    Full migration estimate: shared Stages 1-6 and five of nine iterative
+    implementation/delivery/acceptance slices are complete. Feature 005 passed
+    code/test gates, peer review, public delivery, live revision, and clean
+    independent acceptance. Feature 006 is the next delivery slice.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 55
-    claude_usable_reports: 37
+    claude_sessions_started: 56
+    claude_usable_reports: 38
     codex_sessions_started: 35
     codex_usable_reports: 28
-    deterministic_batches_covered: 19
+    deterministic_batches_covered: 20
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T14:00:00+02:00
+  updated_at: 2026-07-23T14:15:00+02:00
 
 methodology_stage:
-  number: 10
-  name: Slice acceptance - Feature 005 funds transfers
-  status: delivered-candidate-awaiting-independent-acceptance
-  last_completed_stage: 9
+  number: 7
+  name: Coding - Feature 006 transaction history
+  status: ready-to-start
+  last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
   actor: OpenAI Codex orchestrator
-  feature: 005-funds-transfers
-  stage: 10
+  feature: 006-transaction-history
+  stage: 7
   instruction: >-
-    Commit the complete Feature 005 delivery candidate and run a fresh
-    read-only independent Stage 10 review against the immutable revision.
+    Implement and test the approved Feature 006 transaction-history slice,
+    synchronize its SDD/tasks/workbook, and repeat Stages 8-10.
   completion_gate: >-
     Feature 005 code, tests, SDD/tasks/workbook, deployment, and independent
     acceptance are clean before Feature 006 starts.
@@ -225,6 +225,12 @@ review_passes:
     agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
     result: clean
     report: analysis/reviews/stage-10-pass-007.md
+  - stage: 10
+    pass: 8
+    date: 2026-07-23
+    agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: clean
+    report: analysis/reviews/stage-10-pass-008.md
 
 accepted_slices:
   - feature: 001-secure-access-shell
@@ -247,6 +253,11 @@ accepted_slices:
     stage_10_pass: 7
     report: analysis/reviews/stage-10-pass-007.md
     workbook_rows: 20
+  - feature: 005-funds-transfers
+    accepted_on: 2026-07-23
+    stage_10_pass: 8
+    report: analysis/reviews/stage-10-pass-008.md
+    workbook_rows: 6
 
 owner_gates:
   constitution_ratification:
