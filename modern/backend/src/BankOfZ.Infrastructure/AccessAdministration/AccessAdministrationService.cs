@@ -5,6 +5,7 @@ using BankOfZ.Domain.Customers;
 using BankOfZ.Domain.Security;
 using BankOfZ.Infrastructure.Identity;
 using BankOfZ.Infrastructure.Persistence;
+using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -287,15 +288,23 @@ public sealed class AccessAdministrationService(
         CancellationToken cancellationToken)
     {
         var strategy = context.Database.CreateExecutionStrategy();
-        return await strategy.ExecuteAsync(async () =>
+        try
         {
-            await using var transaction = await context.Database.BeginTransactionAsync(
-                IsolationLevel.Serializable,
-                cancellationToken);
-            var result = await mutation();
-            await transaction.CommitAsync(cancellationToken);
-            return result;
-        });
+            return await strategy.ExecuteAsync(async () =>
+            {
+                await using var transaction = await context.Database.BeginTransactionAsync(
+                    IsolationLevel.Serializable,
+                    cancellationToken);
+                var result = await mutation();
+                await transaction.CommitAsync(cancellationToken);
+                return result;
+            });
+        }
+        catch (Exception exception) when (ContainsSqlDeadlock(exception))
+        {
+            throw new AccessAdministrationConflictException(
+                "A concurrent access change was rejected. Refresh and try again.");
+        }
     }
 
     private async Task<ApplicationUser> LoadUserAsync(Guid id, CancellationToken cancellationToken) =>
@@ -484,6 +493,18 @@ public sealed class AccessAdministrationService(
         exception is AccessAdministrationNotFoundException or
             AccessAdministrationConflictException or
             AccessAdministrationValidationException;
+
+    private static bool ContainsSqlDeadlock(Exception exception)
+    {
+        for (Exception? current = exception; current is not null; current = current.InnerException)
+        {
+            if (current is SqlException { Number: 1205 })
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private static AccessAdministrationValidationException Validation(
         string key,

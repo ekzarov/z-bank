@@ -197,8 +197,9 @@ public sealed class AccessAdministrationApiTests(BankOfZTestsFixture fixture)
                 $"/api/administration/users/{firstUser.GetProperty("id").GetGuid()}/lockout",
                 new { locked = true, version = firstUser.GetProperty("version").GetString() }));
 
-        Assert.Contains(attempts, response => response.StatusCode == HttpStatusCode.OK);
-        Assert.Contains(attempts, response => response.StatusCode == HttpStatusCode.Conflict);
+        Assert.Single(attempts, response => response.StatusCode == HttpStatusCode.OK);
+        Assert.Single(attempts, response =>
+            response.StatusCode is HttpStatusCode.Conflict or HttpStatusCode.Unauthorized);
 
         await using var scope = Fixture.Factory.Services.CreateAsyncScope();
         var context = scope.ServiceProvider.GetRequiredService<BankOfZIdentityContext>();
@@ -220,6 +221,14 @@ public sealed class AccessAdministrationApiTests(BankOfZTestsFixture fixture)
         using var client = CreateClient();
         await LoginAsync(client, "administrator");
         await LoginResponseAsync(CreateClient(), "missing", "Wrong-Password-123!");
+        using var operatorClient = CreateClient();
+        await LoginAsync(operatorClient, "operator");
+        var logout = await SendWithCsrfAsync(
+            operatorClient,
+            HttpMethod.Post,
+            "/api/session/logout",
+            new { });
+        Assert.Equal(HttpStatusCode.NoContent, logout.StatusCode);
 
         var page = await client.GetFromJsonAsync<JsonElement>(
             "/api/administration/security-audit?eventName=login&page=1&pageSize=20");
@@ -229,6 +238,13 @@ public sealed class AccessAdministrationApiTests(BankOfZTestsFixture fixture)
         Assert.True(items.Zip(items.Skip(1), (left, right) =>
             left.GetProperty("occurredAt").GetDateTimeOffset() >=
             right.GetProperty("occurredAt").GetDateTimeOffset()).All(value => value));
+
+        var logoutPage = await client.GetFromJsonAsync<JsonElement>(
+            "/api/administration/security-audit?eventName=logout&succeeded=true");
+        Assert.True(logoutPage.GetProperty("total").GetInt32() >= 1);
+        Assert.Equal(
+            "session-revoked",
+            logoutPage.GetProperty("items")[0].GetProperty("outcome").GetString());
 
         await using var scope = Fixture.Factory.Services.CreateAsyncScope();
         var context = scope.ServiceProvider.GetRequiredService<BankOfZIdentityContext>();

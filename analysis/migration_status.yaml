@@ -3,7 +3,7 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 88
+  current_stage_percent: 100
   overall_percent_estimate: 98
   estimate_only: true
   estimate_basis: >-
@@ -13,13 +13,14 @@ progress:
     target-only Administrator surface is now an owner-approved Access
     Administration correction slice. Stage 6 design review is clean and the
     backend, migration, Angular workspace, and automated tests are implemented.
-    Full gates, independent implementation review, explicit migration, delivery,
-    and live acceptance remain. The approved Stage 3 simulation fallback remains
-    an explicit external IBM-runtime risk.
+    Full deterministic gates and two Claude review rounds are complete. Explicit
+    migration, delivery, live acceptance, and fresh Stage 10 review remain. The
+    approved Stage 3 simulation fallback remains an explicit external IBM-runtime
+    risk.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 78
-    claude_usable_reports: 58
+    claude_sessions_started: 79
+    claude_usable_reports: 59
     codex_sessions_started: 37
     codex_usable_reports: 30
     deterministic_batches_covered: 23
@@ -29,24 +30,25 @@ progress:
   updated_at: 2026-07-23T21:32:00+02:00
 
 methodology_stage:
-  number: 7
-  name: Build - Access Administration target-only correction
-  status: implementation-in-progress
+  number: 8
+  name: Deliver - Access Administration target-only correction
+  status: ready-for-explicit-migration-and-deployment
   last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: Primary implementation agent
+  actor: Primary delivery agent
   feature: 010-access-administration
-  stage: 7
+  stage: 8
   instruction: >-
-    Implement Feature 010 tests-first in small commits, run all affected gates,
-    and obtain a fresh read-only peer review before delivery.
+    Apply the Feature 010 migration explicitly, deploy the immutable application
+    revision, then run role-bound Playwright and live useful-action smoke checks.
   completion_gate: >-
-    Backend, frontend, migration, and role-bound E2E behavior pass; peer-review
-    findings are resolved and audit:target is green before Stage 8 delivery.
+    Migration is recorded as applied, deployment is healthy, Administrator
+    lock/unlock and security-audit behavior pass live, and Stage 9 evidence is
+    ready for fresh Stage 10 review.
 
 stage_3_fallback_result:
   mode: simulate
@@ -330,9 +332,9 @@ reopened_slices:
   - feature: 010-access-administration
     discovered_on: 2026-07-23
     source: project-owner-live-walkthrough
-    status: implementation-in-progress
+    status: stage-7-complete-pending-delivery
     report: analysis/stage-09-administrator-surface-gap.md
-    failing_gate: pending-full-stage-7-gate-run
+    failing_gate: pending-live-playwright-and-stage-10
 
 owner_gates:
   constitution_ratification:
@@ -397,11 +399,12 @@ owner_gates:
 known_blockers:
   - id: target-administrator-surface-gap
     affects_stage: 7
-    status: implementation-in-progress
+    status: stage-7-complete-pending-delivery
     detail: >-
       The owner selected target-only Access Administration. Feature 010 defines
-      useful actions and its implementation is in progress. Full gates,
-      independent implementation review, delivery, and live acceptance remain.
+      useful actions and its implementation passed full deterministic gates and
+      peer review. Explicit migration, delivery, live acceptance, and Stage 10
+      remain.
     evidence: analysis/stage-09-administrator-surface-gap.md; analysis/stage-05-access-administration-report.md; specs/010-access-administration/spec.md
   - id: stage-06-pass-012-clean
     affects_stage: 6
