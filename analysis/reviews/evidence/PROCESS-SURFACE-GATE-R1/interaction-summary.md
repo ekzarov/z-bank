@@ -5,9 +5,9 @@
 - Base revision: `1f79fce`
 - Initial reviewed revision: `3a24d35`
 - Mode: fresh read-only Claude Code CLI peer review
-- Sessions started: 1
-- Usable reports: 1
-- Discussion rounds completed: 1
+- Sessions started: 2
+- Usable reports: 2
+- Discussion rounds completed: 2
 
 ## Reviewer Findings And Disposition
 
@@ -34,7 +34,24 @@
   Administrator violations. This red result is the intended reopened project
   gate, not a process-tool failure.
 
-## Remaining Review
+## Repeat Review
 
-A fresh Claude session must review the corrected immutable revision. This
-summary does not classify that repeat review in advance.
+Fresh packet `PROCESS-SURFACE-GATE-R2` reviewed immutable revision `0d7a279`
+and returned `CLEAN`. It confirmed F1-F6 were materially fixed and found no
+remaining high- or medium-severity bypass.
+
+The reviewer recorded four low-risk future-hardening observations:
+
+- enforce token boundaries when matching test anchors and tags;
+- model inherited route roles if nested role-guarded routes are introduced;
+- scan interpolated inline Angular templates;
+- add more unit tests for individual negative evidence branches.
+
+These do not allow the current visible actionless Administrator destination to
+pass. They remain explicit hardening backlog rather than silent findings.
+
+The reviewer statically predicted three Administrator violations because it
+omitted the template-marker result from its count. The primary agent reran the
+actual command: `audit:target` reports four violations, including the visible
+`next migration slice` marker. This factual counting discrepancy does not
+change the reviewer's `CLEAN` conclusion.
