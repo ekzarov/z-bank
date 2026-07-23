@@ -280,4 +280,4 @@ redefinition, MINOR for a new enforceable principle/section, PATCH for wording
 clarification. Amendments state rationale and impact. Ratification and owner
 approval cannot be inferred from an agent action or from merge alone.
 
-**Version**: 0.6.1 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-22
+**Version**: 0.7.0 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-23

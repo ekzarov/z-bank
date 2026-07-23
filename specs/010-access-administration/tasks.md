@@ -2,7 +2,7 @@
 
 ## SDD And Contracts
 
-- [ ] T001 Record the target-only owner decision, target-surface planned
+- [x] T001 Record the target-only owner decision, target-surface planned
   actions, reverse traceability, and Stage 6 review evidence.
 - [ ] T002 Define safe user, mutation, paging, and security-audit contracts plus
   invariant/unit-test cases.
