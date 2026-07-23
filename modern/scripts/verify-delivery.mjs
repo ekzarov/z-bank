@@ -5,9 +5,12 @@ const compose = read('../compose.yaml');
 const apiDockerfile = read('../Dockerfile');
 const uiDockerfile = read('../frontend/bank-of-z-ui/Dockerfile');
 const nginx = read('../frontend/bank-of-z-ui/nginx.conf');
+const angular = JSON.parse(read('../frontend/bank-of-z-ui/angular.json'));
 const serviceBlock = name => compose.match(new RegExp(`\\n  ${name}:\\n([\\s\\S]*?)(?=\\n  [a-z][a-z0-9-]*:\\n|\\nvolumes:)`))?.[1] ?? '';
 const api = serviceBlock('api');
 const db = serviceBlock('db');
+const productionOptimization =
+  angular.projects['bank-of-z-ui'].architect.build.configurations.production.optimization;
 
 const checks = [
   ['API is non-root', apiDockerfile.includes('USER app')],
@@ -20,7 +23,11 @@ const checks = [
   ['startup has no setup dependency', !api.match(/depends_on:[\s\S]*?setup:/)],
   ['nginx request limit exists', nginx.includes('client_max_body_size 11m')],
   ['nginx security headers exist', nginx.includes('Content-Security-Policy') && nginx.includes('X-Content-Type-Options')],
-  ['nginx forwards correlation', nginx.includes('X-Correlation-ID')]
+  ['nginx forwards correlation', nginx.includes('X-Correlation-ID')],
+  [
+    'production CSS does not depend on CSP-blocked inline load handlers',
+    productionOptimization?.styles?.inlineCritical === false
+  ]
 ];
 
 const failures = checks.filter(([, passed]) => !passed).map(([name]) => name);

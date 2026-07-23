@@ -14,3 +14,29 @@ test('web edge exposes real health, runtime identity, and security headers @e2e 
   expect(shell.headers()['x-frame-options']).toBe('DENY');
   expect(shell.headers()['content-security-policy']).toContain("default-src 'self'");
 });
+
+test('sign-in stylesheet is active and the panel stays centered @e2e @operations @visual', async ({ page }) => {
+  await page.goto('sign-in');
+
+  const panel = page.locator('form.panel');
+  await expect(panel).toBeVisible();
+  await expect(panel).toHaveCSS('max-width', '520px');
+  await expect(panel).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+
+  const box = await panel.boundingBox();
+  const viewport = page.viewportSize();
+  expect(box).not.toBeNull();
+  expect(viewport).not.toBeNull();
+  expect(box!.x).toBeGreaterThanOrEqual(16);
+  expect(box!.width).toBeLessThanOrEqual(520);
+  expect(Math.abs(box!.x + box!.width / 2 - viewport!.width / 2)).toBeLessThanOrEqual(2);
+
+  const hasHorizontalOverflow = await page.evaluate(
+    () => document.documentElement.scrollWidth > document.documentElement.clientWidth
+  );
+  expect(hasHorizontalOverflow).toBeFalsy();
+
+  const globalStylesheet = page.locator('link[rel="stylesheet"][href*="styles-"]');
+  await expect(globalStylesheet).toHaveCount(1);
+  expect(await globalStylesheet.getAttribute('media')).not.toBe('print');
+});

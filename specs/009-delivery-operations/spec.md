@@ -65,6 +65,10 @@ failures through health checks and structured logs without exposing secrets.
   operator, and administrator personas, identify the secret source and rotation
   procedure, and provide a role-verification smoke without storing a usable
   password in the repository.
+- **FR-016** The production Angular build and nginx Content Security Policy
+  SHALL be compatible without inline script event handlers. The sign-in page
+  SHALL load its global stylesheet, remain within the viewport, and keep its
+  bounded panel horizontally centered at supported desktop and mobile widths.
 
 ## Success Criteria
 
@@ -77,3 +81,5 @@ failures through health checks and structured logs without exposing secrets.
 - A new operator can identify each demo persona, obtain its password through the
   approved secret channel, and complete the role-verification smoke without
   guessing credentials.
+- A production-container browser test verifies that the stylesheet is active,
+  the sign-in panel is centered and bounded, and no horizontal overflow occurs.

@@ -27,4 +27,6 @@ and correlated diagnostics.
 Build all images, validate Compose, apply migration/import explicitly, start
 services, run API/frontend health and Playwright smoke, restart, and verify data
 persistence. Test unavailable SQL/API behavior. Keep IBM infrastructure blocker
-and simulation labels visible in deployment documentation.
+and simulation labels visible in deployment documentation. Run a browser
+geometry assertion against the production nginx image so CSP/style-loading
+regressions cannot pass through functional-only smoke coverage.

@@ -3,13 +3,15 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 100
-  overall_percent_estimate: 100
-  estimate_only: false
+  current_stage_percent: 45
+  overall_percent_estimate: 99
+  estimate_only: true
   estimate_basis: >-
-    The declared migration scope is complete: all nine iterative slices and all
-    135 workbook rows passed consolidated clean Stage 10 Pass 013. The approved
-    Stage 3 simulation fallback remains an explicit external IBM-runtime risk.
+    Consolidated Stage 10 Pass 013 remains the accepted baseline. A
+    post-acceptance Feature 009 production stylesheet/CSP layout defect is fixed
+    locally and awaits peer review, deployment, and a superseding acceptance
+    pass. The approved Stage 3 simulation fallback remains an explicit external
+    IBM-runtime risk.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
     claude_sessions_started: 70
@@ -20,27 +22,28 @@ progress:
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T18:15:19+02:00
+  updated_at: 2026-07-23T19:22:09+02:00
 
 methodology_stage:
-  number: 10
-  name: Final acceptance - Feature 009 and consolidated migration
-  status: complete-clean-pass-013
+  number: 7
+  name: Post-acceptance correction - Feature 009 stylesheet/CSP compatibility
+  status: implementation-complete-pending-peer-review
   last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: Project owner
+  actor: Claude Code CLI fresh external reviewer, orchestrated by OpenAI Codex
   feature: 009-delivery-operations
-  stage: 10
+  stage: 7
   instruction: >-
-    Use the deployed legacy and modern applications for demonstration. Reopen
-    Stage 3 only when authorized IBM infrastructure becomes available.
+    Review the immutable correction candidate for Angular production stylesheet
+    loading under nginx CSP and its production-container visual regression.
   completion_gate: >-
-    Feature 009 and the consolidated nine-slice migration are accepted by clean
-    Stage 10 Pass 013.
+    A usable peer report has no unresolved substantive findings, deterministic
+    gates pass, the corrected image is deployed, and a superseding Stage 10
+    acceptance pass is clean.
 
 stage_3_fallback_result:
   mode: simulate

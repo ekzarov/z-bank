@@ -22,3 +22,6 @@
   verification.
 - [x] T009 Run slice Stage 9/10 evidence, then run the final consolidated Stage
   10 acceptance only after all prior slices are accepted.
+- [x] T010 Correct production Angular stylesheet loading under nginx CSP and add
+  a production-container Playwright regression for active styles, centered
+  bounded layout, and horizontal overflow.
