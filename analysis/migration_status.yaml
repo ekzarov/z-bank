@@ -3,14 +3,14 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 92
-  overall_percent_estimate: 97
+  current_stage_percent: 99
+  overall_percent_estimate: 98
   estimate_only: true
   estimate_basis: >-
     Full migration estimate: shared Stages 1-6 and seven of nine iterative
-    slices are accepted. Feature 008 implementation, tests, clean-install
-    Compose smoke, workbook synchronization, and two Claude peer-review rounds
-    are complete. Public delivery, live revision, and Stage 10 acceptance remain.
+    slices are accepted. Feature 008 implementation, public delivery, live
+    revision, correction loop, and deterministic gates are complete. Fresh
+    Stage 10 acceptance remains before Feature 009 starts.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
     claude_sessions_started: 65
@@ -21,27 +21,28 @@ progress:
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T16:41:32+02:00
+  updated_at: 2026-07-23T17:14:00+02:00
 
 methodology_stage:
-  number: 7
-  name: Coding - Feature 008 data initialization
-  status: implementation-peer-reviewed
+  number: 10
+  name: Acceptance - Feature 008 data initialization
+  status: pending-fresh-independent-review
   last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: OpenAI Codex orchestrator
+  actor: Fresh Claude Code CLI reviewer, orchestrated by OpenAI Codex
   feature: 008-data-initialization
-  stage: 7
+  stage: 10
   instruction: >-
-    Commit the peer-reviewed Feature 008 candidate, deliver it to the public
-    stand, reconcile the live behavior, and run fresh Stage 10 acceptance.
+    Review the immutable Feature 008 revision, SDD/workbook traceability,
+    implementation, tests, Stage 8 delivery, Stage 9 live revision, and public
+    gate evidence without editing the worktree.
   completion_gate: >-
-    Feature 008 code, tests, clean Compose bootstrap, SDD/tasks/workbook
-    synchronization, and two Claude peer-review rounds are complete.
+    A fresh eligible reviewer reports clean. Findings return to the appropriate
+    correction stage; a blocked or invalid session must be replaced.
 
 stage_3_fallback_result:
   mode: simulate
