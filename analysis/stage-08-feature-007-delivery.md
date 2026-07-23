@@ -34,7 +34,7 @@ provisioning.
 - Operator bulk outcomes and failed-only retry UI: passed.
 - Existing authentication, customer, account, cash, transfer, and transaction
   history paths: passed.
-- Public HTTPS Playwright: 13 passed, 0 failed.
+- Public HTTPS Playwright: 14 passed, 0 failed.
 
 Credentials were loaded from the server environment and were not written to
 the repository or test output.
