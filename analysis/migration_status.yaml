@@ -3,14 +3,14 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 25
-  overall_percent_estimate: 75
+  current_stage_percent: 75
+  overall_percent_estimate: 76
   estimate_only: true
   estimate_basis: >-
     Full migration estimate: shared Stages 1-6 and four of nine iterative
     implementation/delivery/acceptance slices are complete. Feature 005 code,
-    tests, workbook closure, local Docker/E2E, and two-round backend/UI peer
-    review are complete; public delivery and independent acceptance remain.
+    tests, workbook closure, two-round backend/UI peer review, explicit public
+    delivery, and live revision are complete; independent acceptance remains.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
     claude_sessions_started: 55
@@ -21,13 +21,13 @@ progress:
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T13:30:00+02:00
+  updated_at: 2026-07-23T14:00:00+02:00
 
 methodology_stage:
-  number: 8
-  name: Delivery - Feature 005 funds transfers
-  status: peer-reviewed-candidate-awaiting-public-delivery
-  last_completed_stage: 7
+  number: 10
+  name: Slice acceptance - Feature 005 funds transfers
+  status: delivered-candidate-awaiting-independent-acceptance
+  last_completed_stage: 9
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
@@ -35,11 +35,10 @@ methodology_stage:
 next_action:
   actor: OpenAI Codex orchestrator
   feature: 005-funds-transfers
-  stage: 8
+  stage: 10
   instruction: >-
-    Deploy the peer-reviewed Feature 005 candidate with explicit migration and
-    demo provisioning, close public smoke, then complete Stages 9-10 before
-    Feature 006 starts.
+    Commit the complete Feature 005 delivery candidate and run a fresh
+    read-only independent Stage 10 review against the immutable revision.
   completion_gate: >-
     Feature 005 code, tests, SDD/tasks/workbook, deployment, and independent
     acceptance are clean before Feature 006 starts.
