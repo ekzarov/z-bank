@@ -3,7 +3,7 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 45
+  current_stage_percent: 76
   overall_percent_estimate: 99
   estimate_only: true
   estimate_basis: >-
@@ -14,32 +14,32 @@ progress:
     IBM-runtime risk.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 70
-    claude_usable_reports: 51
+    claude_sessions_started: 71
+    claude_usable_reports: 52
     codex_sessions_started: 37
     codex_usable_reports: 30
     deterministic_batches_covered: 23
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T19:22:09+02:00
+  updated_at: 2026-07-23T19:29:00+02:00
 
 methodology_stage:
   number: 7
   name: Post-acceptance correction - Feature 009 stylesheet/CSP compatibility
-  status: implementation-complete-pending-peer-review
+  status: peer-finding-accepted-mobile-evidence-pending-rerun
   last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: Claude Code CLI fresh external reviewer, orchestrated by OpenAI Codex
+  actor: OpenAI Codex primary implementation agent
   feature: 009-delivery-operations
   stage: 7
   instruction: >-
-    Review the immutable correction candidate for Angular production stylesheet
-    loading under nginx CSP and its production-container visual regression.
+    Run the corrected desktop-and-mobile production-container visual regression,
+    record the peer-review interaction, and prepare the deployment candidate.
   completion_gate: >-
     A usable peer report has no unresolved substantive findings, deterministic
     gates pass, the corrected image is deployed, and a superseding Stage 10
