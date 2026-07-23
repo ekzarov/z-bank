@@ -4,6 +4,7 @@ using BankOfZ.Domain.Transactions;
 using BankOfZ.Domain.Statements;
 using BankOfZ.Infrastructure.Identity;
 using BankOfZ.Infrastructure.DataInitialization;
+using BankOfZ.Infrastructure.AccessAdministration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,21 @@ public sealed class BankOfZIdentityContext(DbContextOptions<BankOfZIdentityConte
     public DbSet<ImportAttempt> ImportAttempts => Set<ImportAttempt>();
     public DbSet<ImportStagedRecord> ImportStagedRecords => Set<ImportStagedRecord>();
     public DbSet<SetupOperationAudit> SetupOperationAudits => Set<SetupOperationAudit>();
+    public DbSet<SecurityAuditRecord> SecurityAuditEntries => Set<SecurityAuditRecord>();
+
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        RejectSecurityAuditMutation();
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override Task<int> SaveChangesAsync(
+        bool acceptAllChangesOnSuccess,
+        CancellationToken cancellationToken = default)
+    {
+        RejectSecurityAuditMutation();
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -49,5 +65,14 @@ public sealed class BankOfZIdentityContext(DbContextOptions<BankOfZIdentityConte
         builder.HasSequence<long>(CatalogModelConstants.Sequences.AccountNumber)
             .StartsAt(10000001)
             .IncrementsBy(1);
+    }
+
+    private void RejectSecurityAuditMutation()
+    {
+        if (ChangeTracker.Entries<SecurityAuditRecord>()
+            .Any(entry => entry.State is EntityState.Modified or EntityState.Deleted))
+        {
+            throw new InvalidOperationException("Security audit records are append-only.");
+        }
     }
 }

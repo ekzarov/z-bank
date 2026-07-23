@@ -17,6 +17,7 @@ Stages 7, 8, 9, and 10 before the next slice starts.
 | 7 | `007-monthly-statements` | 100-107 | D-012 |
 | 8 | `008-data-initialization` | 119-126 | D-013, D-021 |
 | 9 | `009-delivery-operations` | 128-153 | D-006, D-014, D-015, D-022 |
+| 10 | `010-access-administration` | Target-only | Owner-approved target modernization |
 
 Rows marked `Runtime: simulated`, `Inferred`, or `Partial` retain that evidence
 classification. SDD coverage does not promote them to real-runtime verified.

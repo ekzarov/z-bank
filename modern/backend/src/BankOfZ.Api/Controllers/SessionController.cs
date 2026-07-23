@@ -1,5 +1,6 @@
 using BankOfZ.Api.Contracts;
 using BankOfZ.Api.Security;
+using BankOfZ.Application.AccessAdministration;
 using BankOfZ.Infrastructure.Identity;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
@@ -14,7 +15,7 @@ public sealed class SessionController(
     SignInManager<ApplicationUser> signInManager,
     UserManager<ApplicationUser> userManager,
     IAntiforgery antiforgery,
-    ISecurityAudit audit,
+    ISecurityAuditWriter audit,
     InvalidCredentialWorkFactor invalidCredentialWorkFactor) : ControllerBase
 {
     [AllowAnonymous]
@@ -60,7 +61,13 @@ public sealed class SessionController(
         if (user is null)
         {
             invalidCredentialWorkFactor.Verify(request.Password);
-            audit.Record("login", null, false, "invalid-credentials");
+            await audit.WriteAsync(new(
+                "login",
+                null,
+                null,
+                false,
+                "invalid-credentials",
+                SecurityAuditLimits.NormalizeCorrelationId(HttpContext.TraceIdentifier)));
             return Unauthorized(GenericLoginProblem());
         }
 
@@ -72,13 +79,24 @@ public sealed class SessionController(
 
         if (!result.Succeeded)
         {
-            audit.Record("login", user.Id.ToString(), false,
-                result.IsLockedOut ? "locked-out" : "invalid-credentials");
+            await audit.WriteAsync(new(
+                "login",
+                null,
+                user.Id.ToString(),
+                false,
+                result.IsLockedOut ? "locked-out" : "invalid-credentials",
+                SecurityAuditLimits.NormalizeCorrelationId(HttpContext.TraceIdentifier)));
             return Unauthorized(GenericLoginProblem());
         }
 
         var roles = await userManager.GetRolesAsync(user);
-        audit.Record("login", user.Id.ToString(), true, "authenticated");
+        await audit.WriteAsync(new(
+            "login",
+            user.Id.ToString(),
+            user.Id.ToString(),
+            true,
+            "authenticated",
+            SecurityAuditLimits.NormalizeCorrelationId(HttpContext.TraceIdentifier)));
         return Ok(new SessionResponse(true, user.UserName, user.CustomerId, roles.ToArray()));
     }
 
@@ -88,7 +106,13 @@ public sealed class SessionController(
     {
         var subjectId = userManager.GetUserId(User);
         await signInManager.SignOutAsync();
-        audit.Record("logout", subjectId, true, "session-revoked");
+        await audit.WriteAsync(new(
+            "logout",
+            subjectId,
+            subjectId,
+            true,
+            "session-revoked",
+            SecurityAuditLimits.NormalizeCorrelationId(HttpContext.TraceIdentifier)));
         return NoContent();
     }
 

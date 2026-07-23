@@ -88,11 +88,12 @@ than being falsely attached to source evidence.
 | Feature 008 FR-013 | The 10 MiB v1 package limit is a target resource-safety control; legacy loaders do not define this boundary. |
 | Feature 009 FR-015 | Secret-safe demo-persona handoff is a target operational usability control discovered during the Feature 004 live walkthrough. |
 | Feature 009 FR-016 | Production CSP/build compatibility and viewport layout regression coverage are target delivery controls discovered during deployed-system visual inspection. |
+| Feature 010 FR-001 through FR-018 | Owner-approved target-only access administration closes the actionless Administrator surface; it does not claim a legacy source row. |
 
 ## Coverage Summary
 
 - Scenario rows: 135
-- Delivery slices: 9
+- Delivery slices: 10
 - Deferred rows: 0
 - Target-implemented rows before Stage 7: 0
 - Full IBM runtime verification: still blocked; simulation labels remain

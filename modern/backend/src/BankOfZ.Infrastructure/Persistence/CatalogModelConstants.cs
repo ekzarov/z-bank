@@ -18,6 +18,7 @@ public static class CatalogModelConstants
         public const string ImportAttempts = "ImportAttempts";
         public const string ImportStagedRecords = "ImportStagedRecords";
         public const string SetupOperationAudits = "SetupOperationAudits";
+        public const string SecurityAuditEntries = "SecurityAuditEntries";
     }
 
     public static class Sequences
@@ -31,7 +32,6 @@ public static class CatalogModelConstants
         public const int Actor = 128;
         public const int Action = 64;
         public const int Result = 32;
-        public const int CorrelationId = 64;
         public const int Currency = 3;
         public const int StatementDataVersion = 64;
         public const int StatementDescription = 128;

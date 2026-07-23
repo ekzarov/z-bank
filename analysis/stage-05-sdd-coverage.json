@@ -44,6 +44,11 @@
       "id": "009",
       "slug": "delivery-operations",
       "workbookRows": [128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153]
+    },
+    {
+      "id": "010",
+      "slug": "access-administration",
+      "workbookRows": []
     }
   ],
   "decisionNotes": {

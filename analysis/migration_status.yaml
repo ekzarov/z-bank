@@ -3,49 +3,52 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 10
-  overall_percent_estimate: 98
+  current_stage_percent: 100
+  overall_percent_estimate: 100
   estimate_only: true
   estimate_basis: >-
     The project owner's live role walkthrough found a visible Administrator
     placeholder with no useful action. Previously accepted legacy banking
     behavior remains implemented under Customer and Operator, but the
-    target-only Administrator surface requires an owner decision and a new
-    Stage 5-10 correction loop. The approved Stage 3 simulation fallback
-    remains an explicit external IBM-runtime risk.
+    target-only Administrator surface is now an owner-approved Access
+    Administration correction slice. Stage 6 design review is clean and the
+    backend, migration, Angular workspace, and automated tests are implemented.
+    Full deterministic gates, two Claude review rounds, explicit migration,
+    delivery, live acceptance, and fresh Stage 10 review are complete. The
+    approved Stage 3 simulation fallback remains an explicit external IBM-runtime
+    risk.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 75
-    claude_usable_reports: 56
+    claude_sessions_started: 80
+    claude_usable_reports: 60
     codex_sessions_started: 37
     codex_usable_reports: 30
     deterministic_batches_covered: 23
     active_sessions: 0
-    blocked_or_invalid_sessions: 25
+    blocked_or_invalid_sessions: 26
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T21:02:00+02:00
+  updated_at: 2026-07-23T21:32:00+02:00
 
 methodology_stage:
-  number: 4
-  name: Requirements revision - Administrator target surface
-  status: reopened-owner-observed-gap
+  number: 10
+  name: Independent acceptance complete
+  status: complete-under-approved-stage-3-simulation-fallback
   last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: Project owner
-  feature: administrator-surface
-  stage: 4
+  actor: Project owner or infrastructure provider
+  feature: cross-cutting-legacy-runtime
+  stage: 3
   instruction: >-
-    Decide whether strict legacy parity removes the target Administrator role
-    and surface, or target modernization adds an owner-approved Administrator
-    feature with concrete useful actions.
+    Keep the accepted modern application available. If authorized IBM
+    CICS/IMS/DB2 infrastructure becomes available, run the real legacy
+    walkthrough and reconcile any observed differences.
   completion_gate: >-
-    Record the owner decision, update the workbook and SDD, pass independent
-    Stage 6 verification, and take the resulting correction slice through
-    Stages 7-10 with a clean target-surface audit.
+    The currently approved migration flow is complete. The external legacy
+    runtime risk closes only after a real authorized IBM walkthrough.
 
 stage_3_fallback_result:
   mode: simulate
@@ -187,6 +190,12 @@ review_passes:
     agent: OpenAI Codex fresh read-only reviewer
     result: clean
     report: analysis/reviews/stage-06-pass-012.md
+  - stage: 6
+    pass: 13
+    date: 2026-07-23
+    agent: Claude Code CLI fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: clean
+    report: analysis/reviews/stage-06-pass-013.md
   - stage: 10
     pass: 1
     date: 2026-07-22
@@ -271,6 +280,12 @@ review_passes:
     agent: Claude Code CLI fresh read-only reviewer, orchestrated by OpenAI Codex
     result: clean
     report: analysis/reviews/stage-10-pass-014.md
+  - stage: 10
+    pass: 15
+    date: 2026-07-23
+    agent: Claude Code CLI 2.1.173 fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: clean
+    report: analysis/reviews/stage-10-pass-015.md
 
 accepted_slices:
   - feature: 001-secure-access-shell
@@ -318,14 +333,20 @@ accepted_slices:
     stage_10_pass: 14
     report: analysis/reviews/stage-10-pass-014.md
     workbook_rows: 26
+  - feature: 010-access-administration
+    accepted_on: 2026-07-23
+    stage_10_pass: 15
+    report: analysis/reviews/stage-10-pass-015.md
+    workbook_rows: 0
+    target_only: true
 
 reopened_slices:
-  - feature: 001-secure-access-shell
+  - feature: 010-access-administration
     discovered_on: 2026-07-23
     source: project-owner-live-walkthrough
-    status: owner-decision-required
+    status: accepted-stage-10-pass-015
     report: analysis/stage-09-administrator-surface-gap.md
-    failing_gate: npm --prefix analysis/tools run audit:target
+    failing_gate: none
 
 owner_gates:
   constitution_ratification:
@@ -342,6 +363,7 @@ owner_gates:
       - correct-unsafe-and-defective-legacy-behavior
       - preserve-business-capabilities-not-dead-technical-artifacts
       - unify-cics-and-ims-with-source-provenance
+      - retain-administrator-as-target-only-access-administration
   target_architecture:
     status: approved
     approved_by: project owner
@@ -351,18 +373,20 @@ owner_gates:
     frontend: angular-22
     delivery: docker-compose-explicit-migrations
   stage_5_sdd:
-    status: independently-verified-pass-012
+    status: feature-010-independently-verified-pass-013
     completed_on: 2026-07-21
-    corrected_on: 2026-07-22
-    report: analysis/stage-05-sdd-report.md
-    slices: 9
+    corrected_on: 2026-07-23
+    report: analysis/stage-05-access-administration-report.md
+    previous_full_design_verification: analysis/reviews/stage-06-pass-012.md
+    feature_010_verification: analysis/reviews/stage-06-pass-013.md
+    slices: 10
     workbook_rows_covered: 135
   implementation_approval:
     status: approved
     approved_by: project owner
     approved_on: 2026-07-22
-    scope: iterative-feature-slices-starting-with-001
-    basis: explicit owner instruction to proceed autonomously after Stage 6
+    scope: 010-access-administration-correction-slice
+    basis: explicit owner selection of target-only Access Administration
   stage_3_fallback_decision:
     status: approved
     allowed_modes:
@@ -386,14 +410,14 @@ owner_gates:
 
 known_blockers:
   - id: target-administrator-surface-gap
-    affects_stage: 4
-    status: owner-decision-required
+    affects_stage: 10
+    status: resolved-stage-10-pass-015
     detail: >-
-      The visible target-only Administrator route is a placeholder with no
-      owner-approved useful action. The target-surface audit blocks acceptance
-      until the role is removed for strict parity or specified and delivered
-      as an explicit modernization feature.
-    evidence: analysis/stage-09-administrator-surface-gap.md; analysis/target-surface-inventory.json
+      The owner selected target-only Access Administration. Feature 010 defines
+      useful actions and its implementation passed full deterministic gates and
+      peer review. Explicit migration, deployment, live useful-action
+      acceptance, and fresh Stage 10 Pass 015 passed.
+    evidence: analysis/stage-08-feature-010-delivery.md; analysis/stage-09-feature-010-live-acceptance.md; analysis/reviews/stage-10-pass-015.md
   - id: stage-06-pass-012-clean
     affects_stage: 6
     status: resolved-stage-6-complete
