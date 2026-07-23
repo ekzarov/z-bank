@@ -1,0 +1,116 @@
+<section class="page administration">
+  <header class="page-heading">
+    <div><p class="eyebrow">Authorized workspace</p><h1>Access administration</h1></div>
+    @if (activeTab() === 'users') {
+      <button type="button" class="primary" (click)="startCreate()">New user</button>
+    }
+  </header>
+
+  <nav class="tabs" aria-label="Administration views">
+    <button type="button" [class.active]="activeTab() === 'users'" (click)="setTab('users')">Users</button>
+    <button type="button" [class.active]="activeTab() === 'audit'" (click)="setTab('audit')">Security audit</button>
+  </nav>
+
+  @if (message()) { <p class="notice" role="status">{{ message() }}</p> }
+  @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
+
+  @if (activeTab() === 'users') {
+    <form class="filter-bar" (submit)="$event.preventDefault(); searchUsers()">
+      <label for="user-search">User name, email, or customer ID</label>
+      <div>
+        <input id="user-search" [value]="query()" (input)="query.set($any($event.target).value)" autocomplete="off">
+        <button type="submit" [disabled]="loading()">Search</button>
+      </div>
+    </form>
+
+    <div class="summary">{{ userTotal() }} users</div>
+    <div class="workspace-grid">
+      <aside aria-label="User results">
+        @for (user of users(); track user.id) {
+          <button type="button" class="result" [class.active]="selected()?.id === user.id" (click)="selectUser(user)">
+            <span class="result-main"><strong>{{ user.userName }}</strong><span class="role">{{ user.role }}</span></span>
+            <span>{{ user.email }}</span>
+            @if (user.isLockedOut) { <span class="locked">Locked</span> }
+          </button>
+        } @empty {
+          <p class="muted">{{ loading() ? 'Loading users...' : 'No users matched the search.' }}</p>
+        }
+      </aside>
+
+      <div class="editor">
+        @if (createOpen()) {
+          <form [formGroup]="createForm" (ngSubmit)="createUser()">
+            <div class="editor-heading"><div><p class="eyebrow">Identity</p><h2>Create user</h2></div></div>
+            <div class="fields">
+              <label>User name<input formControlName="userName" autocomplete="off"></label>
+              <label>Email<input type="email" formControlName="email" autocomplete="off"></label>
+              <label class="wide">Temporary password<input type="password" formControlName="password" autocomplete="new-password"></label>
+              <label>Role<select formControlName="role">@for (role of roles; track role) { <option [value]="role">{{ role }}</option> }</select></label>
+              @if (createForm.controls.role.value === 'Customer') {
+                <label>Customer ID<input formControlName="customerId" maxlength="10"></label>
+              }
+            </div>
+            <div class="actions"><button type="submit" class="primary" [disabled]="saving()">Create user</button></div>
+          </form>
+        } @else if (selected(); as user) {
+          <div class="editor-heading">
+            <div><p class="eyebrow">User account</p><h2>{{ user.userName }}</h2></div>
+            <span class="status" [class.status-locked]="user.isLockedOut">{{ user.isLockedOut ? 'Locked' : 'Active' }}</span>
+          </div>
+          <dl>
+            <div><dt>Email</dt><dd>{{ user.email }}</dd></div>
+            <div><dt>Role</dt><dd>{{ user.role }}</dd></div>
+            <div><dt>Customer ID</dt><dd>{{ user.customerId || 'Not linked' }}</dd></div>
+            <div><dt>Failed sign-ins</dt><dd>{{ user.accessFailedCount }}</dd></div>
+          </dl>
+          <form [formGroup]="roleForm" (ngSubmit)="changeRole()" class="role-editor">
+            <h3>Access role</h3>
+            <div class="fields">
+              <label>Role<select formControlName="role">@for (role of roles; track role) { <option [value]="role">{{ role }}</option> }</select></label>
+              @if (roleForm.controls.role.value === 'Customer') {
+                <label>Customer ID<input formControlName="customerId" maxlength="10"></label>
+              }
+            </div>
+            <div class="actions">
+              <button type="submit" class="primary" [disabled]="saving()">Save role</button>
+              <button type="button" [class.danger]="!user.isLockedOut" [disabled]="saving()" (click)="changeLockout()">
+                {{ user.isLockedOut ? 'Unlock user' : 'Lock user' }}
+              </button>
+            </div>
+          </form>
+        } @else {
+          <div class="empty-state"><h2>Select a user</h2><p>Review access, change a role, or manage account lockout.</p></div>
+        }
+      </div>
+    </div>
+  } @else {
+    <form class="audit-filter" [formGroup]="auditForm" (ngSubmit)="searchAudit()">
+      <label>Event<input formControlName="eventName"></label>
+      <label>Actor or subject ID<input formControlName="actorOrSubject"></label>
+      <label>Outcome<select formControlName="succeeded"><option value="">All</option><option value="true">Succeeded</option><option value="false">Rejected</option></select></label>
+      <label>From<input type="datetime-local" formControlName="from"></label>
+      <label>To<input type="datetime-local" formControlName="to"></label>
+      <button type="submit" class="primary" [disabled]="loading()">Apply filters</button>
+    </form>
+    <div class="summary">{{ auditTotal() }} security events</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Time</th><th>Event</th><th>Actor</th><th>Subject</th><th>Outcome</th><th>Correlation</th></tr></thead>
+        <tbody>
+          @for (entry of auditEntries(); track entry.id) {
+            <tr>
+              <td>{{ entry.occurredAt }}</td>
+              <td><strong>{{ entry.eventName }}</strong></td>
+              <td>{{ entry.actorId || 'System' }}</td>
+              <td>{{ entry.subjectId || 'None' }}</td>
+              <td><span class="result-pill" [class.rejected]="!entry.succeeded">{{ entry.succeeded ? 'Succeeded' : 'Rejected' }}</span><small>{{ entry.outcome }}</small></td>
+              <td><code>{{ entry.correlationId }}</code></td>
+            </tr>
+          } @empty {
+            <tr><td colspan="6">{{ loading() ? 'Loading security events...' : 'No security events matched the filters.' }}</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

@@ -19,6 +19,8 @@ using BankOfZ.Application.Statements;
 using BankOfZ.Infrastructure.Statements;
 using BankOfZ.Api.Configuration;
 using BankOfZ.Api.Diagnostics;
+using BankOfZ.Application.AccessAdministration;
+using BankOfZ.Infrastructure.AccessAdministration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -56,6 +58,9 @@ builder.Services
     })
     .AddEntityFrameworkStores<BankOfZIdentityContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+    options.ValidationInterval = TimeSpan.Zero);
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -130,13 +135,15 @@ builder.Services.AddScoped<ICustomerAuditWriter, CustomerAuditWriter>();
 builder.Services.AddScoped<ICustomerAccountStatusReader, CustomerAccountStatusReader>();
 builder.Services.AddScoped<ICreditAssessmentProvider, DeterministicCreditAssessmentProvider>();
 builder.Services.AddScoped<CustomerService>();
-builder.Services.AddScoped<ISecurityAudit, SecurityAudit>();
+builder.Services.AddScoped<ISecurityAuditWriter, SecurityAuditWriter>();
+builder.Services.AddScoped<IAccessAdministrationService, AccessAdministrationService>();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<CustomerExceptionHandler>();
 builder.Services.AddExceptionHandler<AccountExceptionHandler>();
 builder.Services.AddExceptionHandler<CashTransactionExceptionHandler>();
 builder.Services.AddExceptionHandler<TransactionHistoryExceptionHandler>();
 builder.Services.AddExceptionHandler<StatementExceptionHandler>();
+builder.Services.AddExceptionHandler<AccessAdministrationExceptionHandler>();
 builder.Services.AddHealthChecks()
     .AddCheck<SqlReadinessHealthCheck>("sql", tags: ["ready"]);
 builder.Services.Configure<ForwardedHeadersOptions>(options =>

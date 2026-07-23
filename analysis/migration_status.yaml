@@ -3,7 +3,7 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 0
+  current_stage_percent: 72
   overall_percent_estimate: 98
   estimate_only: true
   estimate_basis: >-
@@ -11,9 +11,11 @@ progress:
     placeholder with no useful action. Previously accepted legacy banking
     behavior remains implemented under Customer and Operator, but the
     target-only Administrator surface is now an owner-approved Access
-    Administration correction slice. Stage 5 artifacts are authored and await
-    independent Stage 6 verification. The approved Stage 3 simulation fallback
-    remains an explicit external IBM-runtime risk.
+    Administration correction slice. Stage 6 design review is clean and the
+    backend, migration, Angular workspace, and automated tests are implemented.
+    Full gates, independent implementation review, explicit migration, delivery,
+    and live acceptance remain. The approved Stage 3 simulation fallback remains
+    an explicit external IBM-runtime risk.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
     claude_sessions_started: 76
@@ -29,7 +31,7 @@ progress:
 methodology_stage:
   number: 7
   name: Build - Access Administration target-only correction
-  status: approved-ready-for-implementation
+  status: implementation-in-progress
   last_completed_stage: 10
   incomplete_stages:
     - 3
@@ -328,9 +330,9 @@ reopened_slices:
   - feature: 010-access-administration
     discovered_on: 2026-07-23
     source: project-owner-live-walkthrough
-    status: stage-6-clean-ready-for-implementation
+    status: implementation-in-progress
     report: analysis/stage-09-administrator-surface-gap.md
-    failing_gate: npm --prefix analysis/tools run audit:target
+    failing_gate: pending-full-stage-7-gate-run
 
 owner_gates:
   constitution_ratification:
@@ -395,11 +397,11 @@ owner_gates:
 known_blockers:
   - id: target-administrator-surface-gap
     affects_stage: 7
-    status: stage-6-clean-ready-for-implementation
+    status: implementation-in-progress
     detail: >-
       The owner selected target-only Access Administration. Feature 010 defines
-      useful actions but the visible route remains a placeholder and the
-      target-surface audit remains red until Stages 6-10 complete.
+      useful actions and its implementation is in progress. Full gates,
+      independent implementation review, delivery, and live acceptance remain.
     evidence: analysis/stage-09-administrator-surface-gap.md; analysis/stage-05-access-administration-report.md; specs/010-access-administration/spec.md
   - id: stage-06-pass-012-clean
     affects_stage: 6

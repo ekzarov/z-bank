@@ -286,21 +286,54 @@
       "path": "/administration",
       "roles": ["Administrator"],
       "visibility": "navigation",
-      "status": "gap",
-      "actions": [],
-      "plannedActions": [
+      "status": "implemented",
+      "actions": [
         {
           "name": "Manage users, governed roles, and lockout state",
           "roles": ["Administrator"],
-          "requirements": ["specs/010-access-administration/spec.md#FR-001"]
+          "requirements": [
+            "specs/010-access-administration/spec.md#FR-001",
+            "specs/010-access-administration/spec.md#FR-004",
+            "specs/010-access-administration/spec.md#FR-008"
+          ],
+          "code": [
+            "modern/frontend/bank-of-z-ui/src/app/administration/access-administration.component.ts",
+            "modern/backend/src/BankOfZ.Api/Controllers/AccessAdministrationController.cs"
+          ],
+          "tests": [
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#administrator manages lockout and views security audit",
+              "roles": ["Administrator"]
+            },
+            {
+              "reference": "modern/frontend/bank-of-z-ui/src/app/administration/access-administration.component.spec.ts#renders a useful administrator user action",
+              "roles": ["Administrator"]
+            }
+          ]
         },
         {
           "name": "Filter and inspect immutable security-audit events",
           "roles": ["Administrator"],
-          "requirements": ["specs/010-access-administration/spec.md#FR-013"]
+          "requirements": [
+            "specs/010-access-administration/spec.md#FR-013",
+            "specs/010-access-administration/spec.md#FR-015"
+          ],
+          "code": [
+            "modern/frontend/bank-of-z-ui/src/app/administration/access-administration.component.ts",
+            "modern/backend/src/BankOfZ.Api/Controllers/AccessAdministrationController.cs"
+          ],
+          "tests": [
+            {
+              "reference": "modern/frontend/bank-of-z-ui/e2e/secure-access.spec.ts#administrator manages lockout and views security audit",
+              "roles": ["Administrator"]
+            },
+            {
+              "reference": "modern/frontend/bank-of-z-ui/src/app/administration/access-administration.component.spec.ts#loads persistent security events from the audit tab",
+              "roles": ["Administrator"]
+            }
+          ]
         }
-      ],
-      "finding": "Owner approved target-only Access Administration on 2026-07-23; Feature 010 is designed but not yet implemented."
+      ]
     },
     {
       "id": "not-found",

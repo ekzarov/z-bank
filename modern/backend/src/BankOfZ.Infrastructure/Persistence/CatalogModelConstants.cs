@@ -18,6 +18,7 @@ public static class CatalogModelConstants
         public const string ImportAttempts = "ImportAttempts";
         public const string ImportStagedRecords = "ImportStagedRecords";
         public const string SetupOperationAudits = "SetupOperationAudits";
+        public const string SecurityAuditEntries = "SecurityAuditEntries";
     }
 
     public static class Sequences

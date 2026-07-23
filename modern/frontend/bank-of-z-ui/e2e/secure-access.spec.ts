@@ -126,6 +126,32 @@ test('administrator sees only authorized navigation @e2e @surface:overview @role
   await verifyRoleNavigation(page, roleCases[2]);
 });
 
+test('administrator manages lockout and views security audit @e2e @surface:administration @role:Administrator', async ({ page }) => {
+  const password = requiredDemoPassword();
+  await page.goto('sign-in');
+  await page.getByLabel('User name').fill('administrator');
+  await page.getByLabel('Password').fill(password);
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.getByRole('link', { name: 'Administration' }).click();
+
+  await page.getByLabel('User name, email, or customer ID').fill('operator');
+  await page.getByRole('button', { name: 'Search' }).click();
+  await page.locator('.result', { hasText: 'operator' }).click();
+
+  page.once('dialog', dialog => dialog.accept());
+  await page.getByRole('button', { name: 'Lock user' }).click();
+  await expect(page.getByRole('status')).toContainText('operator locked');
+
+  page.once('dialog', dialog => dialog.accept());
+  await page.getByRole('button', { name: 'Unlock user' }).click();
+  await expect(page.getByRole('status')).toContainText('operator unlocked');
+
+  await page.getByRole('button', { name: 'Security audit' }).click();
+  await page.getByLabel('Event').fill('user-unlocked');
+  await page.getByRole('button', { name: 'Apply filters' }).click();
+  await expect(page.getByRole('cell', { name: 'user-unlocked' }).first()).toBeVisible();
+});
+
 test('operator can create find update and retire a customer @e2e @surface:operator-customers @role:Operator', async ({ page }) => {
   const password = requiredDemoPassword();
 
