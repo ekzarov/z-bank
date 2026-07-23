@@ -4,13 +4,14 @@ updated: 2026-07-23
 
 progress:
   current_stage_percent: 0
-  overall_percent_estimate: 83
+  overall_percent_estimate: 85
   estimate_only: true
   estimate_basis: >-
     Full migration estimate: shared Stages 1-6 and five of nine iterative
     implementation/delivery/acceptance slices are complete. Feature 006 has
-    passed implementation, code/test gates, workbook synchronization, and
-    read-only peer review; delivery and independent acceptance remain.
+    passed implementation, code/test gates, workbook synchronization,
+    read-only peer review, public delivery, and live revision; independent
+    Stage 10 acceptance remains.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
     claude_sessions_started: 58
@@ -21,13 +22,13 @@ progress:
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T13:38:00+02:00
+  updated_at: 2026-07-23T13:42:00+02:00
 
 methodology_stage:
-  number: 8
-  name: Delivery - Feature 006 transaction history
-  status: ready-for-delivery
-  last_completed_stage: 7
+  number: 10
+  name: Independent acceptance - Feature 006 transaction history
+  status: ready-for-independent-review
+  last_completed_stage: 9
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
@@ -35,14 +36,14 @@ methodology_stage:
 next_action:
   actor: OpenAI Codex orchestrator
   feature: 006-transaction-history
-  stage: 8
+  stage: 10
   instruction: >-
-    Commit and deploy the peer-reviewed Feature 006 transaction-history slice,
-    run public smoke/Playwright, reconcile the live result, and complete a
-    fresh formal Stage 10 pass.
+    Run a fresh formal read-only Stage 10 pass against committed revision
+    4afb465 and the Feature 006 delivery/live evidence. Resolve every finding
+    before owner-independent acceptance is recorded.
   completion_gate: >-
-    Feature 006 code, tests, SDD/tasks/workbook, and slice peer review are
-    clean before delivery starts.
+    Feature 006 code, tests, SDD/tasks/workbook, deployment, public smoke, and
+    Stage 9 live revision are clean before independent acceptance starts.
 
 stage_3_fallback_result:
   mode: simulate

@@ -11,5 +11,5 @@
 - [x] T006 Add Vitest tests and implement history list/detail/empty UI.
 - [x] T007 Add tagged Playwright customer and operator list-to-detail paths,
   date filtering, authorized scope, denied scope, and empty state.
-- [ ] T008 Run gates, update SDD/tasks/workbook, deploy this slice, and prepare
+- [x] T008 Run gates, update SDD/tasks/workbook, deploy this slice, and prepare
   Stage 9/10 evidence before Feature 007 starts.
