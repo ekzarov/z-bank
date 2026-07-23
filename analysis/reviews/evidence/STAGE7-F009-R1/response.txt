@@ -1,0 +1,51 @@
+﻿I have no write capability in this read-only review context (and the packet requires I mutate nothing), so I present the review directly.
+
+# Feature 009 Peer Review — Packet `STAGE7-F009-R1`
+
+## Acknowledgement
+- **Packet:** `STAGE7-F009-R1`
+- **Immutable head:** `f0f3ed8` ("Implement delivery and operations hardening")
+- **Base:** `c535d7a` ("Merge Feature 008 delivery acceptance")
+- **Declared scope:** Feature 009 delivery, resilience, and operational hardening (specs/009-delivery-operations).
+- **Eligibility:** Fresh, read-only reviewer; not an author of `f0f3ed8`. I obtained the diff independently via `git diff c535d7a f0f3ed8`.
+- **Working-tree integrity:** Verified before and after review — the only delta is the untracked packet directory `analysis/reviews/evidence/STAGE7-F009-R1/`; no other tracked or untracked change exists. Head remained `f0f3ed8`.
+
+I inspected every changed production, test, Compose, nginx, CI, script, and runbook file in the 29-file diff.
+
+## What is correct and well-implemented
+- **Startup non-mutating / explicit migration (FR-002):** `api` `depends_on` is `db` only; `setup` is behind `profiles: [tools]` (compose.yaml). OPERATIONS.md:10-22 keeps provision/inspect/migrate/import/reset as explicit one-shot commands; README reiterates startup never changes schema/data.
+- **Liveness/readiness (FR-006):** Program.cs:159-168 maps `/health/live` (predicate `Tags.Contains("live")` → no checks → 200, process-only) and `/health/ready` (tag `ready` → `SqlReadinessHealthCheck`). The readiness check uses `Database.CanConnectAsync` (SqlReadinessHealthCheck.cs:18) — non-mutating, fails closed to `Unhealthy` on exception. Liveness correctly independent of the DB.
+- **Least privilege / resilience (FR-008):** `data` network `internal: true`; `db`/`api` have no host ports, only `ui` publishes `127.0.0.1:8088`. Non-root images (`USER app`, `nginx-unprivileged`), `read_only: true` + scoped `tmpfs`, `restart: unless-stopped`, `stop_grace_period`, `init: true`, and `deploy.resources` bounds on all services.
+- **Reverse proxy (FR-005):** `/z-bank-new/` base-href, SPA fallback, same-origin `/api` and `/health` proxying, request limits (`client_max_body_size 11m`, timeouts), security headers (CSP/XCTO/XFO/Referrer/Permissions), and `X-Forwarded-Proto` mapping for TLS termination upstream. Correlation forwarded via `X-Correlation-ID $request_id`.
+- **Correlation/redaction (FR-007):** CorrelationMiddleware validates supplied IDs against `^[A-Za-z0-9_-]{1,64}$`, else generates one; logs only method/status/elapsed and `Path.Value` (query string and bodies excluded), matching the OPERATIONS.md redaction statement.
+- **Atomicity mechanism (FR-014, partial):** Pre-existing `CashTransactionRepository.ExecuteSerializableAsync` rolls back on any throw (dispose without commit); validation-path rollback is covered by `InternalTransferApiTests.cs:76-104`.
+- **IBM residual risk (FR-012):** OPERATIONS.md:3-8 preserves the residual-risk / simulated-surface statement; migration_status.yaml keeps IBM stages open.
+
+## Findings (ordered by severity)
+
+### F1 — Medium — Claimed financial-failure-injection diagnostic test is absent (FR-014 / D-006)
+- **Evidence:** tasks.md marks `T001` (financial rollback **logging** tests) and `T002` (atomic financial-failure **diagnostics**) as `[x]`; plan.md:22-23 requires "Financial failure injection verifies transaction rollback and correlated diagnostics." The only test added in this slice is `OperationalApiTests.cs` (liveness/readiness, bank identity, correlation-ID). No new test injects an *unhandled infrastructure* failure (e.g., forced `DbUpdateException` mid-`ExecuteSerializableAsync`) and asserts (a) no domain/audit rows persist and (b) a correlated, sensitive-data-free diagnostic is emitted. Existing `InternalTransferApiTests.cs:76-104` exercises only validation-path rollback, not infrastructure failure.
+- **Impact:** FR-014's "emit correlated diagnostics on unhandled infrastructure failure" is unverified for this slice, and the `[x]` completion of T001/T002 is an unsupported parity claim. Atomicity itself is met by pre-existing code, so this is a verification/traceability gap rather than a runtime break.
+- **Correction/test:** Add an integration test that substitutes a repository/DbContext throwing on `SaveChanges` inside the serializable transaction; assert `BookedTransactions`/audit are empty afterward and that the emitted log carries the correlation ID with no body/credential/query content. Otherwise revert the T001/T002 checkmarks pending that evidence.
+
+### F2 — Low — Broken regex makes a delivery gate a permanent false-negative (FR-002 assurance)
+- **Evidence:** `verify-delivery.mjs:20` — `!api.match(/depends_on:[\\s\\S]*?setup:/)`. In a regex **literal**, `\\s`/`\\S` match a literal backslash / `s` / `S`, not whitespace/any-char. The `api` block contains no backslashes, so this assertion can never match and "startup has no setup dependency" always passes — even if `setup` were later added to `api.depends_on`.
+- **Impact:** The gate gives false assurance for FR-002; a future regression would slip through the 11-control delivery audit.
+- **Correction:** Use single backslashes `/depends_on:[\s\S]*?setup:/`, or (more robust) extract the `api` service's `depends_on` keys and assert `setup` is absent.
+
+### F3 — Low — Secret scanner has known blind spots / workflow exclusion (FR-004)
+- **Evidence:** `scan-secrets.mjs:15` only flags quoted values ≥16 chars keyed by `password|token|secret`; it misses PEM/private-key blocks, base64 key material, unquoted assignments, and inline `Password=` in connection strings. `.github/workflows/` is fully excluded (line 8), so the CI-embedded literals in `modern-feature-001.yml` (`Validation-*-Password-2026!`) bypass scanning entirely.
+- **Impact:** False-negative risk; acceptable for a demo gate but currently undocumented.
+- **Correction:** Add patterns for PEM headers and connection-string credentials, and document the workflow-exclusion limitation in OPERATIONS.md.
+
+## Accepted deviations / residual risk (not defects)
+- **No HSTS header** at nginx: acceptable — the internal listener is HTTP (`listen 8080`) with TLS terminated at an upstream edge per plan.md:7-8; HSTS belongs to the terminator.
+- **Health endpoints exposed at the web edge** (`/health/`, `/z-bank-new/health/`): required by `smoke-demo.sh` and `operations.spec.ts`; non-sensitive, non-mutating.
+- **`api` service carries both `image:` and `build:`**: README directs `--build`; benign.
+- **IBM-runtime residual risk**: correctly retained and not relabeled (FR-012).
+- Minor doc nit only: README "only readiness checks **required** SQL" (should read "requires") — non-actionable.
+
+## Conclusion
+The runtime, container, network, proxy, health, correlation, and documentation hardening substantially satisfy FR-001–FR-013 and FR-015, and the supplied deterministic results are consistent with the code. However, **F1** (missing infrastructure-failure diagnostic verification behind an `[x]` task and an explicit plan requirement) and **F2** (a permanently-passing delivery gate) are actionable defects.
+
+Not `CLEAN` — remediate F1 and F2 (and preferably F3) before acceptance.

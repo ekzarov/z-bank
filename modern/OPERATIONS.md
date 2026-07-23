@@ -50,6 +50,12 @@ the explicit `reset-demo` command with owner approval.
 4. Confirm `.env` contains all documented keys without printing their values.
 5. Run `node scripts/verify-delivery.mjs` and `./scripts/scan-secrets.sh`.
 
+The secret scan covers tracked production, configuration, and workflow files
+for credential assignments, connection-string passwords, and private-key
+blocks. It excludes legacy evidence, test fixtures, generated lock files, and
+documentation. This deterministic repository gate complements, but does not
+replace, the hosting platform's secret scanning and credential rotation.
+
 Unused legacy helper programs, the fixed-account history diagnostic, broken TOC
 generator, trust-all TLS, unsecured management, IBM build/deploy tooling, and
 IBM MQ documentation-only claims are intentionally not ported.

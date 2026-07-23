@@ -17,7 +17,7 @@ const checks = [
   ['resource limits exist', compose.includes('resources:') && compose.includes('memory: 512M')],
   ['graceful shutdown is configured', compose.includes('stop_grace_period')],
   ['API readiness is the container gate', compose.includes('GET /health/ready')],
-  ['startup has no setup dependency', !api.match(/depends_on:[\\s\\S]*?setup:/)],
+  ['startup has no setup dependency', !api.match(/depends_on:[\s\S]*?setup:/)],
   ['nginx request limit exists', nginx.includes('client_max_body_size 11m')],
   ['nginx security headers exist', nginx.includes('Content-Security-Policy') && nginx.includes('X-Content-Type-Options')],
   ['nginx forwards correlation', nginx.includes('X-Correlation-ID')]

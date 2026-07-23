@@ -17,7 +17,11 @@ public sealed partial class CorrelationMiddleware(
             : Activity.Current?.TraceId.ToString() ?? Guid.NewGuid().ToString("N");
 
         context.TraceIdentifier = correlationId;
-        context.Response.Headers[HeaderName] = correlationId;
+        context.Response.OnStarting(() =>
+        {
+            context.Response.Headers[HeaderName] = correlationId;
+            return Task.CompletedTask;
+        });
         var started = Stopwatch.GetTimestamp();
 
         using (logger.BeginScope(new Dictionary<string, object> { ["CorrelationId"] = correlationId }))
@@ -28,12 +32,17 @@ public sealed partial class CorrelationMiddleware(
             }
             finally
             {
-                logger.LogInformation(
-                    "HTTP {Method} {Path} completed with {StatusCode} in {ElapsedMilliseconds} ms",
+                var level = context.Response.StatusCode >= StatusCodes.Status500InternalServerError
+                    ? LogLevel.Error
+                    : LogLevel.Information;
+                logger.Log(
+                    level,
+                    "HTTP {Method} {Path} completed with {StatusCode} in {ElapsedMilliseconds} ms; correlation {CorrelationId}",
                     context.Request.Method,
                     context.Request.Path.Value,
                     context.Response.StatusCode,
-                    Stopwatch.GetElapsedTime(started).TotalMilliseconds);
+                    Stopwatch.GetElapsedTime(started).TotalMilliseconds,
+                    correlationId);
             }
         }
     }
