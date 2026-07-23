@@ -18,6 +18,8 @@ aside { max-height: 650px; padding: 14px; overflow: auto; }
 .editor { min-height: 420px; padding: 24px; }
 .result { position: relative; width: 100%; margin-bottom: 8px; text-align: left; border-color: #d4dee3; }
 .result > span { display: block; overflow: hidden; text-overflow: ellipsis; }
+.result > .result-main { display: flex; }
+.result-main strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .result > span:not(.result-main) { margin-top: 4px; color: #637985; font-size: .8rem; }
 .result.active { border-color: #176b79; background: #eef8f8; }
 .role { color: #456373; font-size: .75rem; font-weight: 600; }
