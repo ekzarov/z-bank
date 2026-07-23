@@ -3,48 +3,45 @@ project: Bank of Z modernization
 updated: 2026-07-23
 
 progress:
-  current_stage_percent: 97
-  overall_percent_estimate: 99
-  estimate_only: true
+  current_stage_percent: 100
+  overall_percent_estimate: 100
+  estimate_only: false
   estimate_basis: >-
-    Consolidated Stage 10 Pass 013 remains the accepted baseline. A
-    post-acceptance Feature 009 production stylesheet/CSP layout defect is fixed
-    locally and awaits peer review, deployment, and a superseding acceptance
-    pass. The approved Stage 3 simulation fallback remains an explicit external
-    IBM-runtime risk.
+    Stage 10 Pass 014 cleanly accepted the deployed Feature 009 production
+    stylesheet/CSP correction and supersedes Pass 013 for that scope. All nine
+    slices and 135 workbook rows remain accepted. The approved Stage 3
+    simulation fallback remains an explicit external IBM-runtime risk.
   external_review:
     agents: Claude Code CLI and OpenAI Codex fresh reviewers
-    claude_sessions_started: 72
-    claude_usable_reports: 53
+    claude_sessions_started: 73
+    claude_usable_reports: 54
     codex_sessions_started: 37
     codex_usable_reports: 30
     deterministic_batches_covered: 23
     active_sessions: 0
     blocked_or_invalid_sessions: 25
     unresolved_blocked_scopes: 0
-  updated_at: 2026-07-23T19:43:00+02:00
+  updated_at: 2026-07-23T19:49:00+02:00
 
 methodology_stage:
   number: 10
-  name: Post-acceptance correction - Feature 009 final acceptance
-  status: deployed-pending-clean-pass-014
+  name: Final acceptance - Feature 009 and consolidated migration
+  status: complete-clean-pass-014
   last_completed_stage: 10
   incomplete_stages:
     - 3
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
-  actor: Claude Code CLI fresh external acceptance reviewer
+  actor: Project owner
   feature: 009-delivery-operations
   stage: 10
   instruction: >-
-    Independently inspect the immutable correction and deployment evidence,
-    verify FR-016 and all unchanged Feature 009 acceptance claims, and return a
-    fail-closed Stage 10 Pass 014 verdict.
+    Use the deployed legacy and modern applications for demonstration. Reopen
+    Stage 3 only when authorized IBM infrastructure becomes available.
   completion_gate: >-
-    A usable peer report has no unresolved substantive findings, deterministic
-    gates pass, the corrected image is deployed, and a superseding Stage 10
-    acceptance pass is clean.
+    Feature 009 and the consolidated nine-slice migration are accepted by clean
+    Stage 10 Pass 014.
 
 stage_3_fallback_result:
   mode: simulate
@@ -264,6 +261,12 @@ review_passes:
     agent: Claude Code CLI fresh read-only reviewer, orchestrated by OpenAI Codex
     result: clean
     report: analysis/reviews/stage-10-pass-013.md
+  - stage: 10
+    pass: 14
+    date: 2026-07-23
+    agent: Claude Code CLI fresh read-only reviewer, orchestrated by OpenAI Codex
+    result: clean
+    report: analysis/reviews/stage-10-pass-014.md
 
 accepted_slices:
   - feature: 001-secure-access-shell
@@ -308,8 +311,8 @@ accepted_slices:
     workbook_rows: 8
   - feature: 009-delivery-operations
     accepted_on: 2026-07-23
-    stage_10_pass: 13
-    report: analysis/reviews/stage-10-pass-013.md
+    stage_10_pass: 14
+    report: analysis/reviews/stage-10-pass-014.md
     workbook_rows: 26
 
 owner_gates:
