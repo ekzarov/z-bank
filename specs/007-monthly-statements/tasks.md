@@ -15,5 +15,5 @@
   operator bulk outcomes, failed-account retry, and successful-snapshot state.
 - [x] T008 Add tagged Playwright populated, empty, operator bulk partial-failure,
   failed-account retry, and successful-snapshot isolation paths.
-- [ ] T009 Run gates, update SDD/tasks/workbook, deploy this slice, and prepare
+- [x] T009 Run gates, update SDD/tasks/workbook, deploy this slice, and prepare
   Stage 9/10 evidence before Feature 008 starts.
