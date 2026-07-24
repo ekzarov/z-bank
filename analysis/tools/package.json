@@ -7,6 +7,7 @@
     "audit:sdd": "node stage5-sdd-audit.js",
     "audit:evidence": "node verify-legacy-evidence.js",
     "audit:target": "node target-surface-audit.js",
+    "audit:prototype": "node prototype-audit.js",
     "test:sdd-lifecycle": "node stage5-sdd-audit.test.js",
     "test:target-audit": "node target-surface-audit.test.js"
   },

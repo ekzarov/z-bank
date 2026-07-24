@@ -1,6 +1,6 @@
 schema_version: 1
 project: Bank of Z modernization
-updated: 2026-07-23
+updated: 2026-07-24
 
 progress:
   current_stage_percent: 100
@@ -41,6 +41,7 @@ methodology_stage:
     numbering in effect on its date; see the methodology's numbering note.
   incomplete_stages:
     - 3
+  waived_stages:
     - 5
     - 6
     - 7
@@ -51,8 +52,10 @@ methodology_stage:
     this project's design, delivery, and acceptance had already completed
     under the former numbering. The owner waived retroactive execution for
     this project on 2026-07-24 (see owner_gates.prototyping_retroactive);
-    the stages stay listed as not executed here and are mandatory for any
-    future project or new feature work that starts from the methodology.
+    the stages are listed in waived_stages, not incomplete_stages, because
+    the skip is an explicit recorded owner decision. Prototyping is
+    mandatory for any future project or new feature work that starts from
+    the methodology.
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:

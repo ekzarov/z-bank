@@ -2,7 +2,9 @@
 
 This protocol lets a primary agent delegate review to an external agent CLI
 without asking the owner to relay messages. It applies to implementation-slice
-peer review and to formal independent passes at Stages 2, 6, and 10.
+peer review and to formal independent passes at Stages 2, 7, 10, and 14
+(reports before the 2026-07-24 renumbering use the old stage numbers; see the
+methodology numbering note).
 
 The primary agent remains accountable for the work. Agreement between models
 is not evidence, does not replace tests, and never grants owner approval.
@@ -22,8 +24,8 @@ most two challenge-and-response rounds are allowed. An unresolved material
 finding blocks the slice and is escalated to the owner; it is never silently
 discarded by the primary agent.
 
-Slice peer review improves implementation quality but is not a Stage 2, 6, or
-10 independent pass unless every formal-pass rule below is also satisfied.
+Slice peer review improves implementation quality but is not a Stage 2, 7, 10,
+or 14 independent pass unless every formal-pass rule below is also satisfied.
 
 ### Formal independent pass
 

@@ -278,6 +278,12 @@ removed before the review is considered operationally complete.
 - If the owner selects **no interactive UI**, Stages 6–8 shrink to the
   owner-approved minimum (e.g. wireframes only for an ops/admin console, or an
   explicit recorded owner waiver of the remaining prototyping scope).
+- **Once per design baseline, not once per feature.** Stage 5 runs once for a
+  project and establishes the design baseline (form, style, palette). New
+  feature work **reuses the recorded baseline** and does not re-ask the owner;
+  Stage 5 is repeated only on a deliberate change of channel or design system,
+  recorded as a new decision. Stages 6–8, by contrast, run **for the new or
+  changed screens of every feature**.
 
 ### Stage 6 — Wireframes (agent via Google Stitch or Figma)
 
@@ -324,10 +330,12 @@ removed before the review is considered operationally complete.
     channel variants from the Stage 6 definition are all present;
   - every manifest link (screen → rows → roles → states) resolves and the
     export hashes match the delivered files.
-- These manifest invariants are checked by an **automated prototype audit**
-  under `analysis/tools` (added together with the first prototyping run);
-  until that script exists, the pass performs and records the same checks
-  manually in the report, item by item.
+- The manifest invariants are checked by the **automated prototype audit**:
+  `npm --prefix analysis/tools run audit:prototype` must print
+  `PROTOTYPE AUDIT OK` before the stage can close. Parity-map coverage (rows ↔
+  screens) remains the reviewer's own checklist item until it is wired into
+  the script. The reusable scaffold and templates live in
+  `analysis/prototyping/` (see its README).
 - Every finding loops back to **Stage 6**: the wireframes are corrected, then
   the control pass is repeated. The stage closes only on a **dry pass** — a
   full pass without a single new finding.
@@ -468,6 +476,12 @@ removed before the review is considered operationally complete.
   "next migration slice", "coming soon", "not implemented", or an empty generic
   workspace). A deferred surface may remain only when it is explicitly
   owner-approved and hidden from production navigation.
+- The walked UI is also compared against the **approved prototype** (the
+  export set pinned by version/hash in `analysis/prototyping/approval.md`):
+  screen composition, navigation, and declared states must match the approved
+  wireframes. A visual divergence is a finding — a gap to fix or a
+  gray-status decision for the owner; it never passes silently. (Skipped when
+  the owner waived prototyping for the walked scope.)
 - Every finding updates the map **and** the SDD in the same change set.
 - **Unverified = not done (red).** Every gap records its provenance:
   confirmed by observation, or not-checked (the check is then the first step
@@ -500,12 +514,18 @@ removed before the review is considered operationally complete.
   other vendors** (e.g. Google Antigravity, OpenAI Codex or equivalent): the
   agent that wrote the code never signs off on itself.
 - The third-party agent receives only the instruction, the workbook, and the
-  stand URL, plus the target-surface inventory. The reviewer independently
+  stand URL, plus the target-surface inventory and — when prototyping was not
+  waived for the scope — the approved prototype record
+  (`analysis/prototyping/`, pinned by the approval version/hash). The reviewer
+  independently
   enumerates deployed navigation/routes and compares them with that inventory.
   It must exercise useful actions for every role-visible destination; title,
-  route, access-probe, and HTTP-status-only checks cannot close a surface. When
-  its results match the map and surface inventory, the acceptance is signed by
-  the owner.
+  route, access-probe, and HTTP-status-only checks cannot close a surface. The
+  delivered UI must also match the approved wireframes (composition,
+  navigation, states); an unapproved visual divergence fails acceptance the
+  same way a missing action does. When
+  its results match the map, surface inventory, and approved prototype, the
+  acceptance is signed by the owner.
 - This is a **human-in-the-loop checkpoint**: the agent stops and requests
   the owner's explicit sign-off. Acceptance cannot be inferred from a clean
   report, a merge, or an agent statement; without the owner's recorded

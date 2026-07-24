@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "project": "<project name>",
+  "tool": "google-stitch",
+  "export_set_version": "2026-07-24-01",
+  "decision": "analysis/prototyping/decision.md",
+  "screens": [
+    {
+      "id": "customer-login",
+      "title": "Customer login",
+      "channel": "web",
+      "roles": ["customer"],
+      "states": ["default", "loading", "error", "forbidden"],
+      "workbook_rows": [8, 9, 10],
+      "target_only": false,
+      "files": [
+        {
+          "path": "wireframes/customer-login.png",
+          "sha256": "<hex sha-256 of the exported file>"
+        }
+      ]
+    },
+    {
+      "id": "admin-access-overview",
+      "title": "Access administration overview",
+      "channel": "web",
+      "roles": ["admin"],
+      "states": ["default", "empty", "error"],
+      "workbook_rows": [],
+      "target_only": true,
+      "target_requirement": "<owner-approved target requirement reference>",
+      "files": [
+        {
+          "path": "wireframes/admin-access-overview.png",
+          "sha256": "<hex sha-256 of the exported file>"
+        }
+      ]
+    }
+  ]
+}

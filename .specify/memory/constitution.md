@@ -1,5 +1,9 @@
 <!--
 Sync Impact Report
+0.8.1: Clarified prototyping cadence: Stage 5 sets a per-project design
+baseline reused by later features; Stages 6-8 run per new/changed screens.
+Live revision and acceptance additionally compare the delivered UI against
+the approved prototype export.
 0.8.0: Adopted the fourteen-stage methodology: inserted the Prototyping phase
 (Stages 5-8: application form/style decision, wireframes, wireframe control,
 owner approval) between Requirements and SDD; renumbered former Stages 5-10
@@ -39,8 +43,12 @@ reconnaissance, independent control, live legacy walkthrough, requirements
 revision, application form and style decision, wireframes, wireframe control,
 wireframe approval, SDD, independent design verification, build, delivery,
 live revision, and final acceptance. Prototyping (Stages 5-8) completes before
-Stage 9 SDD for any new project or new feature work; for the completed Bank of
-Z migration the owner explicitly waived retroactive execution on 2026-07-24.
+Stage 9 SDD for any new project or new feature work: Stage 5 runs once per
+project and establishes the design baseline (form, style, palette), which
+later features reuse — it repeats only on a deliberate owner-recorded change
+of channel or design system; Stages 6-8 run for the new or changed screens of
+every feature. For the completed Bank of Z migration the owner explicitly
+waived retroactive execution on 2026-07-24.
 Production code MUST NOT be written before the relevant SDD exists,
 independent design verification is clean, and the owner explicitly approves
 implementation.
@@ -300,4 +308,4 @@ redefinition, MINOR for a new enforceable principle/section, PATCH for wording
 clarification. Amendments state rationale and impact. Ratification and owner
 approval cannot be inferred from an agent action or from merge alone.
 
-**Version**: 0.8.0 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-24
+**Version**: 0.8.1 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-24
