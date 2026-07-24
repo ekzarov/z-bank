@@ -46,7 +46,7 @@ surface.
 ## New Guardrails
 
 - Constitution Principle XIII requires every shipped surface to be useful.
-- `analysis/target-surface-inventory.json` records every Angular route and
+- `analysis/inventories/target-surface-inventory.json` records every Angular route and
   role-visible destination with useful-action evidence.
 - `npm --prefix analysis/tools run audit:target` rejects visible gaps,
   actionless roles, missing inventory entries, and placeholder markers.

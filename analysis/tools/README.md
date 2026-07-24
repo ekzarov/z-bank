@@ -46,7 +46,7 @@ npm --prefix analysis/tools run audit:target
 ```
 
 This gate reconciles Angular routes and navigation with
-`analysis/target-surface-inventory.json`, requires a concrete useful action with
+`analysis/inventories/target-surface-inventory.json`, requires a concrete useful action with
 SDD/code/test evidence for every implemented surface, and requires test
 evidence to identify the concrete test name after `#`. It rejects visible
 gap/deferred destinations, rejects roles without a role-specific useful action,

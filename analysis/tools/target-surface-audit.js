@@ -348,7 +348,12 @@ function validateModel({
 }
 
 function run() {
-  const inventoryFile = path.join(root, 'analysis', 'target-surface-inventory.json');
+  const inventoryFile = path.join(
+    root,
+    'analysis',
+    'inventories',
+    'target-surface-inventory.json'
+  );
   const inventory = JSON.parse(fs.readFileSync(inventoryFile, 'utf8'));
   const routeFile = path.join(root, inventory.routeFile);
   const navigationFile = path.join(root, inventory.navigationFile);

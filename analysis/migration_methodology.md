@@ -241,7 +241,7 @@ removed before the review is considered operationally complete.
   under `specs/NNN-*`.
 - The map and SDD are linked through the coverage columns and must never
   disagree.
-- Build or update `analysis/target-surface-inventory.json`. Every target route,
+- Build or update `analysis/inventories/target-surface-inventory.json`. Every target route,
   menu item, role workspace, screen, API operation, and job in the slice maps
   to a concrete user-visible action or observable contract plus its SDD
   requirement. A target-only role or screen with no legacy predecessor needs
@@ -329,7 +329,7 @@ removed before the review is considered operationally complete.
   it sees against the map.
 - Before walking, enumerate routes, navigation items, roles, screens, API
   operations, and jobs from the deployed target and reconcile that inventory
-  with `analysis/target-surface-inventory.json`. For every applicable role,
+  with `analysis/inventories/target-surface-inventory.json`. For every applicable role,
   click every visible navigation item and complete the listed useful action.
   A page that only authenticates, loads, returns `200`, or displays its title is
   recorded as a gap when the inventory or SDD promises functionality.

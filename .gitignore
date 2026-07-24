@@ -13,6 +13,7 @@ modern/**/test-results/
 modern/artifacts/
 
 # IDE and OS files
+.claude/
 .vs/
 .idea/
 .DS_Store

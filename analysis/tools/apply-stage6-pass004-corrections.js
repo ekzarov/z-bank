@@ -50,8 +50,8 @@ function setFont(cell, name, size, bold) {
 
   rev1.getCell('C11').value = '8-14,113';
   const decisionRows = [
-    ['R1-D-016', null, '54', 'decision', 'The legacy screen accepts statement dates that the update program does not persist.', 'Owner-approved target decision D-016 recorded in Stage 4.', 'Yes', 'Yes', 'analysis/stage-04-requirements-revision.md#d-016; approved by project owner on 2026-07-22.'],
-    ['R1-D-017', null, '57', 'decision', 'Legacy account deletion is unconditional and removes the account record.', 'Owner-approved target decision D-017 recorded in Stage 4.', 'Yes', 'Yes', 'analysis/stage-04-requirements-revision.md#d-017; approved by project owner on 2026-07-22.'],
+    ['R1-D-016', null, '54', 'decision', 'The legacy screen accepts statement dates that the update program does not persist.', 'Owner-approved target decision D-016 recorded in Stage 4.', 'Yes', 'Yes', 'analysis/stages/stage-04/stage-04-requirements-revision.md#d-016; approved by project owner on 2026-07-22.'],
+    ['R1-D-017', null, '57', 'decision', 'Legacy account deletion is unconditional and removes the account record.', 'Owner-approved target decision D-017 recorded in Stage 4.', 'Yes', 'Yes', 'analysis/stages/stage-04/stage-04-requirements-revision.md#d-017; approved by project owner on 2026-07-22.'],
   ];
   const knownDecisionIds = new Set();
   rev1.eachRow((row) => knownDecisionIds.add(String(row.getCell(1).value || '')));

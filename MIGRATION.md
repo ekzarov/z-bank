@@ -69,7 +69,7 @@ conflict to the owner.
 | [Migration status](analysis/migration_status.yaml) | Machine-readable checkpoint and next action | At every stage transition or gate decision |
 | [Review protocol and records](analysis/reviews/README.md) | Auditable evidence for independent and control passes | Every Stage 2, 6, or 10 pass, including clean and blocked passes |
 | [Cross-agent orchestration](analysis/agent_orchestration.md) | Direct read-only review through an external agent CLI, including context checkpoints | Whenever agents review or challenge one another without owner message relay |
-| [Target surface inventory](analysis/target-surface-inventory.json) | Every shipped route, role-visible destination, useful action, and its SDD/code/test evidence | Stage 5 design and every Stage 7-10 delivery loop |
+| [Target surface inventory](analysis/inventories/target-surface-inventory.json) | Every shipped route, role-visible destination, useful action, and its SDD/code/test evidence | Stage 5 design and every Stage 7-10 delivery loop |
 | [Legacy reconnaissance](analysis/legacy_reconnaissance.md) | Stage 1 handoff and evidence boundary | New legacy evidence changes the handoff |
 | [Legacy deployment overview](analysis/cobol_deployment_overview.md) | What can and cannot run without IBM infrastructure | Runtime prerequisites or deployment knowledge changes |
 | [Constitution](.specify/memory/constitution.md) | Project governance and non-negotiable constraints | Through an explicit, documented amendment |
@@ -118,7 +118,7 @@ no Bank of Z evidence; the filled workbook is the governed project record.
 - A route, menu item, role workspace, screen, API operation, or job is not
   complete merely because it exists, returns success, or shows the expected
   heading. Every shipped surface MUST appear in
-  `analysis/target-surface-inventory.json` with at least one concrete useful
+  `analysis/inventories/target-surface-inventory.json` with at least one concrete useful
   action or observable contract and SDD, code, and automated-test evidence.
   Test evidence MUST identify the concrete test name, not merely a test file.
   Its title MUST include `@surface:<id>` and `@role:<role>` bindings. These

@@ -17,6 +17,10 @@ reverse-engineering material:
   presentation of that process; it is not an independent source of rules.
 - [`migration_status.yaml`](migration_status.yaml) - current machine-readable
   stage, gate, blocker, pass history, waiver, and next action.
+- [`stages/`](stages/README.md) - Stage 3-5 design evidence and Stage 8-9
+  delivery/live-revision records, grouped by methodology stage.
+- [`inventories/`](inventories/README.md) - machine-readable inventories used
+  by migration gates, including the target surface inventory.
 - [`reviews/`](reviews/README.md) - immutable control-pass reports and the
   shared report template for Stages 2, 6, and 10.
 - [`legacy_reconnaissance.md`](legacy_reconnaissance.md) - Stage 1 evidence

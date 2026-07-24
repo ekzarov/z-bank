@@ -16,7 +16,7 @@ workbook.
 - `specs/010-access-administration/plan.md`
 - `specs/010-access-administration/tasks.md`
 - planned `/administration` actions in
-  `analysis/target-surface-inventory.json`
+  `analysis/inventories/target-surface-inventory.json`
 
 ## Gate
 

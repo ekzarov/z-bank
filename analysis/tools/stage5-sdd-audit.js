@@ -6,7 +6,13 @@ const ExcelJS = require('exceljs');
 const { cellText, parseRefs } = require('./lib');
 
 const root = path.resolve(__dirname, '..', '..');
-const coverageFile = path.join(root, 'analysis', 'stage-05-sdd-coverage.json');
+const coverageFile = path.join(
+  root,
+  'analysis',
+  'stages',
+  'stage-05',
+  'stage-05-sdd-coverage.json'
+);
 const workbookFile = path.join(root, 'analysis', 'legacy_user_flows.xlsx');
 const traceabilityFile = path.join(root, 'specs', 'traceability.md');
 const migrationStatusFile = path.join(root, 'analysis', 'migration_status.yaml');

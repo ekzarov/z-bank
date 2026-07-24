@@ -23,7 +23,13 @@ const { COLORS, cellText, fillArgb, parseRefs } = require('./lib');
 
 const FILE = path.join(__dirname, '..', 'legacy_user_flows.xlsx');
 const TRACEABILITY_FILE = path.join(__dirname, '..', '..', 'specs', 'traceability.md');
-const COVERAGE_FILE = path.join(__dirname, '..', 'stage-05-sdd-coverage.json');
+const COVERAGE_FILE = path.join(
+  __dirname,
+  '..',
+  'stages',
+  'stage-05',
+  'stage-05-sdd-coverage.json'
+);
 const DATA_START = 7;
 
 (async () => {

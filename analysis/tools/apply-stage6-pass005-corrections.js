@@ -157,12 +157,12 @@ function appendRuntimeLabel(value, label) {
   rev.getRow(1).height = 40;
 
   const decisions = [
-    ['R1-D-018', null, '26-27', 'decision', 'Name search is unsupported and failed lookup can retain stale customer state.', 'Target normalized search is implemented; failed lookup clears stale state and disables mutation.', 'Yes', 'Yes', 'analysis/stage-04-requirements-revision.md#d-018'],
-    ['R1-D-019', null, '43,45,51', 'decision', 'Channel-specific portfolio paths expose six/ten/twenty-entry limits.', 'Target returns the complete authorized portfolio through bounded pagination.', 'Yes', 'Yes', 'analysis/stage-04-requirements-revision.md#d-019'],
-    ['R1-D-020', null, '50,71,80,89', 'decision', 'Sort code is inconsistently operator-entered or supplied internally.', 'Target derives validated sort code from account/bank configuration.', 'Yes', 'Yes', 'analysis/stage-04-requirements-revision.md#d-020'],
-    ['R1-D-021', null, '119-126', 'decision', 'Legacy reset/load paths are destructive and can expose partial batch state.', 'Use guarded deterministic reset plus staged atomic import and resumable run ledger.', 'Yes', 'Yes', 'analysis/stage-04-requirements-revision.md#d-021'],
-    ['R1-D-022', null, '133,136,150', 'decision', 'Unused helpers and broken/fixed diagnostics are not banking capabilities.', 'Move identity to configuration and do not port these utilities.', 'Yes', 'Yes', 'analysis/stage-04-requirements-revision.md#d-022'],
-    ['R1-D-023', null, '33,50,52', 'decision', 'Counter updates and later persistence are not fully proven atomic in source.', 'Target allocation/entity/audit persistence is atomic; identifier gaps are allowed.', 'Yes', 'Yes', 'analysis/stage-04-requirements-revision.md#d-023'],
+    ['R1-D-018', null, '26-27', 'decision', 'Name search is unsupported and failed lookup can retain stale customer state.', 'Target normalized search is implemented; failed lookup clears stale state and disables mutation.', 'Yes', 'Yes', 'analysis/stages/stage-04/stage-04-requirements-revision.md#d-018'],
+    ['R1-D-019', null, '43,45,51', 'decision', 'Channel-specific portfolio paths expose six/ten/twenty-entry limits.', 'Target returns the complete authorized portfolio through bounded pagination.', 'Yes', 'Yes', 'analysis/stages/stage-04/stage-04-requirements-revision.md#d-019'],
+    ['R1-D-020', null, '50,71,80,89', 'decision', 'Sort code is inconsistently operator-entered or supplied internally.', 'Target derives validated sort code from account/bank configuration.', 'Yes', 'Yes', 'analysis/stages/stage-04/stage-04-requirements-revision.md#d-020'],
+    ['R1-D-021', null, '119-126', 'decision', 'Legacy reset/load paths are destructive and can expose partial batch state.', 'Use guarded deterministic reset plus staged atomic import and resumable run ledger.', 'Yes', 'Yes', 'analysis/stages/stage-04/stage-04-requirements-revision.md#d-021'],
+    ['R1-D-022', null, '133,136,150', 'decision', 'Unused helpers and broken/fixed diagnostics are not banking capabilities.', 'Move identity to configuration and do not port these utilities.', 'Yes', 'Yes', 'analysis/stages/stage-04/stage-04-requirements-revision.md#d-022'],
+    ['R1-D-023', null, '33,50,52', 'decision', 'Counter updates and later persistence are not fully proven atomic in source.', 'Target allocation/entity/audit persistence is atomic; identifier gaps are allowed.', 'Yes', 'Yes', 'analysis/stages/stage-04/stage-04-requirements-revision.md#d-023'],
   ];
   const ids = new Set();
   rev.eachRow((row) => ids.add(String(row.getCell(1).value || '')));

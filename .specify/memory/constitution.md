@@ -174,7 +174,7 @@ unverified until a real walkthrough confirms them.
 A route, navigation item, role workspace, screen, API operation, or job is not
 implemented merely because it exists, returns success, enforces authorization,
 or displays the expected title. Every shipped surface MUST be recorded in
-`analysis/target-surface-inventory.json` with at least one concrete useful
+`analysis/inventories/target-surface-inventory.json` with at least one concrete useful
 action or observable contract and traceable SDD, code, and automated-test
 evidence. Automated evidence MUST name the concrete test case after `#`; a
 reference to a test file alone is not proof of the action. Test titles MUST bind

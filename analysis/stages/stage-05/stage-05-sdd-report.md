@@ -32,7 +32,7 @@ The backlog is split into nine dependency-ordered vertical slices under
 `specs/`. Each contains `spec.md`, `plan.md`, and unchecked `tasks.md`. The
 delivery order and row ranges are recorded in `specs/README.md`; exact
 row-to-requirement links are recorded in `specs/traceability.md` and the
-machine-checkable `analysis/stage-05-sdd-coverage.json`.
+machine-checkable `analysis/stages/stage-05/stage-05-sdd-coverage.json`.
 
 Starting at Stage 7, only the first accepted slice enters implementation. It
 must complete Stages 7-10 before the next slice starts. This report does not
@@ -79,6 +79,6 @@ explicit owner implementation approval are required before any Stage 7 code.
 
 Owner-approved Feature 010 adds Access Administration as a tenth target-only
 slice with no legacy workbook rows. Its separate Stage 5 report is
-`analysis/stage-05-access-administration-report.md`. The original Pass 012 does
+`analysis/stages/stage-05/stage-05-access-administration-report.md`. The original Pass 012 does
 not verify this new scope; Feature 010 requires a fresh independent Stage 6
 review before implementation.

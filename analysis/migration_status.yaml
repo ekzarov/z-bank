@@ -54,7 +54,7 @@ stage_3_fallback_result:
   mode: simulate
   outcome: partial-simulated
   completed_on: 2026-07-21
-  report: analysis/stage-03-simulated-walkthrough.md
+  report: analysis/stages/stage-03/stage-03-simulated-walkthrough.md
   harness: simulation/
   automated_tests: 28-passed
   browser_smoke: passed-with-original-legacy-frontend
@@ -345,7 +345,7 @@ reopened_slices:
     discovered_on: 2026-07-23
     source: project-owner-live-walkthrough
     status: accepted-stage-10-pass-015
-    report: analysis/stage-09-administrator-surface-gap.md
+    report: analysis/stages/stage-09/stage-09-administrator-surface-gap.md
     failing_gate: none
 
 owner_gates:
@@ -358,7 +358,7 @@ owner_gates:
     status: approved
     approved_by: project owner
     approved_on: 2026-07-21
-    report: analysis/stage-04-requirements-revision.md
+    report: analysis/stages/stage-04/stage-04-requirements-revision.md
     decisions:
       - correct-unsafe-and-defective-legacy-behavior
       - preserve-business-capabilities-not-dead-technical-artifacts
@@ -376,7 +376,7 @@ owner_gates:
     status: feature-010-independently-verified-pass-013
     completed_on: 2026-07-21
     corrected_on: 2026-07-23
-    report: analysis/stage-05-access-administration-report.md
+    report: analysis/stages/stage-05/stage-05-access-administration-report.md
     previous_full_design_verification: analysis/reviews/stage-06-pass-012.md
     feature_010_verification: analysis/reviews/stage-06-pass-013.md
     slices: 10
@@ -417,7 +417,7 @@ known_blockers:
       useful actions and its implementation passed full deterministic gates and
       peer review. Explicit migration, deployment, live useful-action
       acceptance, and fresh Stage 10 Pass 015 passed.
-    evidence: analysis/stage-08-feature-010-delivery.md; analysis/stage-09-feature-010-live-acceptance.md; analysis/reviews/stage-10-pass-015.md
+    evidence: analysis/stages/stage-08/stage-08-feature-010-delivery.md; analysis/stages/stage-09/stage-09-feature-010-live-acceptance.md; analysis/reviews/stage-10-pass-015.md
   - id: stage-06-pass-012-clean
     affects_stage: 6
     status: resolved-stage-6-complete
@@ -578,6 +578,6 @@ governed_artifacts:
   workbook_instructions: analysis/legacy_user_flows_template_instructions.md
   review_protocol: analysis/reviews/README.md
   review_template: analysis/reviews/review_template.md
-  target_surface_inventory: analysis/target-surface-inventory.json
+  target_surface_inventory: analysis/inventories/target-surface-inventory.json
   methodology: analysis/migration_methodology.md
   constitution: .specify/memory/constitution.md
