@@ -13,7 +13,10 @@
 //
 // Fail-closed: a missing manifest is an error unless the migration status
 // file records an explicit owner waiver
-// (owner_gates.prototyping_retroactive.status: waived).
+// (owner_gates.prototyping_retroactive.status: waived) whose applies_to list
+// covers the audited scope. The audited scope is --scope=<id> when given,
+// otherwise next_action.feature from the status file; a waiver for one
+// project never silences the gate for new feature work.
 //
 // Parity-map coverage (rows <-> screens) remains the Stage 7 reviewer's
 // checklist item until it is wired into this script.
@@ -27,6 +30,10 @@ const crypto = require('crypto');
 const PROTO_DIR = path.resolve(process.env.PROTOTYPE_DIR || path.join(__dirname, '..', 'prototyping'));
 const STATUS_FILE = path.resolve(process.env.MIGRATION_STATUS_FILE || path.join(__dirname, '..', 'migration_status.yaml'));
 const REQUIRE_APPROVAL = process.argv.includes('--require-approval');
+const SCOPE_ARG = (() => {
+  const a = process.argv.find((x) => x.startsWith('--scope='));
+  return a ? a.slice('--scope='.length).trim() : null;
+})();
 
 const MANIFEST = path.join(PROTO_DIR, 'screen-manifest.json');
 const WIREFRAMES = path.join(PROTO_DIR, 'wireframes');
@@ -47,19 +54,58 @@ function isNonEmptyString(v) { return typeof v === 'string' && v.trim().length >
 
 const PLACEHOLDER = /<[a-z][^>\n]{0,80}>|YYYY-MM-DD/i;
 
-function hasOwnerWaiver() {
-  if (!fs.existsSync(STATUS_FILE)) return false;
-  const lines = fs.readFileSync(STATUS_FILE, 'utf8').split(/\r?\n/);
-  const start = lines.findIndex((l) => /^\s*prototyping_retroactive:\s*$/.test(l));
-  if (start === -1) return false;
+function statusLines() {
+  if (!fs.existsSync(STATUS_FILE)) return null;
+  return fs.readFileSync(STATUS_FILE, 'utf8').split(/\r?\n/);
+}
+
+// Returns the lines of the YAML block that starts at `startRe`, i.e. all
+// following lines with deeper indentation.
+function blockLines(lines, startRe) {
+  const start = lines.findIndex((l) => startRe.test(l));
+  if (start === -1) return null;
   const indent = lines[start].match(/^\s*/)[0].length;
+  const out = [];
   for (let i = start + 1; i < lines.length; i++) {
     const line = lines[i];
     if (line.trim() === '') continue;
     if (line.match(/^\s*/)[0].length <= indent) break;
-    if (/^\s*status:\s*waived\s*$/.test(line)) return true;
+    out.push(line);
   }
-  return false;
+  return out;
+}
+
+// Returns the waiver's applies_to scope ids when the owner waiver is
+// recorded (status: waived), otherwise null. A waiver without applies_to
+// yields an empty array — it covers nothing.
+function ownerWaiverScopes() {
+  const lines = statusLines();
+  if (!lines) return null;
+  const block = blockLines(lines, /^\s*prototyping_retroactive:\s*$/);
+  if (!block || !block.some((l) => /^\s*status:\s*waived\s*$/.test(l))) return null;
+  const scopes = [];
+  const idx = block.findIndex((l) => /^\s*applies_to:\s*$/.test(l));
+  if (idx !== -1) {
+    const indent = block[idx].match(/^\s*/)[0].length;
+    for (let i = idx + 1; i < block.length; i++) {
+      const m = block[i].match(/^(\s*)-\s*(.+?)\s*$/);
+      if (!m || m[1].length <= indent) break;
+      scopes.push(m[2]);
+    }
+  }
+  return scopes;
+}
+
+// The audited scope: explicit --scope wins; otherwise the active
+// next_action.feature from the status file.
+function auditedScope() {
+  if (SCOPE_ARG) return SCOPE_ARG;
+  const lines = statusLines();
+  if (!lines) return null;
+  const block = blockLines(lines, /^next_action:\s*$/);
+  if (!block) return null;
+  const m = block.map((l) => l.match(/^\s*feature:\s*(.+?)\s*$/)).find(Boolean);
+  return m ? m[1] : null;
 }
 
 function checkFilledDocument(file, label) {
@@ -88,11 +134,20 @@ function scanSecrets() {
 
 function main() {
   if (!fs.existsSync(MANIFEST)) {
-    if (hasOwnerWaiver()) {
-      console.log('PROTOTYPE AUDIT SKIPPED: no screen-manifest.json, and the migration status records an explicit owner waiver (owner_gates.prototyping_retroactive: waived).');
-      process.exit(0);
+    const waiverScopes = ownerWaiverScopes();
+    if (!waiverScopes) {
+      fail('screen-manifest.json does not exist and no owner waiver (owner_gates.prototyping_retroactive.status: waived) is recorded in the migration status — the prototype gate cannot be skipped silently');
+    } else {
+      const scope = auditedScope();
+      if (!scope) {
+        fail(`cannot determine the audited scope: pass --scope=<feature-or-project-id> or set next_action.feature in the status file. The recorded waiver covers only: [${waiverScopes.join(', ')}]`);
+      } else if (!waiverScopes.includes(scope)) {
+        fail(`the recorded owner waiver covers [${waiverScopes.join(', ')}] but the audited scope is "${scope}" — prototyping is mandatory for this scope`);
+      } else {
+        console.log(`PROTOTYPE AUDIT SKIPPED: no screen-manifest.json; the recorded owner waiver (owner_gates.prototyping_retroactive: waived) covers the audited scope "${scope}".`);
+        process.exit(0);
+      }
     }
-    fail('screen-manifest.json does not exist and no owner waiver (owner_gates.prototyping_retroactive.status: waived) is recorded in the migration status — the prototype gate cannot be skipped silently');
     return report();
   }
 
@@ -183,8 +238,11 @@ function main() {
   // Approval: mandatory with --require-approval, otherwise a warning.
   if (fs.existsSync(APPROVAL)) {
     const approval = checkFilledDocument(APPROVAL, 'approval.md');
-    if (!approval.includes(manifest.export_set_version)) {
-      fail(`approval.md does not name the manifest export_set_version "${manifest.export_set_version}"`);
+    const m = approval.match(/approved export set:[^\n]*?export_set_version:\s*`?([^`\s]+)/i);
+    if (!m) {
+      fail('approval.md must contain an "Approved export set: `export_set_version: <value>`" line (see templates/approval-template.md)');
+    } else if (m[1] !== manifest.export_set_version) {
+      fail(`approval.md approves export set "${m[1]}" but the manifest export_set_version is "${manifest.export_set_version}" — the values must match exactly`);
     }
     if (!/approved by/i.test(approval)) fail('approval.md must name the approver');
   } else if (REQUIRE_APPROVAL) {

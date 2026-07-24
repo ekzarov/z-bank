@@ -47,10 +47,14 @@ requires `approval.md` pinning the manifest's exact `export_set_version`:
 npm --prefix analysis/tools run audit:prototype:approved
 ```
 
-The audit is **fail-closed**: a missing `screen-manifest.json` is an error
-unless `analysis/migration_status.yaml` records an explicit owner waiver
-(`owner_gates.prototyping_retroactive.status: waived`) — only then it prints
-`PROTOTYPE AUDIT SKIPPED` with exit code 0. With a manifest present it
+The audit is **fail-closed and scope-aware**: a missing `screen-manifest.json`
+is an error unless `analysis/migration_status.yaml` records an explicit owner
+waiver (`owner_gates.prototyping_retroactive.status: waived`) **whose
+`applies_to` list contains the audited scope** — only then it prints
+`PROTOTYPE AUDIT SKIPPED` with exit code 0. The audited scope is
+`--scope=<feature-or-project-id>` when given, otherwise `next_action.feature`
+from the status file; a waiver recorded for the completed migration never
+silences the gate for a new feature slug. With a manifest present it
 verifies that `decision.md` exists and contains no unfilled template
 placeholders, manifest structure, unique screen ids, non-empty roles /
 states / rows (or an explicit `target_only` justification), that every listed

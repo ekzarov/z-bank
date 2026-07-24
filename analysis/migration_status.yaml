@@ -381,6 +381,9 @@ owner_gates:
     status: waived
     approved_by: project owner
     approved_on: 2026-07-24
+    applies_to:
+      - bank-of-z-legacy-migration
+      - cross-cutting-legacy-runtime
     rationale: >-
       This repository's purpose is developing and proving the migration flow
       itself; Bank of Z is the exercise vehicle. Prototyping (Stages 5-8) was
@@ -393,7 +396,10 @@ owner_gates:
       the project's design baseline. New feature work reuses the recorded
       baseline and runs Stages 6-8 for its new or changed screens; Stage 5
       repeats only on a deliberate owner-recorded change of channel or
-      design system (constitution 0.8.1).
+      design system (constitution 0.8.1). The prototype audit honors this
+      waiver only for the scope ids listed in applies_to; any other audited
+      scope (a new feature slug in next_action.feature or an explicit
+      --scope) fails closed until its prototype record exists.
   constitution_ratification:
     status: approved
     approved_by: project owner
