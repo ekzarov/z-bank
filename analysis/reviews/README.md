@@ -73,3 +73,25 @@ summary.
 Reviewer packets name their own runtime/dependency paths and explicitly allow
 required protocol files. A packet/environment defect is fixed before retrying
 only the uncovered scope; it is never treated as an artifact finding.
+
+## Temporary Workspace Cleanup
+
+Review worktrees, rendered workbook copies, CLI scratch files, and dependency
+directories are temporary execution state, not review records. Do not place a
+Git worktree under `analysis/` and do not leave sibling `z-bank-*-review`,
+`z-bank-*-evidence`, or similar directories after the pass is recorded.
+
+Before closing a review:
+
+1. copy the durable prompt, response, checkpoints, manifest, and concise
+   interaction summary into `analysis/reviews/evidence/<packet-id>/`;
+2. confirm the immutable report under `analysis/reviews/` references that
+   packet;
+3. confirm the review worktree is clean;
+4. remove the registered worktree with `git worktree remove` and prune its Git
+   metadata;
+5. delete disposable renders, workbook copies, scripts, and `node_modules`
+   outside the repository.
+
+Only governed review evidence belongs in Git. Build caches and duplicate full
+checkouts never belong in `analysis/reviews/evidence/`.

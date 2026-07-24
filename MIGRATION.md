@@ -161,6 +161,11 @@ Before ending any working session:
 4. Confirm that no uncommitted claim of completion exists only in chat.
 5. Tell the owner what changed, what remains open, which gate stopped progress,
    and the exact action or approval needed next.
+6. Consolidate external-agent evidence under
+   `analysis/reviews/evidence/<packet-id>/`, then remove clean review worktrees
+   and disposable sibling scratch/evidence directories. Do not leave duplicate
+   repository checkouts, renders, dependency folders, or raw temporary files
+   beside the project.
 
 ## Current Project
 

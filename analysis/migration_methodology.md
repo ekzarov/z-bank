@@ -138,6 +138,12 @@ content not approved for the selected service. If complete safe evidence cannot
 be sent, the review is blocked until the owner selects an authorized reviewer
 or environment.
 
+Review worktrees and scratch directories are disposable execution state.
+Durable reports and the minimum auditable prompt/response/checkpoint packet are
+consolidated under `analysis/reviews/`; duplicate checkouts, rendered copies,
+dependency folders, and external `*-review`/`*-evidence` directories are
+removed before the review is considered operationally complete.
+
 ## Stages
 
 ### Stage 1 — Reconnaissance (legacy code → parity map)
