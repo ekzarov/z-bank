@@ -1,10 +1,13 @@
-# Bank of Z Stage 5 Delivery Design
+# Bank of Z Stage 9 Delivery Design
+
+(SDD was Stage 5 when these specs were written; it is Stage 9 since the
+2026-07-24 renumbering — see the methodology numbering note.)
 
 The specifications below cover every scenario row in
 `analysis/legacy_user_flows.xlsx`. They are ordered delivery slices, not a
-single big-bang implementation backlog. After the Stage 6 design gate is clean
-and the owner approves implementation, each slice independently traverses
-Stages 7, 8, 9, and 10 before the next slice starts.
+single big-bang implementation backlog. After the Stage 10 design gate is
+clean and the owner approves implementation, each slice independently
+traverses Stages 11, 12, 13, and 14 before the next slice starts.
 
 | Order | Slice | Workbook rows | Stage 4 decisions |
 |---|---|---|---|

@@ -11,18 +11,22 @@ reverse-engineering material:
 - [`legacy_user_flows_template_instructions.md`](legacy_user_flows_template_instructions.md)
   - rules for evidence-based flow discovery, SDD mapping, implementation
   approval, and parity tracking.
-- [`migration_methodology.md`](migration_methodology.md) - canonical ten-stage
-  migration process.
+- [`migration_methodology.md`](migration_methodology.md) - canonical
+  fourteen-stage migration process.
 - [`migration_methodology.html`](migration_methodology.html) - human
   presentation of that process; it is not an independent source of rules.
 - [`migration_status.yaml`](migration_status.yaml) - current machine-readable
   stage, gate, blocker, pass history, waiver, and next action.
-- [`stages/`](stages/README.md) - Stage 3-5 design evidence and Stage 8-9
-  delivery/live-revision records, grouped by methodology stage.
+- [`stages/`](stages/README.md) - stage-grouped design, delivery, and
+  live-revision evidence (directory names use the numbering in effect when
+  each record was written; see the methodology numbering note).
+- `prototyping/` - Stage 5-8 prototype record (decision, wireframe catalog,
+  screen manifest, owner approval); created when the Prototyping phase first
+  runs.
 - [`inventories/`](inventories/README.md) - machine-readable inventories used
   by migration gates, including the target surface inventory.
 - [`reviews/`](reviews/README.md) - immutable control-pass reports and the
-  shared report template for Stages 2, 6, and 10.
+  shared report template for Stages 2, 7, 10, and 14.
 - [`legacy_reconnaissance.md`](legacy_reconnaissance.md) - Stage 1 evidence
   boundary and handoff.
 - [`cobol_deployment_overview.md`](cobol_deployment_overview.md) - legacy

@@ -69,6 +69,7 @@ conflict to the owner.
 | [Migration status](analysis/migration_status.yaml) | Machine-readable checkpoint and next action | At every stage transition or gate decision |
 | [Review protocol and records](analysis/reviews/README.md) | Auditable evidence for independent and control passes | Every Stage 2, 7, 10, or 14 pass, including clean and blocked passes |
 | [Cross-agent orchestration](analysis/agent_orchestration.md) | Direct read-only review through an external agent CLI, including context checkpoints | Whenever agents review or challenge one another without owner message relay |
+| `analysis/prototyping/` | Prototype record: Stage 5 form/style/palette decision (`decision.md`), exported wireframe catalog (`wireframes/`), screen manifest mapping screen → workbook rows → roles → states with export hashes (`screen-manifest.json`), and Stage 8 owner approval with the approved version/hash (`approval.md`) | During Stages 5-8 and when later SDD work changes the approved UI |
 | [Target surface inventory](analysis/inventories/target-surface-inventory.json) | Every shipped route, role-visible destination, useful action, and its SDD/code/test evidence | Stage 9 design and every Stage 11-14 delivery loop |
 | [Legacy reconnaissance](analysis/legacy_reconnaissance.md) | Stage 1 handoff and evidence boundary | New legacy evidence changes the handoff |
 | [Legacy deployment overview](analysis/cobol_deployment_overview.md) | What can and cannot run without IBM infrastructure | Runtime prerequisites or deployment knowledge changes |

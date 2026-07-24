@@ -13,11 +13,19 @@ Start from [`../../MIGRATION.md`](../../MIGRATION.md), then copy
 Use `stage-NN-pass-NNN.md`, for example:
 
 - `stage-02-pass-001.md` for control reconnaissance;
-- `stage-06-pass-001.md` for independent design verification;
-- `stage-10-pass-001.md` for independent final acceptance.
+- `stage-07-pass-001.md` for wireframe control;
+- `stage-10-pass-016.md` for independent design verification;
+- `stage-14-pass-016.md` for independent slice/final acceptance.
 
 Pass numbers are monotonically increasing within a stage. Never overwrite or
 renumber an earlier report.
+
+Reports written before the 2026-07-24 renumbering keep their original names:
+`stage-06-pass-001..013.md` are design re-verification passes (Stage 10 today)
+and `stage-10-pass-001..015.md` are acceptance passes (Stage 14 today). New
+passes for both stages continue at 016 so no file name is ever reused; the
+`review_passes` ledger in `../migration_status.yaml` is the authoritative
+stage-to-report mapping (see the methodology numbering note).
 
 ## Results
 
@@ -34,11 +42,30 @@ not advance the stage unless every stage-specific gate also passes.
 
 ## Independence
 
-Stages 2, 6, and 10 require a fresh independent agent for every pass. Before
-reading the artifact under review, the agent must complete the eligibility
-declaration in the report. If its current context contains creation or editing
-of any artifact in scope, it is disqualified and must stop without performing
-the review.
+Stages 2, 7, 10, and 14 require a fresh independent agent for every pass.
+Before reading the artifact under review, the agent must complete the
+eligibility declaration in the report. If its current context contains
+creation or editing of any artifact in scope, it is disqualified and must stop
+without performing the review.
+
+## Stage 7 — Wireframe control scope
+
+A Stage 7 pass reviews the exported prototype record under
+`analysis/prototyping/` (never live SaaS links alone) against the parity map:
+
+- **Scope**: `wireframes/` export catalog, `screen-manifest.json`, the filled
+  parity map, and the Stage 5 decision record.
+- **Checklist**: every ported UI-facing workbook row covered by at least one
+  screen; no screen without a requirement or owner-approved target-only
+  decision; declared roles, states (loading/empty/error/forbidden/success),
+  forms and validation states, dialogs/wizard steps, and channel variants all
+  present; every manifest link resolves and export hashes match the files.
+- **Evidence format**: a per-screen verdict table (screen id → rows → roles →
+  states → verdict) plus a standard findings list; run the automated prototype
+  audit under `analysis/tools` when it exists, otherwise record each checklist
+  item manually.
+- Findings return the work to Stage 6; the stage closes only on a dry pass.
+- Credentials for Stitch/Figma/MCP never appear in the report or evidence.
 
 ## Orchestrated External Review
 

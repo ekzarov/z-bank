@@ -1,5 +1,12 @@
 <!--
 Sync Impact Report
+0.8.0: Adopted the fourteen-stage methodology: inserted the Prototyping phase
+(Stages 5-8: application form/style decision, wireframes, wireframe control,
+owner approval) between Requirements and SDD; renumbered former Stages 5-10
+to 9-14; added prototype artifact and secret-handling gates. Historical
+review reports keep pre-renumbering file names per the methodology numbering
+note. The owner waived retroactive prototyping for the completed Bank of Z
+migration on 2026-07-24.
 0.7.0: Added target-surface completeness, useful-action evidence, placeholder
 rejection, and role-by-role live click-through as hard acceptance gates.
 0.6.1: Clarified self-contained reviewer packets and scoped retries after
@@ -26,13 +33,17 @@ repository authority when those documents conflict.
 
 ### I. Constitution-First, SDD-Driven, Approval-Gated
 
-The project follows the ten stages in
+The project follows the fourteen stages in
 [`analysis/migration_methodology.md`](../../analysis/migration_methodology.md):
 reconnaissance, independent control, live legacy walkthrough, requirements
-revision, SDD, independent design verification, build, delivery, live revision,
-and final acceptance. Production code MUST NOT be written before the relevant
-SDD exists, independent design verification is clean, and the owner explicitly
-approves implementation.
+revision, application form and style decision, wireframes, wireframe control,
+wireframe approval, SDD, independent design verification, build, delivery,
+live revision, and final acceptance. Prototyping (Stages 5-8) completes before
+Stage 9 SDD for any new project or new feature work; for the completed Bank of
+Z migration the owner explicitly waived retroactive execution on 2026-07-24.
+Production code MUST NOT be written before the relevant SDD exists,
+independent design verification is clean, and the owner explicitly approves
+implementation.
 
 ### II. Preserve an Honest Legacy Baseline
 
@@ -71,14 +82,15 @@ silently promoted to a requirement.
 The target is delivered in small dependency-ordered slices. Each slice includes
 its contract/domain behavior, required data changes, user or external-system
 surface, automated tests, SDD updates, and workbook updates in one scoped PR.
-Starting at Stage 7, one approved feature or a small, tightly related feature
-group MUST pass through Stage 7 build, Stage 8 delivery, Stage 9 live revision,
-and Stage 10 slice acceptance before the next slice starts. Findings return to
-Stage 5 for SDD/task correction and re-verification, or to Stage 1 when the
-legacy map is wrong, before that slice re-enters Stage 7. Implementing the
-entire approved backlog in one batch or postponing verification until the end
-is non-compliant. After every slice is accepted, Stage 10 performs one final
-consolidated acceptance across the complete migrated system.
+Starting at Stage 11, one approved feature or a small, tightly related feature
+group MUST pass through Stage 11 build, Stage 12 delivery, Stage 13 live
+revision, and Stage 14 slice acceptance before the next slice starts. Findings
+return to Stage 9 for SDD/task correction and re-verification, or to Stage 1
+when the legacy map is wrong, before that slice re-enters Stage 11.
+Implementing the entire approved backlog in one batch or postponing
+verification until the end is non-compliant. After every slice is accepted,
+Stage 14 performs one final consolidated acceptance across the complete
+migrated system.
 
 ### VI. Branch-First, Main-Stable Workflow
 
@@ -131,7 +143,7 @@ or code that contradicts the spec is a defect.
 
 ### XII. Auditable Independent Reviews and Handoffs
 
-Stages 2, 6, and 10 require a different agent with fresh context for every
+Stages 2, 7, 10, and 14 require a different agent with fresh context for every
 pass. An agent whose current context includes creating or editing an artifact
 in scope MUST self-disqualify. Every clean, findings, or blocked pass produces
 an immutable report under
@@ -179,7 +191,7 @@ action or observable contract and traceable SDD, code, and automated-test
 evidence. Automated evidence MUST name the concrete test case after `#`; a
 reference to a test file alone is not proof of the action. Test titles MUST bind
 their evidence to `@surface:<id>` and `@role:<role>`. These tags provide
-structural traceability but do not prove semantics, so Stage 9/10 MUST still
+structural traceability but do not prove semantics, so Stage 13/14 MUST still
 execute the action. When a workbook row bundles several observable outcomes,
 every outcome MUST be evidenced or explicitly split/deferred before the row
 becomes green.
@@ -190,8 +202,8 @@ similarly named legacy file. Visible placeholders, generic empty workspaces,
 "coming soon" text, and future-slice destinations are release-blocking gaps.
 An approved deferred surface MUST be hidden from production navigation.
 
-Stage 9 walks every visible destination for every applicable role and performs
-the listed useful action. Stage 10 independently reconciles deployed
+Stage 13 walks every visible destination for every applicable role and performs
+the listed useful action. Stage 14 independently reconciles deployed
 routes/navigation with the target-surface inventory. Login, `200 OK`, access
 probes, route guards, and heading-only assertions cannot by themselves close a
 surface.
@@ -207,8 +219,11 @@ surface.
 - `MIGRATION.md`: mandatory agent entry point and artifact routing contract.
 - `analysis/migration_status.yaml`: current stage, gates, blockers, and next action.
 - `.specify/memory/constitution.md`: this constitution.
-- `specs/NNN-<slug>/`: Stage 5 feature artifacts; implementation requires the
-  Stage 6 clean review and explicit owner approval.
+- `specs/NNN-<slug>/`: Stage 9 feature artifacts; implementation requires the
+  Stage 10 clean review and explicit owner approval.
+- `analysis/prototyping/`: Stage 5-8 prototype record (form/style/palette
+  decision, exported wireframe catalog, screen manifest, owner approval);
+  created when the Prototyping phase first runs.
 
 The owner-approved target uses .NET 10 LTS, ASP.NET Core Web API, EF Core 10,
 SQL Server, and Angular 22. The browser and API use secure same-origin HTTP-only
@@ -241,8 +256,8 @@ owner decision changes. Its progress estimates and external-review counters
 are updated only at durable checkpoints and never substitute for gates. An
 agent MUST NOT mark its own work independently
 verified. Before stopping, it records the required artifact and checks, updates
-the status without erasing history, and names the next gate. Stages 2, 6, and
-10 follow the
+the status without erasing history, and names the next gate. Stages 2, 7, 10,
+and 14 follow the
 [review protocol](../../analysis/reviews/README.md).
 
 ## Quality Gates
@@ -265,8 +280,13 @@ the status without erasing history, and names the next gate. Stages 2, 6, and
   after tests pass. Findings are independently validated by the primary agent;
   no more than two discussion rounds are allowed, and unresolved material
   findings block delivery.
-- A delivery slice is not complete until it has passed Stages 7-10; the next
+- A delivery slice is not complete until it has passed Stages 11-14; the next
   slice does not start before that acceptance is recorded.
+- New UI work reaching Stage 9 SDD has an owner-approved prototype record
+  (form/style decision, wireframe catalog, screen manifest, approval with
+  version/hash) unless the owner explicitly waived prototyping for that scope.
+  Prototyping tool credentials (Stitch/Figma API keys, MCP configuration)
+  never enter Git, reports, or manifests.
 - Every independent gate has an eligible-agent declaration, immutable report,
   status-history entry, and stage-specific clean result.
 - Every transition past a blocked Stage 3 has an explicit owner fallback
@@ -280,4 +300,4 @@ redefinition, MINOR for a new enforceable principle/section, PATCH for wording
 clarification. Amendments state rationale and impact. Ratification and owner
 approval cannot be inferred from an agent action or from merge alone.
 
-**Version**: 0.7.0 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-23
+**Version**: 0.8.0 | **Ratified**: 2026-07-21 by project owner | **Last Amended**: 2026-07-24

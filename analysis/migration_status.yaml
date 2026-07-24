@@ -391,8 +391,12 @@ owner_gates:
   constitution_ratification:
     status: approved
     approved_by: project owner
-    approved_on: 2026-07-23
-    version: 0.7.0
+    approved_on: 2026-07-24
+    version: 0.8.0
+    note: >-
+      0.8.0 adopts the fourteen-stage methodology (Prototyping Stages 5-8,
+      renumbering, prototype artifact and secret-handling gates) per the
+      owner-directed 2026-07-24 process change.
   requirements_revision:
     status: approved
     approved_by: project owner

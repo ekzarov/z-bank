@@ -63,6 +63,12 @@ belong to the closed acceptance series) and acceptance as
 `stage-14-pass-016.md` onward. Stage 7 (wireframe control) is new and starts
 at `stage-07-pass-001.md`.
 
+**Maturity.** The Prototyping phase is normative from 2026-07-24, but it is
+deliberately young: its rules are expected to be extended and refined as the
+first projects run through it (the presentation marks the block as "in
+progress, ~50%"). Until then the stages apply as written — maturity is a
+statement about future additions, never a permission to skip or improvise.
+
 ## Actors
 
 - **Owner** — the human project owner. Only the owner approves SDD, merges
@@ -251,11 +257,14 @@ removed before the review is considered operationally complete.
 - If a "contradiction" turns out to be a mapping error, that is a map hole —
   **loop back to Stage 1**.
 
-### Stage 5 — Application form and style (web / mobile / both, human decision)
+### Stage 5 — Application form and style (human decision)
 
 - Before a single screen is drawn, decide **what the application will be as a
   whole**:
-  - **form** — web, mobile, or both, and which channel is primary;
+  - **form** — web, mobile, desktop, terminal/console, several channels
+    (multi-channel), or **no interactive UI at all** (a pure API/batch
+    system), and which channel is primary. The methodology is stack-agnostic;
+    the option list is open, not limited to web/mobile.
   - **style** — e.g. minimalism, classic corporate, Material-like, or another
     direction;
   - **color scheme** — palette, accent colors, light/dark theme.
@@ -264,15 +273,38 @@ removed before the review is considered operationally complete.
   lives), style options with references, and 2–3 candidate palettes.
 - This is a **human-in-the-loop checkpoint**: the agent stops and asks the
   owner for an explicit decision. The chosen form, style, and palette are
-  recorded before wireframing starts; the agent must not pick them itself.
+  recorded in `analysis/prototyping/decision.md` (approver, date, options
+  considered) before wireframing starts; the agent must not pick them itself.
+- If the owner selects **no interactive UI**, Stages 6–8 shrink to the
+  owner-approved minimum (e.g. wireframes only for an ops/admin console, or an
+  explicit recorded owner waiver of the remaining prototyping scope).
 
 ### Stage 6 — Wireframes (agent via Google Stitch or Figma)
 
 - The agent builds **wireframes for every screen** of the future application
   for the form chosen in Stage 5, driven by the parity-map rows.
+- **"Every screen" is defined, not felt.** The wireframe set covers:
+  - every screen **for every role** that can see it;
+  - screen **states**: loading, empty, error, forbidden/no-access, success;
+  - **forms with their validation states** (pristine, invalid with messages,
+    submitted);
+  - **dialogs, wizard steps, and the transitions** between screens;
+  - **desktop and mobile variants** when the Stage 5 decision includes both;
+  - **target-only screens** (owner-approved surfaces with no legacy
+    predecessor).
 - Tooling: **Google Stitch or Figma**. The owner performs a one-time setup of
   access — an API key or a locally configured MCP server for the chosen tool —
-  before this stage can run.
+  before this stage can run. **Secrets never enter the repository**: keys and
+  MCP configuration live only in the owner's local environment; Git, review
+  reports, and manifests record only the fact that access is configured,
+  never the credential itself.
+- The stage produces a durable, reviewable record under
+  `analysis/prototyping/`:
+  - `wireframes/` — the exported wireframe catalog (images/exports, not only
+    links into the SaaS tool);
+  - `screen-manifest.json` — a machine-readable manifest mapping
+    **screen → workbook rows → roles → states**, plus the export
+    version/hash of each screen.
 - Every wireframe screen is linked to the workbook rows it covers: a screen
   without a row is as impossible as a ported row without a screen (rows
   decided as "do not port" in Stage 4 are excluded).
@@ -283,6 +315,19 @@ removed before the review is considered operationally complete.
   screen by screen against the parity map: is every ported flow covered, is
   anything missed, and did anything appear on the screens that no requirement
   asks for.
+- The pass verifies, over the exported catalog and `screen-manifest.json`
+  (never over live SaaS links alone):
+  - every ported UI-facing workbook row is covered by at least one screen;
+  - no screen exists without a backing requirement or owner-approved
+    target-only decision;
+  - the declared roles, states, forms/validation, dialogs/wizard steps, and
+    channel variants from the Stage 6 definition are all present;
+  - every manifest link (screen → rows → roles → states) resolves and the
+    export hashes match the delivered files.
+- These manifest invariants are checked by an **automated prototype audit**
+  under `analysis/tools` (added together with the first prototyping run);
+  until that script exists, the pass performs and records the same checks
+  manually in the report, item by item.
 - Every finding loops back to **Stage 6**: the wireframes are corrected, then
   the control pass is repeated. The stage closes only on a **dry pass** — a
   full pass without a single new finding.
@@ -302,6 +347,10 @@ removed before the review is considered operationally complete.
   the owner's explicit approval. Design (SDD) does not start until the
   wireframes are approved; the approved wireframes then serve as the visual
   companion to the specifications.
+- The approval is recorded in `analysis/prototyping/approval.md`: approver,
+  date, and the **version/hash of the approved wireframe export set** (from
+  `screen-manifest.json`), so later stages can prove exactly which prototype
+  was approved. An unrecorded approval does not exist.
 
 ### Stage 9 — Design: SDD (map → spec / plan / tasks)
 
@@ -341,6 +390,13 @@ removed before the review is considered operationally complete.
   - target surface ↔ SDD: does every declared role and destination have a
     concrete useful action and acceptance evidence, rather than a placeholder
     heading or access probe?
+  - wireframes ↔ SDD: does every screen of the approved prototype (per the
+    approved version/hash in `analysis/prototyping/approval.md`) trace to the
+    specs, and does the SDD's UI scope still match the approved prototype? If
+    SDD work after Stage 8 changed the UI, the change **returns to Stage 6**:
+    the wireframes are updated, Stage 7 control and Stage 8 approval are
+    repeated for the changed scope. (Skipped when the owner waived
+    prototyping for the reviewed scope.)
 - The check is not paper-only: following the **source code evidence** columns,
   the agent goes back into the legacy sources row by row — opening the cited
   files and lines and verifying that the requirement and the spec really match
@@ -475,6 +531,7 @@ removed before the review is considered operationally complete.
 | Stage 7 (wireframe control) | Stage 6 | screens missing a mapped flow, or screens with no requirement (Stage 1 for a map error) |
 | Stage 8 (wireframe approval) | Stage 6 | owner remarks on the wireframes |
 | Stage 10 (design re-verification) | Stage 9 | map/SDD coverage discrepancies |
+| Stage 10 (design re-verification) | Stage 6 | the SDD's UI scope diverges from the approved wireframes |
 | Stage 13 (live revision) | Stage 9 | gaps → map → SDD → code |
 | Stage 14 (final acceptance) | Stage 9 | third-party findings |
 
