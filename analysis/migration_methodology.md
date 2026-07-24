@@ -50,6 +50,11 @@ any action and overrides convenience.
 
 - **Owner** — the human project owner. Only the owner approves SDD, merges
   PRs, and signs acceptance.
+- **Human-in-the-loop stages** — Stages 4 and 10 require live human
+  participation (marked with a person badge on the presentation diagrams).
+  On reaching these points the agent **stops and asks the owner for explicit
+  confirmation**; it must not proceed on its own and must not assume, infer,
+  or simulate the human decision.
 - **Primary agent** — does the stage's main work.
 - **Independent agent** — a *different* agent (fresh context, no shared chat
   history) used for control and re-verification stages. An agent never
@@ -219,6 +224,10 @@ removed before the review is considered operationally complete.
 - Every flagged row is reviewed **together with the business (owner) and a
   developer**: keep as-is / change / do not port. The decision is recorded in
   the map (decision status, deviation notes) **before SDD starts**.
+- This is a **human-in-the-loop checkpoint**: the agent stops here and
+  requests the owner's explicit confirmation of every keep / change /
+  do-not-port decision. It must not proceed to Stage 5, and must not assume
+  or simulate the business decision, until the owner has confirmed.
 - If a "contradiction" turns out to be a mapping error, that is a map hole —
   **loop back to Stage 1**.
 
@@ -366,6 +375,10 @@ removed before the review is considered operationally complete.
   route, access-probe, and HTTP-status-only checks cannot close a surface. When
   its results match the map and surface inventory, the acceptance is signed by
   the owner.
+- This is a **human-in-the-loop checkpoint**: the agent stops and requests
+  the owner's explicit sign-off. Acceptance cannot be inferred from a clean
+  report, a merge, or an agent statement; without the owner's recorded
+  confirmation the slice (or the final system) remains unaccepted.
 - Every acceptance attempt is recorded as
   `analysis/reviews/stage-10-pass-NNN.md`. A finding returns to Stage 5 and the
   next attempt requires another eligible fresh agent. Final acceptance requires
