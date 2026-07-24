@@ -526,6 +526,12 @@ removed before the review is considered operationally complete.
   same way a missing action does. When
   its results match the map, surface inventory, and approved prototype, the
   acceptance is signed by the owner.
+- **Optionally the owner walks the delivered system too** — a live,
+  hands-on role walkthrough of the stand. Owner findings are treated exactly
+  like third-party findings: they return the slice to Stage 9 (or Stage 1
+  for a map error) and reset the dry-pass count. This walkthrough
+  supplements the mandatory third-party pass and never replaces it or the
+  recorded sign-off.
 - This is a **human-in-the-loop checkpoint**: the agent stops and requests
   the owner's explicit sign-off. Acceptance cannot be inferred from a clean
   report, a merge, or an agent statement; without the owner's recorded
