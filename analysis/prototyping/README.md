@@ -39,12 +39,29 @@ Run after any change to this directory:
 npm --prefix analysis/tools run audit:prototype
 ```
 
-The audit verifies manifest structure, unique screen ids, non-empty roles /
+For the Stage 8 approval gate and any later stage that relies on the approved
+prototype (Stages 10, 13, 14), run the strict mode, which additionally
+requires `approval.md` pinning the manifest's exact `export_set_version`:
+
+```bash
+npm --prefix analysis/tools run audit:prototype:approved
+```
+
+The audit is **fail-closed**: a missing `screen-manifest.json` is an error
+unless `analysis/migration_status.yaml` records an explicit owner waiver
+(`owner_gates.prototyping_retroactive.status: waived`) — only then it prints
+`PROTOTYPE AUDIT SKIPPED` with exit code 0. With a manifest present it
+verifies that `decision.md` exists and contains no unfilled template
+placeholders, manifest structure, unique screen ids, non-empty roles /
 states / rows (or an explicit `target_only` justification), that every listed
 export file exists with a matching SHA-256 hash, that no file in `wireframes/`
-is missing from the manifest, and that `approval.md` (when present) names the
-manifest's exact `export_set_version`. It must print `PROTOTYPE AUDIT OK`
+is missing from the manifest, that `approval.md` (when present, or required in
+strict mode) names the manifest's exact `export_set_version`, and that no
+token-shaped credential appears in any text-based file of the record
+(including `.svg`/`.html` exports). It must print `PROTOTYPE AUDIT OK`
 before Stage 7 can close.
+
+Regression tests: `npm --prefix analysis/tools run test:prototype-audit`.
 
 Coverage of the parity map (is every ported UI row covered by at least one
 screen, and does every screen trace to a real requirement) is the Stage 7

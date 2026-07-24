@@ -8,6 +8,8 @@
     "audit:evidence": "node verify-legacy-evidence.js",
     "audit:target": "node target-surface-audit.js",
     "audit:prototype": "node prototype-audit.js",
+    "audit:prototype:approved": "node prototype-audit.js --require-approval",
+    "test:prototype-audit": "node prototype-audit.test.js",
     "test:sdd-lifecycle": "node stage5-sdd-audit.test.js",
     "test:target-audit": "node target-surface-audit.test.js"
   },
