@@ -12,19 +12,19 @@
     --xl-red:#FFC7CE;   --xl-red-b:#C0505F;
     --xl-gray:#EDEDED;  --xl-gray-b:#9AA3AC;
     --xl-amber:#FCE4D6; --xl-amber-b:#D08A4E;
-    --owner:#C9971E; --agent:#6E7F90; --gate:#3D8455; --iter:#7E5FC9;
+    --owner:#C9971E; --agent:#6E7F90; --gate:#3D8455; --iter:#7E5FC9; --wip-bg:#F7EEE3;
     --s1:#54689B; --s2:#54749C; --s3:#557F9D; --s4:#558B9D; --s5:#56979E; --s6:#569F9B; --s7:#57A091; --s8:#57A086; --s9:#58A17C; --s10:#58A271; --s11:#59A366; --s12:#59A35B; --s13:#63A45A; --s14:#6FA55A;
   }
   @media (prefers-color-scheme: dark){
     :root{ --ground:#141B23; --panel:#1C2632; --ink:#E7ECF1; --muted:#94A3B2;
-      --line:#34404D; --spine:#4E5F6F; --owner:#D9AE45; --agent:#8B9CAC; --gate:#5CAB84; --iter:#A78BFA;
+      --line:#34404D; --spine:#4E5F6F; --owner:#D9AE45; --agent:#8B9CAC; --gate:#5CAB84; --iter:#A78BFA; --wip-bg:#221D12;
       --s1:#6479AE; --s2:#6485AF; --s3:#6590AF; --s4:#659CB0; --s5:#66A8B0; --s6:#66B1AE; --s7:#67B1A3; --s8:#67B298; --s9:#68B28D; --s10:#68B382; --s11:#69B378; --s12:#69B46D; --s13:#71B46A; --s14:#7DB56A; }
   }
   :root[data-theme="dark"]{ --ground:#141B23; --panel:#1C2632; --ink:#E7ECF1; --muted:#94A3B2;
-      --line:#34404D; --spine:#4E5F6F; --owner:#D9AE45; --agent:#8B9CAC; --gate:#5CAB84; --iter:#A78BFA;
+      --line:#34404D; --spine:#4E5F6F; --owner:#D9AE45; --agent:#8B9CAC; --gate:#5CAB84; --iter:#A78BFA; --wip-bg:#221D12;
       --s1:#6479AE; --s2:#6485AF; --s3:#6590AF; --s4:#659CB0; --s5:#66A8B0; --s6:#66B1AE; --s7:#67B1A3; --s8:#67B298; --s9:#68B28D; --s10:#68B382; --s11:#69B378; --s12:#69B46D; --s13:#71B46A; --s14:#7DB56A; }
   :root[data-theme="light"]{ --ground:#EFF1F4; --panel:#FFFFFF; --ink:#1A2430; --muted:#5D6C7B;
-      --line:#CBD4DD; --spine:#9AACBD; --owner:#C9971E; --agent:#6E7F90; --gate:#3D8455; --iter:#7E5FC9;
+      --line:#CBD4DD; --spine:#9AACBD; --owner:#C9971E; --agent:#6E7F90; --gate:#3D8455; --iter:#7E5FC9; --wip-bg:#F7EEE3;
       --s1:#54689B; --s2:#54749C; --s3:#557F9D; --s4:#558B9D; --s5:#56979E; --s6:#569F9B; --s7:#57A091; --s8:#57A086; --s9:#58A17C; --s10:#58A271; --s11:#59A366; --s12:#59A35B; --s13:#63A45A; --s14:#6FA55A; }
 
   body{ background:var(--ground); color:var(--ink);
@@ -196,6 +196,11 @@
     display:flex; align-items:center; justify-content:center;
     box-shadow:0 1px 3px rgba(20,35,60,.3); }
   .gman svg{ width:9px; height:9px; fill:var(--owner); display:block; }
+  /* блок в проработке: янтарный фон + бейдж зрелости в правом верхнем углу */
+  .wip{ background:var(--wip-bg) !important; border-color:var(--xl-amber-b); }
+  .gwip{ position:absolute; top:-9px; right:10px; z-index:2;
+    background:var(--xl-amber); color:#1A2430; border:1px solid var(--xl-amber-b);
+    border-radius:6px; padding:1px 8px; font-size:10.5px; white-space:nowrap; }
   .legend .gman{ position:static; display:inline-flex; margin-right:6px; vertical-align:-3px; box-shadow:none; }
   .node .gman{ width:17px; height:17px; top:-4px; right:-4px; }
   .node .gman svg, .dgroup .node .gman svg{ width:10px; height:10px; fill:var(--owner); stroke:none; stroke-width:0; }
@@ -301,7 +306,8 @@
         <div class="varr"></div>
         <div class="gvstep" id="st04"><span class="gdot" style="background:var(--s4)">04<span class="gman" title="участвует человек — агент останавливается и ждёт подтверждения"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4.4"/><path d="M12 13.2c-4.6 0-8.2 2.3-8.2 5.2V21h16.4v-2.6c0-2.9-3.6-5.2-8.2-5.2z"/></svg></span></span><span class="gvname">Ревизия требований<small>противоречия и устаревшее</small></span></div>
       </div>
-      <div class="ggroup" id="grp-proto">
+      <div class="ggroup wip" id="grp-proto">
+        <div class="gwip" title="фаза будет дополняться по мере накопления опыта">в проработке · ~50%</div>
         <div class="gtitle">Прототипирование</div>
         <div class="gvstep" id="st05"><span class="gdot" style="background:var(--s5)">05<span class="gman" title="участвует человек — агент останавливается и ждёт подтверждения"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4.4"/><path d="M12 13.2c-4.6 0-8.2 2.3-8.2 5.2V21h16.4v-2.6c0-2.9-3.6-5.2-8.2-5.2z"/></svg></span></span><span class="gvname">Вид и стиль приложения<small>web / мобильное / оба, стиль, палитра — решает человек</small></span></div>
         <div class="varr"></div>
@@ -614,7 +620,8 @@
 
     <div class="down"></div>
 
-    <section class="dgroup" id="dg-proto">
+    <section class="dgroup wip" id="dg-proto">
+      <div class="gwip" title="фаза будет дополняться по мере накопления опыта">в проработке · ~50% — будем дополнять</div>
       <div class="dgtitle">Прототипирование</div>
       <section class="phase" id="ph5">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="15" height="11" rx="2"/><path d="M7 19h5.5"/><path d="M9.5 15v4"/><rect x="15" y="9" width="7" height="12" rx="2"/><path d="M17.5 18h2"/></svg><span class="gman" title="участвует человек — агент останавливается и ждёт подтверждения"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4.4"/><path d="M12 13.2c-4.6 0-8.2 2.3-8.2 5.2V21h16.4v-2.6c0-2.9-3.6-5.2-8.2-5.2z"/></svg></span></div>
