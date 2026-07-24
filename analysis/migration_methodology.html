@@ -13,23 +13,23 @@
     --xl-gray:#EDEDED;  --xl-gray-b:#9AA3AC;
     --xl-amber:#FCE4D6; --xl-amber-b:#D08A4E;
     --owner:#C9971E; --agent:#6E7F90; --gate:#3D8455; --iter:#7E5FC9;
-    --s1:#54689B; --s2:#4F6EA0; --s3:#4B77A0; --s4:#46809D; --s5:#418998; --s6:#3D8F8E; --s7:#3E9280; --s8:#45966F; --s9:#549C61; --s10:#6FA55A;
+    --s1:#54689B; --s2:#54749C; --s3:#557F9D; --s4:#558B9D; --s5:#56979E; --s6:#569F9B; --s7:#57A091; --s8:#57A086; --s9:#58A17C; --s10:#58A271; --s11:#59A366; --s12:#59A35B; --s13:#63A45A; --s14:#6FA55A;
   }
   @media (prefers-color-scheme: dark){
     :root{ --ground:#141B23; --panel:#1C2632; --ink:#E7ECF1; --muted:#94A3B2;
       --line:#34404D; --spine:#4E5F6F; --owner:#D9AE45; --agent:#8B9CAC; --gate:#5CAB84; --iter:#A78BFA;
-      --s1:#6479AE; --s2:#5F7EB0; --s3:#5886AF; --s4:#528EA9; --s5:#4D95A0; --s6:#4A9A93; --s7:#4F9E84; --s8:#58A275; --s9:#67A96C; --s10:#7DB56A; }
+      --s1:#6479AE; --s2:#6485AF; --s3:#6590AF; --s4:#659CB0; --s5:#66A8B0; --s6:#66B1AE; --s7:#67B1A3; --s8:#67B298; --s9:#68B28D; --s10:#68B382; --s11:#69B378; --s12:#69B46D; --s13:#71B46A; --s14:#7DB56A; }
   }
   :root[data-theme="dark"]{ --ground:#141B23; --panel:#1C2632; --ink:#E7ECF1; --muted:#94A3B2;
       --line:#34404D; --spine:#4E5F6F; --owner:#D9AE45; --agent:#8B9CAC; --gate:#5CAB84; --iter:#A78BFA;
-      --s1:#6479AE; --s2:#5F7EB0; --s3:#5886AF; --s4:#528EA9; --s5:#4D95A0; --s6:#4A9A93; --s7:#4F9E84; --s8:#58A275; --s9:#67A96C; --s10:#7DB56A; }
+      --s1:#6479AE; --s2:#6485AF; --s3:#6590AF; --s4:#659CB0; --s5:#66A8B0; --s6:#66B1AE; --s7:#67B1A3; --s8:#67B298; --s9:#68B28D; --s10:#68B382; --s11:#69B378; --s12:#69B46D; --s13:#71B46A; --s14:#7DB56A; }
   :root[data-theme="light"]{ --ground:#EFF1F4; --panel:#FFFFFF; --ink:#1A2430; --muted:#5D6C7B;
       --line:#CBD4DD; --spine:#9AACBD; --owner:#C9971E; --agent:#6E7F90; --gate:#3D8455; --iter:#7E5FC9;
-      --s1:#54689B; --s2:#4F6EA0; --s3:#4B77A0; --s4:#46809D; --s5:#418998; --s6:#3D8F8E; --s7:#3E9280; --s8:#45966F; --s9:#549C61; --s10:#6FA55A; }
+      --s1:#54689B; --s2:#54749C; --s3:#557F9D; --s4:#558B9D; --s5:#56979E; --s6:#569F9B; --s7:#57A091; --s8:#57A086; --s9:#58A17C; --s10:#58A271; --s11:#59A366; --s12:#59A35B; --s13:#63A45A; --s14:#6FA55A; }
 
   body{ background:var(--ground); color:var(--ink);
     font:15px/1.55 "Segoe UI", system-ui, -apple-system, sans-serif; margin:0; }
-  .wrap{ max-width:980px; margin:0 auto; padding:30px 22px 56px; }
+  .wrap{ max-width:1260px; margin:0 auto; padding:30px 22px 56px; }
   h1{ font-family:"Bahnschrift","Segoe UI Semibold","Arial Narrow",system-ui,sans-serif;
     font-size:29px; margin:0 0 4px; letter-spacing:.2px; text-wrap:balance; }
   .lede{ color:var(--muted); margin:0 0 20px; }
@@ -179,13 +179,13 @@
 
   /* ---- группированная лента ---- */
   .ggroups{ display:flex; gap:12px; align-items:stretch; position:relative;
-    padding-bottom:48px; min-width:860px; }
+    padding-bottom:48px; min-width:1150px; }
   .ggroup{ flex:1; min-width:0; border:1px solid var(--line); border-radius:10px;
-    background:var(--ground); padding:10px 10px 8px; position:relative;
+    background:var(--ground); padding:36px 10px 8px; position:relative;
     display:flex; flex-direction:column; }
   .ggroup .gtitle{ font-family:"Bahnschrift","Segoe UI Semibold",system-ui,sans-serif;
     font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
-    text-align:center; margin-bottom:10px; }
+    text-align:center; white-space:nowrap; position:absolute; top:10px; left:0; right:0; }
   .gvstep{ display:flex; gap:8px; align-items:flex-start; }
   .gdot{ flex:none; width:26px; height:26px; border-radius:50%; color:#fff;
     font-family:"Bahnschrift",system-ui,sans-serif; font-size:12px;
@@ -239,9 +239,9 @@
     font-size:12px; white-space:nowrap; }
 
   /* шире, воздух, симметричные отступы, SVG-дуги */
-  .wrap{ max-width:1120px; }
+  .wrap{ max-width:1260px; }
   .ggroups{ gap:16px; padding-bottom:64px; }
-  .ggroup{ padding:10px 34px; }
+  .ggroup{ padding:36px 34px 10px; }
   .ggroup:not(.glast)::after{ right:-18px; width:15px; }
   .ggroup:not(.glast)::before{ right:-19px; }
   .retsvg{ position:absolute; inset:0; pointer-events:none; overflow:visible; }
@@ -268,6 +268,8 @@
   #ph5 .node{ background:var(--s5); } #ph6 .node{ background:var(--s6); }
   #ph7 .node{ background:var(--s7); } #ph8 .node{ background:var(--s8); }
   #ph9 .node{ background:var(--s9); } #ph10 .node{ background:var(--s10); }
+  #ph11 .node{ background:var(--s11); } #ph12 .node{ background:var(--s12); }
+  #ph13 .node{ background:var(--s13); } #ph14 .node{ background:var(--s14); }
 
   /* стрелки внутри групп — на центр карточки (компенсация асимметричных паддингов 104/18) */
   .dgroup .down::after{ left:calc(50% - 43px); }
@@ -299,25 +301,35 @@
         <div class="varr"></div>
         <div class="gvstep" id="st04"><span class="gdot" style="background:var(--s4)">04<span class="gman" title="участвует человек — агент останавливается и ждёт подтверждения"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4.4"/><path d="M12 13.2c-4.6 0-8.2 2.3-8.2 5.2V21h16.4v-2.6c0-2.9-3.6-5.2-8.2-5.2z"/></svg></span></span><span class="gvname">Ревизия требований<small>противоречия и устаревшее</small></span></div>
       </div>
+      <div class="ggroup" id="grp-proto">
+        <div class="gtitle">Прототипирование</div>
+        <div class="gvstep" id="st05"><span class="gdot" style="background:var(--s5)">05<span class="gman" title="участвует человек — агент останавливается и ждёт подтверждения"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4.4"/><path d="M12 13.2c-4.6 0-8.2 2.3-8.2 5.2V21h16.4v-2.6c0-2.9-3.6-5.2-8.2-5.2z"/></svg></span></span><span class="gvname">Вид и стиль приложения<small>web / мобильное / оба, стиль, палитра — решает человек</small></span></div>
+        <div class="varr"></div>
+        <div class="gvstep" id="st06"><span class="gdot" style="background:var(--s6)">06</span><span class="gvname">Вайрфреймы<small>агент: Google Stitch / Figma</small></span></div>
+        <div class="varr"></div>
+        <div class="gvstep" id="st07"><span class="gdot" style="background:var(--s7)">07</span><span class="gvname">Контроль вайрфреймов<small>второй агент сверяет с картой</small></span></div>
+        <div class="varr"></div>
+        <div class="gvstep" id="st08"><span class="gdot" style="background:var(--s8)">08<span class="gman" title="участвует человек — агент останавливается и ждёт подтверждения"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4.4"/><path d="M12 13.2c-4.6 0-8.2 2.3-8.2 5.2V21h16.4v-2.6c0-2.9-3.6-5.2-8.2-5.2z"/></svg></span></span><span class="gvname">Апрув вайрфреймов<small>владелец смотрит и утверждает</small></span></div>
+      </div>
       <div class="ggroup" id="grp-arch">
         <div class="gtitle">Архитектура</div>
-        <div class="gvstep" id="st05"><span class="gdot" style="background:var(--s5)">05</span><span class="gvname">Проектирование<small>SDD: spec → plan → tasks</small></span></div>
+        <div class="gvstep" id="st09"><span class="gdot" style="background:var(--s9)">09</span><span class="gvname">Проектирование<small>SDD: spec → plan → tasks</small></span></div>
         <div class="varr"></div>
-        <div class="gvstep" id="st06"><span class="gdot" style="background:var(--s6)">06</span><span class="gvname">Перепроверка<small>другой агент: всё ли учтено</small></span></div>
+        <div class="gvstep" id="st10"><span class="gdot" style="background:var(--s10)">10</span><span class="gvname">Перепроверка<small>другой агент: всё ли учтено</small></span></div>
       </div>
       <div class="ggroup" id="grp-code">
         <div class="gtitle">Кодинг</div>
-        <div class="gvstep" id="st07"><span class="gdot" style="background:var(--s7)">07</span><span class="gvname">Сборка<small>код + тесты + документы одним PR</small></span></div>
+        <div class="gvstep" id="st11"><span class="gdot" style="background:var(--s11)">11</span><span class="gvname">Сборка<small>код + тесты + документы одним PR</small></span></div>
       </div>
       <div class="ggroup" id="grp-dep">
         <div class="gtitle">Deployment</div>
-        <div class="gvstep" id="st08"><span class="gdot" style="background:var(--s8)">08</span><span class="gvname">Поставка<small>легаси — один раз; новое — с каждой фичей</small></span></div>
+        <div class="gvstep" id="st12"><span class="gdot" style="background:var(--s12)">12</span><span class="gvname">Поставка<small>легаси — один раз; новое — с каждой фичей</small></span></div>
       </div>
       <div class="ggroup glast" id="grp-qa">
         <div class="gtitle">QA</div>
-        <div class="gvstep" id="st09"><span class="gdot" style="background:var(--s9)">09</span><span class="gvname">Живая ревизия<small>все каналы против карты</small></span></div>
+        <div class="gvstep" id="st13"><span class="gdot" style="background:var(--s13)">13</span><span class="gvname">Живая ревизия<small>все каналы против карты</small></span></div>
         <div class="varr"></div>
-        <div class="gvstep" id="st10"><span class="gdot" style="background:var(--s10)">10<span class="gman" title="участвует человек — агент останавливается и ждёт подтверждения"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4.4"/><path d="M12 13.2c-4.6 0-8.2 2.3-8.2 5.2V21h16.4v-2.6c0-2.9-3.6-5.2-8.2-5.2z"/></svg></span></span><span class="gvname">Приёмка<small>сторонние агенты</small></span></div>
+        <div class="gvstep" id="st14"><span class="gdot" style="background:var(--s14)">14<span class="gman" title="участвует человек — агент останавливается и ждёт подтверждения"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4.4"/><path d="M12 13.2c-4.6 0-8.2 2.3-8.2 5.2V21h16.4v-2.6c0-2.9-3.6-5.2-8.2-5.2z"/></svg></span></span><span class="gvname">Приёмка<small>сторонние агенты</small></span></div>
       </div>
       <div class="rets" id="rets" aria-hidden="true"></div>
     </div>
@@ -406,10 +418,12 @@
       inGroup('grp-req',  'st02', 'st01', 2, -8);
       inGroup('grp-req',  'st03', 'st01', 1,  0);
       inGroup('grp-req',  'st04', 'st01', 0,  8);
-      inGroup('grp-arch', 'st06', 'st05', 0,  0);
-      collectorReturn('grp-qa', ['st09', 'st10'], 'grp-arch', 'не прошла ревизия (09) или находки приёмки (10) → в Архитектуру');
+      inGroup('grp-proto','st07', 'st06', 1, -4);
+      inGroup('grp-proto','st08', 'st06', 0,  4);
+      inGroup('grp-arch', 'st10', 'st09', 0,  0);
+      collectorReturn('grp-qa', ['st13', 'st14'], 'grp-arch', 'не прошла ревизия (13) или находки приёмки (14) → в Архитектуру');
 
-      // итеративный цикл поставки: стадии 07–10 повторяются для каждого слайса
+      // итеративный цикл поставки: стадии 11–14 повторяются для каждого слайса
       (function(){
         var code = R('grp-code'), qa = R('grp-qa');
         var x1 = code.l - 8, x2 = qa.r + 8;
@@ -423,7 +437,7 @@
         svg.appendChild(rect);
         // подпись на верхнем ребре
         var lb = document.createElement('div'); lb.className = 'ilbl';
-        lb.textContent = 'Итеративный подход: разработка идёт циклами по несколько фичей (слайс) — слайс принят → следующий ↻';
+        lb.textContent = 'Итеративный подход: циклы по несколько фичей — слайс принят → следующий ↻';
         lay.appendChild(lb);
         var bb3 = lb.getBoundingClientRect();
         var cx = (x1 + x2) / 2;
@@ -491,9 +505,11 @@
       inG('dg-req',  'ph2', 'ph1', 2, -8);
       inG('dg-req',  'ph3', 'ph1', 1,  0);
       inG('dg-req',  'ph4', 'ph1', 0,  8);
-      inG('dg-arch', 'ph6', 'ph5', 2,  0);
-      // коллектор QA: ветки от 10 и 09 по внешней дорожке вверх, стрелкой в группу Архитектура
-      var qa10 = N('ph10'), qa9 = N('ph9');
+      inG('dg-proto','ph7', 'ph6', 1, -4);
+      inG('dg-proto','ph8', 'ph6', 0,  4);
+      inG('dg-arch', 'ph10', 'ph9', 2,  0);
+      // коллектор QA: ветки от 14 и 13 по внешней дорожке вверх, стрелкой в группу Архитектура
+      var qa10 = N('ph14'), qa9 = N('ph13');
       var arch = R('dg-arch');
       var ox = -26;
       var entryY = (arch.t + arch.b) / 2;
@@ -501,7 +517,7 @@
       path([[qa9.l-3, qa9.cy], [ox+2, qa9.cy]], 0);
       var tag = document.createElement('div');
       tag.id = 'dtagqa'; tag.className = 'dtag';
-      tag.textContent = 'не прошла ревизия (09) или находки приёмки (10) → в Архитектуру';
+      tag.textContent = 'не прошла ревизия (13) или находки приёмки (14) → в Архитектуру';
       tag.style.left = (ox + 1) + 'px';
       var midY = (entryY + qa10.cy) / 2;
       tag.style.top = midY + 'px';
@@ -536,7 +552,7 @@
 
   <p class="principle" style="margin-bottom:10px"><b>Принцип работы с агентами: глубина важнее скорости.</b> На каждой стадии агент работает в режиме глубокого исследования — полные проходы вместо выборочных, адверсариальные перепроверки, независимые вторые мнения. Это медленнее, но дыра, пойманная рано, всегда дешевле дыры, найденной на приёмке.</p>
 
-  <p class="principle" style="border-left-color:var(--xl-red-b)"><b>Критерий остановки перепроверок: сухой проход.</b> Каждая петля возврата — стадии 2, 3, 4 → в разведку и 6, 9, 10 → в проектирование — закрывается не после фиксированного числа повторов, а <b>сухим проходом</b>: полным проходом без единой новой находки (на практике 2–3 итерации). Контрольные проходы стадий 2, 6 и 10 каждый раз выполняет <b>новый независимый агент со свежим контекстом</b> — агент никогда не перепроверяет сам себя; рабочие итерации стадий 3, 4 и 9 может вести основной агент стадии. Каждый проход 2/6/10 фиксируется отчётом в <b>analysis/reviews/</b> — чистый результат «в чате» закрытым гейтом не считается.</p>
+  <p class="principle" style="border-left-color:var(--xl-red-b)"><b>Критерий остановки перепроверок: сухой проход.</b> Каждая петля возврата — стадии 2, 3, 4 → в разведку, 7, 8 → в вайрфреймы и 10, 13, 14 → в проектирование — закрывается не после фиксированного числа повторов, а <b>сухим проходом</b>: полным проходом без единой новой находки (на практике 2–3 итерации). Контрольные проходы стадий 2, 7, 10 и 14 каждый раз выполняет <b>новый независимый агент со свежим контекстом</b> — агент никогда не перепроверяет сам себя; рабочие итерации стадий 3, 4 и 13 может вести основной агент стадии. Каждый проход 2/7/10/14 фиксируется отчётом в <b>analysis/reviews/</b> — чистый результат «в чате» закрытым гейтом не считается.</p>
 
   <div class="dflow" id="dflow">
     <section class="dgroup" id="dg-req">
@@ -598,11 +614,69 @@
 
     <div class="down"></div>
 
+    <section class="dgroup" id="dg-proto">
+      <div class="dgtitle">Прототипирование</div>
+      <section class="phase" id="ph5">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="15" height="11" rx="2"/><path d="M7 19h5.5"/><path d="M9.5 15v4"/><rect x="15" y="9" width="7" height="12" rx="2"/><path d="M17.5 18h2"/></svg><span class="gman" title="участвует человек — агент останавливается и ждёт подтверждения"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4.4"/><path d="M12 13.2c-4.6 0-8.2 2.3-8.2 5.2V21h16.4v-2.6c0-2.9-3.6-5.2-8.2-5.2z"/></svg></span></div>
+        <h3>5 · Вид и стиль приложения <small>web / мобильное / оба + стиль и цветовая схема — решает человек</small></h3>
+        <p class="d">Прежде чем рисовать хоть один экран, решается, <b>каким приложение будет в целом</b>. Во-первых, <b>вид</b>: веб, мобильное или и то и другое — и какой канал главный. Во-вторых, <b>стиль</b>: минимализм, классический корпоративный, Material-подобный или иной — и <b>цветовая схема</b>: палитра, акцентные цвета, светлая/тёмная тема. Агент готовит материал для решения: каналы и сценарии из карты паритета, варианты стиля с референсами и 2–3 палитры, — но <b>решение принимает человек</b>. <b>Здесь агент останавливается и ждёт явного решения владельца</b> — вид, стиль и палитра фиксируются до начала вайрфреймов.</p>
+        <div class="steps">
+          <span class="chip agent">Каналы и сценарии из карты</span><span class="sep">→</span>
+          <span class="chip">Варианты: web / мобильное / оба</span><span class="sep">→</span>
+          <span class="chip">Стиль и палитры: референсы от агента</span><span class="sep">→</span>
+          <span class="chip owner">Решение владельца</span><span class="sep">→</span>
+          <span class="chip key">Вид, стиль и палитра зафиксированы</span>
+        </div>
+      </section>
+
+      <div class="down"></div>
+
+      <section class="phase" id="ph6">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 9v12"/></svg></div>
+        <h3>6 · Вайрфреймы <small>агент: Google Stitch / Figma</small></h3>
+        <p class="d">Агент строит <b>вайрфреймы всех экранов</b> будущего приложения через <b>Google Stitch или Figma</b> — по строкам карты паритета, для выбранного на шаге 5 вида приложения. Для этого <b>владелец один раз настраивает доступ</b>: API-ключ или локальный MCP-сервер соответствующего инструмента. Каждый экран привязывается к строкам карты, которые он покрывает, — экран без строки так же невозможен, как строка без экрана.</p>
+        <div class="steps">
+          <span class="chip owner">Настройка API-ключа / MCP</span><span class="sep">→</span>
+          <span class="chip">Вайрфреймы по строкам карты</span><span class="sep">→</span>
+          <span class="chip key">Экраны привязаны к строкам</span>
+        </div>
+      </section>
+
+      <div class="down"></div>
+
+      <section class="phase" id="ph7">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="13" height="13" rx="2"/><path d="M3 8h13"/><circle cx="16.5" cy="16.5" r="4"/><path d="M19.5 19.5 22 22"/></svg></div>
+        <h3>7 · Контроль вайрфреймов <small>второй агент сверяет экраны с картой</small></h3>
+        <p class="d">Когда вайрфреймы готовы, <b>второй, независимый агент</b> проходит их экран за экраном против карты паритета: покрыт ли каждый переносимый флоу, ничего ли не упущено, не появилось ли на экранах того, чего в требованиях нет. Каждая находка возвращает работу <b>назад в вайрфреймы</b>; проверка повторяется до <b>сухого прохода</b> — без единой новой находки.</p>
+        <div class="steps">
+          <span class="chip agent">Второй агент: экраны против карты</span><span class="sep">→</span>
+          <span class="chip">Пропуски и лишнее</span><span class="sep">→</span>
+          <span class="chip">Правки вайрфреймов</span><span class="sep">→</span>
+          <span class="chip gate">Сухой проход: 0 находок</span>
+        </div>
+      </section>
+
+      <div class="down"></div>
+
+      <section class="phase" id="ph8">
+        <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg><span class="gman" title="участвует человек — агент останавливается и ждёт подтверждения"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4.4"/><path d="M12 13.2c-4.6 0-8.2 2.3-8.2 5.2V21h16.4v-2.6c0-2.9-3.6-5.2-8.2-5.2z"/></svg></span></div>
+        <h3>8 · Апрув вайрфреймов <small>владелец смотрит и утверждает</small></h3>
+        <p class="d">Проверенные вайрфреймы показываются <b>владельцу</b>: так ли должно выглядеть приложение, всё ли устраивает по составу экранов и переходам. Замечания возвращают работу в вайрфреймы (стадия 6). <b>Здесь агент останавливается и ждёт явного апрува владельца</b> — проектирование (SDD) не стартует, пока вайрфреймы не утверждены; дальше они служат визуальным приложением к спецификациям.</p>
+        <div class="steps">
+          <span class="chip">Показ вайрфреймов владельцу</span><span class="sep">→</span>
+          <span class="chip owner">Замечания или апрув</span><span class="sep">→</span>
+          <span class="chip key">Вайрфреймы утверждены — вход в SDD</span>
+        </div>
+      </section>
+    </section>
+
+    <div class="down"></div>
+
     <section class="dgroup" id="dg-arch">
       <div class="dgtitle">Архитектура</div>
-      <section class="phase" id="ph5">
+      <section class="phase" id="ph9">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4"/><path d="M10 12h6M10 16h6"/></svg></div>
-        <h3>5 · Проектирование — SDD <small>карта → спецификации: spec / plan / tasks</small></h3>
+        <h3>9 · Проектирование — SDD <small>карта → спецификации: spec / plan / tasks</small></h3>
         <p class="d">Здесь пишется <b>SDD (Spec-Driven Development)</b> — спецификации, от которых дальше ведётся вся разработка. Точка входа всегда воркбук: <b>сначала актуализируются сами строки</b> (формулировки, SDD-колонки: что покрывается, что откладывается — с причиной), и только затем каждый флоу превращается в SDD-артефакты: spec → plan → tasks. Карта и SDD связаны колонками покрытия и расходиться не могут. Ни строчки кода до утверждения SDD владельцем.</p>
         <div class="steps">
           <span class="chip key">Актуализация воркбука</span><span class="sep">→</span>
@@ -615,10 +689,10 @@
 
       <div class="down"></div>
 
-      <section class="phase" id="ph6">
+      <section class="phase" id="ph10">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg></div>
-        <h3>6 · Перепроверка проектирования <small>всё ли учтено — чужими глазами</small></h3>
-        <p class="d">До начала сборки <b>другой агент</b> сверяет результат стадий 1–5: все ли легаси-флоу учтены картой (ничего не потеряно ни при разведке, ни при живом прогоне), учтены ли решения ревизии требований и все ли строки карты покрыты SDD-спецификациями или отложены с причиной. Проверка не бумажная: по колонкам <b>source code evidence</b> агент <b>точечно возвращается в исходники легаси</b> — открывает указанные файлы и строки и сверяет, что требование и спека действительно соответствуют коду, вылавливая недоработки и недосказанности. Расхождения возвращаются в стадию 5 — реализация не стартует, пока перепроверка не чистая.</p>
+        <h3>10 · Перепроверка проектирования <small>всё ли учтено — чужими глазами</small></h3>
+        <p class="d">До начала сборки <b>другой агент</b> сверяет результат стадий 1–9: все ли легаси-флоу учтены картой (ничего не потеряно ни при разведке, ни при живом прогоне), учтены ли решения ревизии требований и все ли строки карты покрыты SDD-спецификациями или отложены с причиной. Проверка не бумажная: по колонкам <b>source code evidence</b> агент <b>точечно возвращается в исходники легаси</b> — открывает указанные файлы и строки и сверяет, что требование и спека действительно соответствуют коду, вылавливая недоработки и недосказанности. Расхождения возвращаются в стадию 9 — реализация не стартует, пока перепроверка не чистая.</p>
         <div class="steps">
           <span class="chip agent">Другой агент</span><span class="sep">→</span>
           <span class="chip">Карта ↔ легаси: полнота</span><span class="sep">→</span>
@@ -633,9 +707,9 @@
 
     <section class="dgroup" id="dg-code">
       <div class="dgtitle">Кодинг</div>
-      <section class="phase" id="ph7">
+      <section class="phase" id="ph11">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3v6a3 3 0 0 0 3 3h6a3 3 0 0 1 3 3v6"/><circle cx="6" cy="3" r="2"/><circle cx="18" cy="21" r="2"/><circle cx="18" cy="9" r="2"/><path d="M18 11v4"/></svg></div>
-        <h3>7 · Сборка <small>код, тесты и документы — одним PR</small></h3>
+        <h3>11 · Сборка <small>код, тесты и документы — одним PR</small></h3>
         <p class="d">Ветка → реализация на целевом стеке → <b>автотесты как жёсткий гейт</b>: PR не выпускается на красных. В том же PR вместе с кодом синхронизируются спецификации и воркбук (зеленение строк с доказательствами). Мерж — только владелец.</p>
         <div class="steps">
           <span class="chip">Ветка</span><span class="sep">→</span>
@@ -651,9 +725,9 @@
 
     <section class="dgroup" id="dg-dep">
       <div class="dgtitle">Deployment</div>
-      <section class="phase" id="ph8">
+      <section class="phase" id="ph12">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c4 3 5 7 5 10l3 4h-5a3 3 0 0 1-6 0H4l3-4c0-3 1-7 5-10z"/><circle cx="12" cy="10" r="2"/></svg></div>
-        <h3>8 · Поставка <small>деплой одной командой</small></h3>
+        <h3>12 · Поставка <small>деплой одной командой</small></h3>
         <p class="d">Деплой одной командой → демо-стенд, где <b>легаси и новая система живут бок о бок</b>: один и тот же флоу показывается в двух мирах. Ритм у систем разный: <b>легаси разворачивается на стенд один раз</b> и дальше просто живёт там как эталон для сравнения; <b>новая система передеплоивается после каждой поставленной фичи</b>. Смоук-тест закрывает каждую поставку.</p>
         <div class="steps">
           <span class="chip">Легаси на стенд — один раз</span><span class="sep">→</span>
@@ -668,9 +742,9 @@
 
     <section class="dgroup" id="dg-qa">
       <div class="dgtitle">QA</div>
-      <section class="phase" id="ph9">
+      <section class="phase" id="ph13">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h13v10H8l-4 4z"/><path d="M13 14l2 6 2-3 3 1-2-6"/></svg></div>
-        <h3>9 · Живая ревизия <small>карта против живых систем — по всем каналам</small></h3>
+        <h3>13 · Живая ревизия <small>карта против живых систем — по всем каналам</small></h3>
         <p class="d">Агент проходит <b>обе системы как реальный пользователь — по всем каналам, какие есть</b>: страницы и формы в вебе, экраны и транзакции в терминале, вызовы API, джобы — и сверяет увиденное с картой. Каждая находка в момент фиксации меняет и карту, и спецификации.</p>
         <div class="steps">
           <span class="chip agent">Проход по всем каналам: UI / терминал / API / джобы</span><span class="sep">→</span>
@@ -687,9 +761,9 @@
 
       <div class="down"></div>
 
-      <section class="phase" id="ph10">
+      <section class="phase" id="ph14">
         <div class="node" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M8.5 12l2.5 2.5 4.5-4.5"/></svg><span class="gman" title="участвует человек — агент останавливается и ждёт подтверждения"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4.4"/><path d="M12 13.2c-4.6 0-8.2 2.3-8.2 5.2V21h16.4v-2.6c0-2.9-3.6-5.2-8.2-5.2z"/></svg></span></div>
-        <h3>10 · Финальная приёмка <small>чужими руками</small></h3>
+        <h3>14 · Финальная приёмка <small>чужими руками</small></h3>
         <p class="d">Остаётся <b>один консолидированный бэклог</b> всего открытого; автоматический аудит доказывает полноту — открытая строка вне бэклога невозможна. Финальный прогон чеклиста по всем каналам и аудита отдаётся <b>агентам других вендоров</b> (Google Antigravity, OpenAI Codex или аналог): агент, писавший код, не подтверждает сам себя. Сторонний агент получает только инструкцию, воркбук и URL стенда; совпали результаты с картой — приёмка подписана, при расхождениях цикл повторяется — тоже до сухого прохода. <b>Здесь агент останавливается и ждёт явной подписи владельца</b>: чистый отчёт или мерж сами по себе приёмкой не считаются.</p>
         <div class="steps">
           <span class="chip key">Единый бэклог всего открытого</span><span class="sep">→</span>
@@ -701,7 +775,7 @@
     </section>
   </div>
 
-  <p class="outcome"><b>Петли:</b> дыры в карте, найденные контрольной разведкой (стадия 2), живым прогоном (стадия 3) и ревизией требований (стадия 4), возвращаются в стадию 1 — разведку; находки стадий 6, 9 и 10 возвращаются в стадию 5 (карта → SDD) и далее в сборку — циклы повторяются до сухого прохода на каждой петле и чистой приёмки в конце.&nbsp;&nbsp;<b>Выход:</b> карта без красного и серого + независимая приёмка = <b>перенос доказан, а не заявлен</b>.</p>
+  <p class="outcome"><b>Петли:</b> дыры в карте, найденные контрольной разведкой (стадия 2), живым прогоном (стадия 3) и ревизией требований (стадия 4), возвращаются в стадию 1 — разведку; находки контроля (7) и апрува (8) вайрфреймов возвращаются в стадию 6 — вайрфреймы; находки стадий 10, 13 и 14 возвращаются в стадию 9 (карта → SDD) и далее в сборку — циклы повторяются до сухого прохода на каждой петле и чистой приёмки в конце.&nbsp;&nbsp;<b>Выход:</b> карта без красного и серого + независимая приёмка = <b>перенос доказан, а не заявлен</b>.</p>
 
   <div class="foot">
     <span><b>Правила зашиты:</b> инструкция воркбука + скрипт-аудит (цвет=статус, три типа находок, полнота бэклога, непроверенное=красное)</span>

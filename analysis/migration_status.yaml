@@ -30,12 +30,27 @@ progress:
   updated_at: 2026-07-23T21:32:00+02:00
 
 methodology_stage:
-  number: 10
+  number: 14
   name: Independent acceptance complete
   status: complete-under-approved-stage-3-simulation-fallback
-  last_completed_stage: 10
+  last_completed_stage: 14
+  numbering_note: >-
+    Renumbered 2026-07-24: the Prototyping phase (Stages 5-8) was inserted
+    after Requirements; former Stages 5-10 are now Stages 9-14. All history
+    below this point (review passes, reports, blockers, gates) keeps the
+    numbering in effect on its date; see the methodology's numbering note.
   incomplete_stages:
     - 3
+    - 5
+    - 6
+    - 7
+    - 8
+  prototyping_note: >-
+    Stages 5-8 (application form and style, wireframes, wireframe control,
+    wireframe approval) were added to the methodology on 2026-07-24, after
+    this project's design, delivery, and acceptance had already completed
+    under the former numbering. Whether to execute prototyping retroactively
+    for this project is an open owner decision; for new work it is mandatory.
   progressed_via_stage_3_fallback: partial-simulated
 
 next_action:
@@ -75,6 +90,14 @@ review_pass_schema:
     - findings
     - blocked
 
+# Passes below use the stage numbering in effect on their date. Entries dated
+# before 2026-07-24 use the old numbering: stage 6 = design re-verification
+# (stage 10 after the renumbering), stage 10 = slice/final acceptance
+# (stage 14 after the renumbering). History is immutable. New passes continue
+# under the new stage numbers starting at pass 016 for both affected stages
+# (see the methodology numbering note; 014-015 are skipped for design
+# re-verification because those file names are taken by pre-renumbering
+# acceptance reports).
 review_passes:
   - stage: 2
     pass: 1
@@ -547,14 +570,14 @@ stage_transition_policy:
     mode: iterative
     scope: one-feature-or-small-tightly-related-group
     cycle:
-      - 7
-      - 8
-      - 9
-      - 10
+      - 11
+      - 12
+      - 13
+      - 14
     next_slice_gate: clean-slice-acceptance
-    finding_return_stage: 5
+    finding_return_stage: 9
     map_error_return_stage: 1
-    final_gate: consolidated-stage-10-acceptance
+    final_gate: consolidated-stage-14-acceptance
   blocked_stage: >-
     A blocked Stage 3 remains incomplete. If a full live walkthrough is not
     possible, the agent asks the owner to select simulate or waive and records

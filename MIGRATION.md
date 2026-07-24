@@ -18,7 +18,7 @@ Before changing any file:
    and the [workbook tooling guide](analysis/tools/README.md).
 5. Read only the SDD artifacts under `specs/` that the status file or workbook
    identifies as relevant. If they do not exist yet, do not invent them before
-   the methodology reaches Stage 5.
+   the methodology reaches Stage 9.
 6. Report any conflict, missing prerequisite, or owner gate before crossing it.
 
 If the active stage is Stage 2, preserve independence in this order:
@@ -64,16 +64,16 @@ conflict to the owner.
 | [Filled parity map](analysis/legacy_user_flows.xlsx) | Bank of Z evidence, coverage, parity, and acceptance status | The active methodology stage requires a map update |
 | [Empty workbook template](analysis/legacy_user_flows_template.xlsx) | Reusable starting point for a new legacy project | Only when deliberately improving the reusable template |
 | [Workbook instructions](analysis/legacy_user_flows_template_instructions.md) | Rules for creating and maintaining parity maps | The workbook protocol itself changes |
-| [Methodology](analysis/migration_methodology.md) | Canonical ten-stage migration process | The owner approves a process change |
+| [Methodology](analysis/migration_methodology.md) | Canonical fourteen-stage migration process | The owner approves a process change |
 | [Visual methodology](analysis/migration_methodology.html) | Human presentation of the methodology | It must remain synchronized with the Markdown methodology |
 | [Migration status](analysis/migration_status.yaml) | Machine-readable checkpoint and next action | At every stage transition or gate decision |
-| [Review protocol and records](analysis/reviews/README.md) | Auditable evidence for independent and control passes | Every Stage 2, 6, or 10 pass, including clean and blocked passes |
+| [Review protocol and records](analysis/reviews/README.md) | Auditable evidence for independent and control passes | Every Stage 2, 7, 10, or 14 pass, including clean and blocked passes |
 | [Cross-agent orchestration](analysis/agent_orchestration.md) | Direct read-only review through an external agent CLI, including context checkpoints | Whenever agents review or challenge one another without owner message relay |
-| [Target surface inventory](analysis/inventories/target-surface-inventory.json) | Every shipped route, role-visible destination, useful action, and its SDD/code/test evidence | Stage 5 design and every Stage 7-10 delivery loop |
+| [Target surface inventory](analysis/inventories/target-surface-inventory.json) | Every shipped route, role-visible destination, useful action, and its SDD/code/test evidence | Stage 9 design and every Stage 11-14 delivery loop |
 | [Legacy reconnaissance](analysis/legacy_reconnaissance.md) | Stage 1 handoff and evidence boundary | New legacy evidence changes the handoff |
 | [Legacy deployment overview](analysis/cobol_deployment_overview.md) | What can and cannot run without IBM infrastructure | Runtime prerequisites or deployment knowledge changes |
 | [Constitution](.specify/memory/constitution.md) | Project governance and non-negotiable constraints | Through an explicit, documented amendment |
-| `specs/NNN-<slug>/` | Approved feature requirements, plans, and tasks | During Stages 5-7 and later reconciliation loops |
+| `specs/NNN-<slug>/` | Approved feature requirements, plans, and tasks | During Stages 9-11 and later reconciliation loops |
 
 Never replace the filled parity map with the empty template. The template has
 no Bank of Z evidence; the filled workbook is the governed project record.
@@ -97,9 +97,11 @@ no Bank of Z evidence; the filled workbook is the governed project record.
   pass. If the agent's current context includes creating or editing an artifact
   in the review scope, it MUST self-disqualify, stop, and tell the owner that a
   fresh agent is required.
-- Every Stage 2, 6, or 10 pass writes an immutable report under
+- Every Stage 2, 7, 10, or 14 pass writes an immutable report under
   `analysis/reviews/`, even when its result is clean or blocked. Chat history is
-  not sufficient evidence that a pass occurred.
+  not sufficient evidence that a pass occurred. Reports written before the
+  2026-07-24 renumbering keep their original stage-numbered file names (see the
+  methodology's numbering note).
 - The primary agent MAY communicate directly with an external agent CLI under
   the [cross-agent orchestration protocol](analysis/agent_orchestration.md).
   The external reviewer remains read-only; the primary agent verifies every
@@ -122,22 +124,22 @@ no Bank of Z evidence; the filled workbook is the governed project record.
   action or observable contract and SDD, code, and automated-test evidence.
   Test evidence MUST identify the concrete test name, not merely a test file.
   Its title MUST include `@surface:<id>` and `@role:<role>` bindings. These
-  bindings are structural evidence only; Stage 9/10 still executes and
+  bindings are structural evidence only; Stage 13/14 still executes and
   independently checks the useful action.
   Visible placeholders, "coming soon" destinations, and deferred surfaces left
   in navigation fail the target-surface gate.
-- Stage 9 MUST exercise every visible destination for every applicable role and
-  demonstrate its useful action, not only authentication and navigation.
-  Stage 10 reviewers receive the target-surface inventory and fail closed when
+- Stage 13 MUST exercise every visible destination for every applicable role
+  and demonstrate its useful action, not only authentication and navigation.
+  Stage 14 reviewers receive the target-surface inventory and fail closed when
   a surface is missing, placeholder-only, or supported only by a title/HTTP
   status assertion.
-- Starting at Stage 7, deliver iteratively. Select one approved feature or a
+- Starting at Stage 11, deliver iteratively. Select one approved feature or a
   small, tightly related group of features as a delivery slice, then take only
-  that slice through Stage 7 build, Stage 8 delivery, Stage 9 live revision,
-  and Stage 10 slice acceptance. Findings return the slice to Stage 5 (or to
+  that slice through Stage 11 build, Stage 12 delivery, Stage 13 live revision,
+  and Stage 14 slice acceptance. Findings return the slice to Stage 9 (or to
   Stage 1 when the legacy map is wrong); an accepted slice releases the next
   slice. Do not implement the entire approved backlog in one batch. After all
-  slices are accepted, run the consolidated Stage 10 final acceptance.
+  slices are accepted, run the consolidated Stage 14 final acceptance.
 - Run every automated gate named by the active stage. After any filled-workbook
   edit, run `npm --prefix analysis/tools run audit` and require `AUDIT OK`.
   After target routes, navigation, roles, or user-facing screens change, run

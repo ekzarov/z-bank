@@ -42,15 +42,32 @@ any action and overrides convenience.
   residual risk, and permitted next stage. For an unavailable Stage 3, the
   owner chooses `simulate` or `waive`; neither completes the unobserved real
   scope or verifies affected rows.
-- Stages 2, 6, and 10 produce immutable reports under `analysis/reviews/` and
-  append their result to `review_passes` in the status file. A clean result in
-  chat is not a completed gate.
+- Stages 2, 7, 10, and 14 produce immutable reports under `analysis/reviews/`
+  and append their result to `review_passes` in the status file. A clean result
+  in chat is not a completed gate.
+
+## Numbering note (2026-07-24)
+
+The Prototyping phase (Stages 5–8) was inserted after Requirements on
+2026-07-24; the former Stages 5–10 became Stages 9–14. Historical review
+reports keep their original file names; the `review_passes` ledger in
+`analysis/migration_status.yaml` is the authoritative stage-to-report
+mapping. In this repository the pre-renumbering series are closed:
+`stage-02-pass-001..007` (control reconnaissance, number unchanged),
+`stage-06-pass-001..013` (design re-verification, now Stage 10), and
+`stage-10-pass-001..015` (slice/final acceptance, now Stage 14). Passes
+written after this date use the new stage numbers and continue at pass 016
+for both affected stages — design re-verification as
+`stage-10-pass-016.md` onward (014–015 are skipped because those file names
+belong to the closed acceptance series) and acceptance as
+`stage-14-pass-016.md` onward. Stage 7 (wireframe control) is new and starts
+at `stage-07-pass-001.md`.
 
 ## Actors
 
 - **Owner** — the human project owner. Only the owner approves SDD, merges
   PRs, and signs acceptance.
-- **Human-in-the-loop stages** — Stages 4 and 10 require live human
+- **Human-in-the-loop stages** — Stages 4, 5, 8, and 14 require live human
   participation (marked with a person badge on the presentation diagrams).
   On reaching these points the agent **stops and asks the owner for explicit
   confirmation**; it must not proceed on its own and must not assume, infer,
@@ -58,8 +75,8 @@ any action and overrides convenience.
 - **Primary agent** — does the stage's main work.
 - **Independent agent** — a *different* agent (fresh context, no shared chat
   history) used for control and re-verification stages. An agent never
-  verifies its own work. Before every Stage 2, 6, or 10 pass, it checks its
-  eligibility: if its current context contains creation or editing of an
+  verifies its own work. Before every Stage 2, 7, 10, or 14 pass, it checks
+  its eligibility: if its current context contains creation or editing of an
   artifact in scope, it self-disqualifies and requests a fresh agent. Every
   iteration uses an eligible fresh agent.
 - **Orchestrator** — the primary agent transporting deterministic review
@@ -78,47 +95,50 @@ is always cheaper than one found at acceptance.
 
 ## Stop criterion for re-checks: the dry pass
 
-Every executable return loop — Stages 2, 3, 4 → Stage 1 and Stages 6, 9, 10 →
-Stage 5 — closes not after a fixed number of repetitions but on a **dry pass**:
-a full pass that yields not a single new finding (in practice 2–3 iterations).
-Stages 2, 6, and 10 require a fresh independent agent for every pass. Working
-iterations in Stages 3, 4, and 9 may use the responsible primary agent unless a
-stage-specific decision requires otherwise. When Stage 3 cannot be executed,
-its recorded `simulate` or `waive` owner decision replaces the dry-pass gate
-only for progression; the unobserved real scope remains incomplete.
+Every executable return loop — Stages 2, 3, 4 → Stage 1; Stages 7, 8 →
+Stage 6; and Stages 10, 13, 14 → Stage 9 — closes not after a fixed number of
+repetitions but on a **dry pass**: a full pass that yields not a single new
+finding (in practice 2–3 iterations). Stages 2, 7, 10, and 14 require a fresh
+independent agent for every pass. Working iterations in Stages 3, 4, and 13
+may use the responsible primary agent unless a stage-specific decision
+requires otherwise. When Stage 3 cannot be executed, its recorded `simulate`
+or `waive` owner decision replaces the dry-pass gate only for progression; the
+unobserved real scope remains incomplete.
 
 ## Phase groups
 
-For presentation and planning, the ten stages are grouped into phases:
-**Requirements** (Stages 1–4), **Architecture** (Stages 5–6: SDD and its
-re-verification), **Coding** (Stage 7), **Deployment** (Stage 8), and
-**QA** (Stages 9–10). Grouping changes no rules: loops, gates, and actors
-stay per-stage; the cross-phase return QA → Architecture is the
-Stage 9/10 → Stage 5 loop.
+For presentation and planning, the fourteen stages are grouped into phases:
+**Requirements** (Stages 1–4), **Prototyping** (Stages 5–8: application form
+and style, wireframes, their control and approval), **Architecture**
+(Stages 9–10: SDD and its re-verification), **Coding** (Stage 11),
+**Deployment** (Stage 12), and **QA** (Stages 13–14). Grouping changes no
+rules: loops, gates, and actors stay per-stage; the cross-phase return
+QA → Architecture is the Stage 13/14 → Stage 9 loop.
 
-## Iterative delivery loop from Stage 7
+## Iterative delivery loop from Stage 11
 
-Stages 7-10 are not one big-bang pass over the whole approved backlog. Select
+Stages 11-14 are not one big-bang pass over the whole approved backlog. Select
 one approved feature or a small, tightly related group as a **delivery slice**
 and repeat this loop:
 
-1. **Stage 7 — Build:** implement and test only the selected slice; synchronize
-   its SDD, tasks, and workbook rows in the same PR. After tests pass, run a
-   read-only external-agent peer review of the requirements and diff; verify
-   every finding and use at most two evidence-based discussion rounds.
-2. **Stage 8 — Delivery:** deploy that slice and close its smoke test.
-3. **Stage 9 — Live revision:** compare that slice with the legacy baseline and
-   map through every affected channel. For every role, open every visible
+1. **Stage 11 — Build:** implement and test only the selected slice;
+   synchronize its SDD, tasks, and workbook rows in the same PR. After tests
+   pass, run a read-only external-agent peer review of the requirements and
+   diff; verify every finding and use at most two evidence-based discussion
+   rounds.
+2. **Stage 12 — Delivery:** deploy that slice and close its smoke test.
+3. **Stage 13 — Live revision:** compare that slice with the legacy baseline
+   and map through every affected channel. For every role, open every visible
    destination and complete at least one useful action or observable contract;
    a successful login, HTTP status, route, or heading alone is not evidence of
    a completed surface.
-4. **Stage 10 — Slice acceptance:** an eligible independent agent checks the
-   delivered slice. Findings return to Stage 5 (or Stage 1 for a map error),
+4. **Stage 14 — Slice acceptance:** an eligible independent agent checks the
+   delivered slice. Findings return to Stage 9 (or Stage 1 for a map error),
    then the corrected slice repeats the loop. A clean accepted slice releases
    selection of the next slice.
 
 The whole approved backlog MUST NOT be implemented before this feedback is
-collected. When every slice is accepted, Stage 10 runs once more as the final
+collected. When every slice is accepted, Stage 14 runs once more as the final
 consolidated acceptance of the complete migrated system.
 
 ## Cross-agent execution and context safety
@@ -136,7 +156,7 @@ After `/compact` or a fresh-session continuation, the reviewer must acknowledge
 the packet identifier, revision, completed scope, and remaining scope before
 continuing. Context overflow, timeout, lost acknowledgement, repository
 mutation, or incomplete batch coverage makes the review `blocked`. A formal
-Stage 2, 6, or 10 conclusion still belongs to the eligible external reviewer;
+Stage 2, 7, 10, or 14 conclusion still belongs to the eligible external reviewer;
 model agreement never replaces automated evidence or owner approval.
 No packet may send credentials, personal data, regulated data, or repository
 content not approved for the selected service. If complete safe evidence cannot
@@ -231,7 +251,59 @@ removed before the review is considered operationally complete.
 - If a "contradiction" turns out to be a mapping error, that is a map hole —
   **loop back to Stage 1**.
 
-### Stage 5 — Design: SDD (map → spec / plan / tasks)
+### Stage 5 — Application form and style (web / mobile / both, human decision)
+
+- Before a single screen is drawn, decide **what the application will be as a
+  whole**:
+  - **form** — web, mobile, or both, and which channel is primary;
+  - **style** — e.g. minimalism, classic corporate, Material-like, or another
+    direction;
+  - **color scheme** — palette, accent colors, light/dark theme.
+- The agent prepares the decision material: channels and scenarios from the
+  parity map (which channels the legacy has, who uses them, where each flow
+  lives), style options with references, and 2–3 candidate palettes.
+- This is a **human-in-the-loop checkpoint**: the agent stops and asks the
+  owner for an explicit decision. The chosen form, style, and palette are
+  recorded before wireframing starts; the agent must not pick them itself.
+
+### Stage 6 — Wireframes (agent via Google Stitch or Figma)
+
+- The agent builds **wireframes for every screen** of the future application
+  for the form chosen in Stage 5, driven by the parity-map rows.
+- Tooling: **Google Stitch or Figma**. The owner performs a one-time setup of
+  access — an API key or a locally configured MCP server for the chosen tool —
+  before this stage can run.
+- Every wireframe screen is linked to the workbook rows it covers: a screen
+  without a row is as impossible as a ported row without a screen (rows
+  decided as "do not port" in Stage 4 are excluded).
+
+### Stage 7 — Wireframe control (second agent against the map)
+
+- When the wireframes are ready, a **second, independent agent** walks them
+  screen by screen against the parity map: is every ported flow covered, is
+  anything missed, and did anything appear on the screens that no requirement
+  asks for.
+- Every finding loops back to **Stage 6**: the wireframes are corrected, then
+  the control pass is repeated. The stage closes only on a **dry pass** — a
+  full pass without a single new finding.
+- Every pass is recorded as `analysis/reviews/stage-07-pass-NNN.md` and
+  appended to `review_passes` in the status file; each pass requires an
+  eligible fresh agent.
+- If a wireframe finding turns out to be a hole in the map itself, that is a
+  Stage 1 return, handled like any other map error.
+
+### Stage 8 — Wireframe approval (human decision)
+
+- The verified wireframes are shown to the **owner**: is this how the
+  application should look, is the set of screens and transitions right.
+- Remarks return the work to Stage 6; the control pass of Stage 7 is repeated
+  after material changes.
+- This is a **human-in-the-loop checkpoint**: the agent stops and waits for
+  the owner's explicit approval. Design (SDD) does not start until the
+  wireframes are approved; the approved wireframes then serve as the visual
+  companion to the specifications.
+
+### Stage 9 — Design: SDD (map → spec / plan / tasks)
 
 - **This is where SDD (Spec-Driven Development) happens.** All further
   development is driven by the specifications written here.
@@ -249,7 +321,7 @@ removed before the review is considered operationally complete.
   from a similarly named legacy file or page. Automated evidence names the
   concrete test case after `#` and binds the test title to the surface and role
   with `@surface:<id>` and `@role:<role>`. The binding is structurally audited;
-  Stage 9/10 must still execute the action because metadata cannot prove test
+  Stage 13/14 must still execute the action because metadata cannot prove test
   semantics.
 - Decompose bundled workbook outcomes before claiming coverage. If one row says
   that a control panel exposes seven actions, navigation-shell evidence does
@@ -258,9 +330,9 @@ removed before the review is considered operationally complete.
 - **Not a single line of implementation code before the owner approves the
   SDD.**
 
-### Stage 6 — Design re-verification (independent eyes)
+### Stage 10 — Design re-verification (independent eyes)
 
-- Before any build starts, a **different agent** cross-checks Stages 1–5:
+- Before any build starts, a **different agent** cross-checks Stages 1–9:
   - map ↔ legacy: is every legacy flow captured (nothing lost in
     reconnaissance or the live walkthrough)?
   - map ↔ decisions: are the requirements-revision decisions reflected?
@@ -273,12 +345,15 @@ removed before the review is considered operationally complete.
   the agent goes back into the legacy sources row by row — opening the cited
   files and lines and verifying that the requirement and the spec really match
   the code, catching omissions and understatements.
-- Discrepancies return to Stage 5. Implementation does not start until this
+- Discrepancies return to Stage 9. Implementation does not start until this
   re-verification is clean. For every workbook row, the reviewer checks the
   cited legacy evidence and traces the row to an approved requirement, decision,
   or explicit deferral; sampling is not sufficient.
-- Every pass is recorded as `analysis/reviews/stage-06-pass-NNN.md`. Findings
-  require a Stage 5 correction and another eligible fresh-agent pass. The gate
+- Every pass is recorded as `analysis/reviews/stage-10-pass-NNN.md`
+  (passes 001–013 predate the renumbering and live in
+  `stage-06-pass-001..013.md`; new passes continue at 016 per the numbering
+  note). Findings
+  require a Stage 9 correction and another eligible fresh-agent pass. The gate
   to build opens only after a clean report, recorded pass history, a successful
   workbook audit, and explicit owner approval of the relevant SDD.
 - A blocked or invalid session remains immutable history. Its exact unchecked
@@ -288,7 +363,7 @@ removed before the review is considered operationally complete.
   external finding, the primary agent's accepted/rejected disposition, the
   correction, and the repeat-review outcome.
 
-### Stage 7 — Build (code, tests, and documents in one PR)
+### Stage 11 — Build (code, tests, and documents in one PR)
 
 - Select one approved feature or a small, tightly related feature group. Do not
   pull the entire approved backlog into one implementation batch.
@@ -308,7 +383,7 @@ removed before the review is considered operationally complete.
   is incomplete.
 - **Merge is the owner's decision only.**
 
-### Stage 8 — Delivery (one-command deploy)
+### Stage 12 — Delivery (one-command deploy)
 
 - Deliver the current slice before implementation starts on the next slice.
 - Deploy with a single command to a demo stand where **legacy and the new
@@ -320,7 +395,7 @@ removed before the review is considered operationally complete.
 - The smoke must fail on visible placeholders and must execute one meaningful
   action for each changed role-visible destination.
 
-### Stage 9 — Live revision (map vs the living systems, every channel)
+### Stage 13 — Live revision (map vs the living systems, every channel)
 
 - Revise the current delivered slice before selecting the next one.
 - An agent walks **both systems as a real user — through every channel the
@@ -351,18 +426,18 @@ removed before the review is considered operationally complete.
 - The workbook audit script (`node analysis/tools/workbook-audit.js`) must
   pass before any workbook commit.
 - The target-surface audit
-  (`npm --prefix analysis/tools run audit:target`) must pass before Stage 9 can
-  close.
-- Stage 9 closes for a delivered slice only when every observed difference is
-  represented in the workbook and SDD, all gaps have looped back to Stage 5 or
-  have an explicit owner decision, and the workbook audit passes. Stage 9 does
+  (`npm --prefix analysis/tools run audit:target`) must pass before Stage 13
+  can close.
+- Stage 13 closes for a delivered slice only when every observed difference is
+  represented in the workbook and SDD, all gaps have looped back to Stage 9 or
+  have an explicit owner decision, and the workbook audit passes. Stage 13 does
   not require a fresh independent agent for each working iteration.
 
-### Stage 10 — Slice and final acceptance (someone else's hands)
+### Stage 14 — Slice and final acceptance (someone else's hands)
 
 - Every delivery slice receives an independent acceptance pass. A clean slice
-  releases the next slice; findings return the current slice to Stage 5 and it
-  repeats Stages 7-10 after correction.
+  releases the next slice; findings return the current slice to Stage 9 and it
+  repeats Stages 11-14 after correction.
 - One **consolidated backlog** of everything still open; the automated audit
   proves completeness — an open row outside the backlog is impossible.
 - The final checklist run (across all channels) and audit are given to **third-party agents of
@@ -380,7 +455,9 @@ removed before the review is considered operationally complete.
   report, a merge, or an agent statement; without the owner's recorded
   confirmation the slice (or the final system) remains unaccepted.
 - Every acceptance attempt is recorded as
-  `analysis/reviews/stage-10-pass-NNN.md`. A finding returns to Stage 5 and the
+  `analysis/reviews/stage-14-pass-NNN.md` (passes 001–015 predate the
+  renumbering and live in `stage-10-pass-001..015.md`; new passes continue at
+  016 per the numbering note). A finding returns to Stage 9 and the
   next attempt requires another eligible fresh agent. Final acceptance requires
   a clean report, a complete consolidated backlog, passing workbook, SDD, and
   target-surface audits, and the owner's recorded signature. No visible
@@ -395,9 +472,11 @@ removed before the review is considered operationally complete.
 | Stage 2 (control reconnaissance) | Stage 1 | any hole or error found in the map |
 | Stage 3 (live walkthrough) | Stage 1 | observed behavior missing from the map |
 | Stage 4 (requirements revision) | Stage 1 | a flagged contradiction turns out to be a mapping error |
-| Stage 6 (design re-verification) | Stage 5 | map/SDD coverage discrepancies |
-| Stage 9 (live revision) | Stage 5 | gaps → map → SDD → code |
-| Stage 10 (final acceptance) | Stage 5 | third-party findings |
+| Stage 7 (wireframe control) | Stage 6 | screens missing a mapped flow, or screens with no requirement (Stage 1 for a map error) |
+| Stage 8 (wireframe approval) | Stage 6 | owner remarks on the wireframes |
+| Stage 10 (design re-verification) | Stage 9 | map/SDD coverage discrepancies |
+| Stage 13 (live revision) | Stage 9 | gaps → map → SDD → code |
+| Stage 14 (final acceptance) | Stage 9 | third-party findings |
 
 Cycles repeat until every loop ends in a dry pass and the final acceptance is
 clean.
